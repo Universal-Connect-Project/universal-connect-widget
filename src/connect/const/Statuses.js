@@ -1,0 +1,53 @@
+export const ConnectionStatusMap = {
+  0: 'CREATED',
+  1: 'PREVENTED',
+  2: 'DENIED',
+  3: 'CHALLENGED',
+  4: 'REJECTED',
+  5: 'LOCKED',
+  6: 'CONNECTED',
+  7: 'IMPEDED',
+  8: 'RECONNECTED',
+  9: 'DEGRADED',
+  10: 'DISCONNECTED',
+  11: 'DISCONTINUED',
+  12: 'CLOSED',
+  13: 'DELAYED',
+  14: 'FAILED',
+  15: 'UPDATED',
+  16: 'DISABLED',
+  17: 'IMPORTED',
+  18: 'RESUMED',
+  19: 'EXPIRED',
+  20: 'IMPAIRED',
+  21: 'PENDING',
+}
+
+export const ReadableStatuses = {
+  CREATED: 0,
+  PREVENTED: 1,
+  DENIED: 2,
+  CHALLENGED: 3,
+  REJECTED: 4,
+  LOCKED: 5,
+  CONNECTED: 6,
+  IMPEDED: 7,
+  RECONNECTED: 8,
+  DEGRADED: 9,
+  DISCONNECTED: 10,
+  DISCONTINUED: 11,
+  CLOSED: 12,
+  DELAYED: 13,
+  FAILED: 14,
+  UPDATED: 15,
+  DISABLED: 16,
+  IMPORTED: 17,
+  RESUMED: 18,
+  EXPIRED: 19,
+  IMPAIRED: 20,
+  PENDING: 21,
+}
+
+export const ProcessingStatuses = [0, 15, 18]
+export const MFAStatuses = [3, 4]
+export const ErrorStatuses = [1, 2, 3, 4, 5, 7, 9, 10, 11, 12, 13, 14, 16, 17, 19, 20]

@@ -1,0 +1,5 @@
+export const REFRESH = 'refresh'
+export const GET_HELP = 'get_help'
+export const VISIT_WEBSITE = 'visit_website'
+export const DISCONNECT_INSTITUTION = 'disconnect_institution'
+export const UPDATE_CREDENTIALS = 'update_credentials'
