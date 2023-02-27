@@ -9,7 +9,6 @@ import { useTokens } from '@kyper/tokenprovider'
 
 import { __ } from '../../../utils/Intl'
 import FireflyAPI from '../../../utils/FireflyAPI'
-import connectAPI from '../../../connect/services/api'
 import useAnalyticsPath from '../../../connect/hooks/useAnalyticsPath'
 import {
   EventCategories,
@@ -146,7 +145,7 @@ export const OAuthStep = props => {
        * At this point we have a new member, create it and use it's oauth URL
        */
       const newMemberStream$ = defer(() =>
-        connectAPI.addMember(
+        FireflyAPI.addMember(
           { is_oauth: true, institution_guid: institution.guid },
           connectConfig,
           initializedClientConfig,

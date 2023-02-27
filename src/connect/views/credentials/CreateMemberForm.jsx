@@ -5,7 +5,6 @@ import { catchError, delay, map } from 'rxjs/operators'
 import { useDispatch, useSelector } from 'react-redux'
 
 import FireflyAPI from '../../../utils/FireflyAPI'
-import connectAPI from '../../../connect/services/api'
 import useAnalyticsPath from '../../../connect/hooks/useAnalyticsPath'
 import { PageviewInfo } from '../../../connect/const/Analytics'
 import { sendPostMessage } from '../../../redux/actions/PostMessage'
@@ -70,7 +69,7 @@ export const CreateMemberForm = props => {
     const memberData = { institution_guid: institution.guid, credentials: userCredentials }
 
     const createMember$ = defer(() =>
-      connectAPI.addMember(memberData, connectConfig, appConfig, isHuman),
+      FireflyAPI.addMember(memberData, connectConfig, appConfig, isHuman),
     )
       .pipe(
         // this delay is dumb, but if we don't wait long enough after the
