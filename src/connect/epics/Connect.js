@@ -9,7 +9,7 @@ import {
   loadConnectError,
   selectInstitutionSuccess,
   selectInstitutionError,
-} from 'reduxify/actions/Connect'
+} from '../../redux/actions/Connect'
 import { ReadableStatuses } from '../../connect/const/Statuses'
 import { VERIFY_MODE } from '../../connect/const/Connect'
 import FireflyAPI from '../../utils/FireflyAPI'

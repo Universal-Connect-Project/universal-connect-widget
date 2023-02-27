@@ -8,9 +8,9 @@
  * Node environment variable:
  *   LOG_LEVEL=debug npm run dev
  */
-const Logger = require('js-logger')
+import Logger from 'js-logger';
 
 /* eslint-disable react-hooks/rules-of-hooks */
-Logger.useDefaults({ defaultLevel: Logger[process.env.LOG_LEVEL.toUpperCase()] }) // eslint-disable-line no-process-env
+// Logger.useDefaults({ defaultLevel: Logger[process.env.LOG_LEVEL.toUpperCase()] }) // eslint-disable-line no-process-env
 // Let developers change the log level in a browser console
 window.Logger = Logger

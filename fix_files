@@ -1,0 +1,447 @@
+#!/usr/bin/ruby
+
+require 'fileutils'
+require 'pathname'
+require "thor"
+require "pry"
+require "open3"
+
+class FixFiles < Thor
+  include ::Thor::Actions
+
+  source_root File.expand_path("", __dir__)
+
+
+  ALIASES = {
+    actions: './src/actions',
+    clients: './src/clients',
+    components: './src/components',
+    config: './src/config',
+    constants: './src/constants',
+    css: './src/css',
+    loggerInit: './loggerInit.js',
+    reduxify: './src/redux',
+    schemas: './src/schemas',
+    src: './src',
+    stores: './src/stores',
+    streams: './src/streams',
+    utils: './src/utils',
+    widgets: './src/widgets',
+  }
+
+  IGNORE_LIST = [
+    "@babel/eslint-parser",
+    "@babel/polyfill",
+    "@babel/runtime",
+    "@kyper/a11y",
+    "@kyper/button",
+    "@kyper/card",
+    "@kyper/categoryicon",
+    "@kyper/graphs",
+    "@kyper/hooks",
+    "@kyper/icon",
+    "@kyper/input",
+    "@kyper/institutionlogo",
+    "@kyper/merchantlogo",
+    "@kyper/messagebox",
+    "@kyper/modal",
+    "@kyper/progressindicators",
+    "@kyper/select",
+    "@kyper/selectionbox",
+    "@kyper/table",
+    "@kyper/tabs",
+    "@kyper/tag",
+    "@kyper/text",
+    "@kyper/textarea",
+    "@kyper/tokenprovider",
+    "@kyper/tooltip",
+    "@kyper/userfeedback",
+    "@kyper/utilityrow",
+    "@mx-cartographer/accountfilter",
+    "@mx-cartographer/categories",
+    "@mx-cartographer/common",
+    "@mx-cartographer/date",
+    "@mx-cartographer/spendingplan",
+    "@mx-cartographer/transactions",
+    "@mxenabled/cssinjs",
+    "@tanstack/react-virtual",
+    "axios",
+    "bowser",
+    "d3",
+    "d3-legacy",
+    "daggy",
+    "date-fns",
+    "dompurify",
+    "downshift",
+    "finsmart",
+    "focus-trap-react",
+    "gettext.js",
+    "honeybadger-js",
+    "intl",
+    "intl-locales-supported",
+    "js-logger",
+    "js-sha256",
+    "keycode",
+    "lodash",
+    "mobx",
+    "mobx-react-lite",
+    "moment",
+    "moment-timezone",
+    "mx-design-tokens",
+    "mx-react-components",
+    "numeral",
+    "phoenix",
+    "posthog-js",
+    "prop-types",
+    "react",
+    "react-calendar",
+    "react-dnd",
+    "react-dnd-html5-backend",
+    "react-dom",
+    "react-intl",
+    "react-popper",
+    "react-redux",
+    "react-slick",
+    "react-text-mask",
+    "react-virtualized",
+    "react-window",
+    "redux/epics",
+    "redux",
+    "redux-devtools-extension",
+    "redux-observable",
+    "redux-thunk",
+    "reselect",
+    "rxjs",
+    "text-mask-addons",
+    "underscore",
+    "underscore.string",
+    "velocity-animate",
+    "streams",
+    "enzyme",
+    "robinhood"
+  ]
+
+  INCLUDE_LIST = [
+    "redux/reducers/",
+    "redux/actions/",
+    "redux/selectors/",
+    "redux/Store",
+    "config/axios"
+  ]
+
+  IGNORE_FILES = [
+    "/Users/bryant.morrill/Documents/repos/universal-connect-widget/src/main.jsx",
+    "/Users/bryant.morrill/Documents/repos/universal-connect-widget/src/App.jsx"
+  ]
+
+  option :save, type: :boolean, aliases: :s, default: false
+  desc "imports", "crawls files and fixes imports"
+  def imports
+
+    src_path = Pathname.new(FileUtils.pwd).join("src")
+
+    say "crawling #{src_path}...", :magenta
+
+    opts = options
+    opts = opts.dup || {}
+    opts[:fix_imports] = true
+
+    crawl_directory(src_path, opts)
+  end
+
+  option :save, type: :boolean, aliases: :s, default: false
+  desc "copy", "crawls files and copies missing imports" 
+  def copy
+
+    src_path = Pathname.new(FileUtils.pwd).join("src")
+
+    opts = options
+    opts = opts.dup || {}
+    opts[:copy_files] = true
+
+    crawl_directory(src_path, opts)
+  end
+
+  option :save, type: :boolean, aliases: :s, default: false
+  desc "fix_extension", "changes .js extensions to .jsx"
+  def fix_extensions
+    src_path = Pathname.new(FileUtils.pwd).join("src")
+
+    opts = options
+    opts = opts.dup || {}
+    opts[:fix_ext] = true
+
+    crawl_directory(src_path, opts)
+  end
+
+  option :save, type: :boolean, aliases: :s, default: false
+  desc "quotes", "crawls files and add missing quotes" 
+  def quotes
+
+    src_path = Pathname.new(FileUtils.pwd).join("src")
+
+    opts = options
+    opts = opts.dup || {}
+    opts[:fix_quotes] = true
+
+    crawl_directory(src_path, opts)
+  end
+
+  no_tasks do 
+    def crawl_directory(path, options)
+      path.children.each do |child|
+        if child.file?
+          crawl_file(child, options)
+        else
+          crawl_directory(child, options)
+        end
+      end
+    end
+    
+    def crawl_file(file, options)
+      fix_imports(file, options) if options[:fix_imports]
+      copy_files(file, options) if options[:copy_files]
+      fix_quotes(file, options) if options[:fix_quotes]
+      regex_file(file, options) if options[:fix_ext]
+    end
+
+    def fix_imports(file, options)
+      corrected_lines = File.readlines(file.to_s).map do |line|
+        regex_line_to_fix(file, line)
+      end.compact
+
+      corrected_lines.each do |line_array|
+        line, regexed_line = *line_array
+
+        #binding.pry if line == "import { ActionTypes as ClientActionTypes } from 'redux/actions/Client'"
+
+        if options[:save]
+          say "replacing #{line} with #{regexed_line} in #{file.to_s}", :green
+          gsub_file file.to_s, line, regexed_line
+        else
+          say "will replace #{line} with #{regexed_line} in #{file.to_s}", :yellow
+        end
+      end
+    end
+    
+    def regex_line_to_fix(file, line)
+      
+      self.class::ALIASES.each do |a, path|
+
+        regex = Regexp.new("((?:.*\s+?from\s+)?['|\"])(src)((?:\/.*)?['|\"])")
+        match = regex.match(line)
+        #binding.pry if line =~ /import 'loggerInit'/ && a == :loggerInit
+        if match
+          p1 = Pathname.new("#{FileUtils.pwd}").join(path)
+          p2 = Pathname.new(file.parent)
+
+          relative_path = p1.relative_path_from(p2)
+          raja_relative_path = file.relative_path_from(Pathname.new(FileUtils.pwd)).parent
+          
+          #binding.pry if Pathname.new("../raja").join(raja_relative_path).join(match[2]).exist?
+
+          # unless Pathname.new("../raja").join(raja_relative_path).join(relative_path).exist?
+          #   say "Uh oh the #{Pathname.new("../raja").join(raja_relative_path).to_s} path wasn't found in raja", :red
+          #   return nil
+          # end
+
+          if Pathname.new("../raja").join(raja_relative_path).join(match[2]).exist?
+            relative_path = "./#{relative_path.to_s}"
+          else
+            relative_path = relative_path.to_s
+          end
+
+          regexed_line = line.gsub(regex, "\\1#{relative_path}\\3")
+          return [line, regexed_line]
+        end
+      end
+     #binding.pry if line =~ Regexp.new("@kyper")
+      regex = Regexp.new("(import (?:.* from )?['|\"])([^.]\\w*['|\"])\s?")
+      match = regex.match(line)
+      if match
+        import_path = match[2]
+    
+        ignore_rgx = Regexp.new(".*(#{self.class::IGNORE_LIST.join("|").gsub("-", "\\-")}).*")
+        include_rgx = Regexp.new(".*(#{self.class::INCLUDE_LIST.join("|").gsub("-", "\\-")}).*")
+        
+        if ignore_rgx.match(line) && include_rgx.match(line).nil?
+          #say "Ignoring import #{import_path.to_s} in file: #{file.to_s}", :cyan
+        else
+          raja_relative_path = file.relative_path_from(Pathname.new(FileUtils.pwd)).parent
+          unless Pathname.new("../raja").join(raja_relative_path).join(match[2]).exist?
+            binding.pry
+            say "Uh oh the #{Pathname.new("../raja").join(raja_relative_path).to_s} path wasn't found in raja", :red
+            return nil
+          end
+
+          regexed_line = line.gsub(regex, "\\1./\\2\\3")
+          return [line, regexed_line]
+        end
+      end 
+
+      nil
+    end
+
+    def fix_quotes(file, options)
+      corrected_lines = File.readlines(file.to_s).map do |line|
+        regex_line_to_fix_quotes(file, line)
+      end.compact
+
+      corrected_lines.each do |line_array|
+        line, regexed_line = *line_array
+
+        #binding.pry if line == "import { ActionTypes as ClientActionTypes } from 'redux/actions/Client'"
+
+        if options[:save]
+          say "replacing #{line} with #{regexed_line} in #{file.to_s}", :green
+          gsub_file file.to_s, line, regexed_line
+        else
+          say "will replace #{line} with #{regexed_line} in #{file.to_s}", :yellow
+        end
+      end
+    end
+
+    def regex_line_to_fix_quotes(file, line)
+      
+      regex = Regexp.new("(import (?:.* from )?(['|\"]).*)(?<!['|\"])$")
+      
+      match = regex.match(line)
+      if match
+          regexed_line = line.gsub(regex, "\\1\\2")
+          return [line, regexed_line]
+      end 
+
+      nil
+    end
+
+    def fix_extension(file, options)
+      
+    end
+
+    def regex_file(file,options)
+      if file.extname == ".js"
+        match = Regexp.new("return \\(").match(File.read(file.to_s))
+
+        if match
+          FileUtils.mv file, "#{file.to_s}x" if options[:save]
+          say "will rename #{file.to_s} to #{file.to_s}x" unless options[:save]
+          say "renamed rename #{file.to_s} to #{file.to_s}x" if options[:save]
+        end
+      end
+      
+    end
+
+    def copy_files(file, options)
+      @just_added ||= []
+      return if @just_added.include?(file.to_s)
+      imports = File.readlines(file.to_s).map do |line|
+        regex_line_to_copy(line)
+      end.compact
+      
+      if self.class::IGNORE_FILES.include?(file.to_s)
+        say "Ignoring file: #{file.to_s}", :cyan
+        return
+      end
+
+      imports.each do |import_path|
+        ignore_rgx = Regexp.new(".*(#{self.class::IGNORE_LIST.join("|").gsub("-", "\\-")}).*")
+        include_rgx = Regexp.new(".*(#{self.class::INCLUDE_LIST.join("|").gsub("-", "\\-")}).*")
+        
+        if ignore_rgx.match(import_path.to_s) && include_rgx.match(import_path.to_s).nil?
+          say "Ignoring import #{import_path.to_s} in file: #{file.to_s}", :cyan
+          next
+        end
+
+        cleaned_import_path = import_path.delete_prefix("/").gsub(/['|\"]/, "").strip
+        extensions = [".js", ".jsx", ".css","-test.js"]
+        
+        temp = Pathname.new(cleaned_import_path)
+        unless temp.extname == ""
+          extensions = [temp.extname]
+          cleaned_import_path = cleaned_import_path.gsub(temp.extname, "")
+        end
+
+        exists = extensions.any? do |ext|
+          new_relative_file_path = "#{cleaned_import_path}#{ext}"
+          new_file_path = file.parent.join(new_relative_file_path)
+          new_file_path.exist?
+        end
+
+        next if exists
+       
+        relative_path = file.relative_path_from(Pathname.new(FileUtils.pwd)).parent
+        target_path = Pathname.new("../raja").join(relative_path)
+
+        # short circuits on first success
+        copied = extensions.any? do |ext|
+
+          path = target_path.join("#{cleaned_import_path}#{ext}")
+
+          if path.exist?
+            say "----------------------------"
+            #binding.pry
+            new_relative_file_path = "#{cleaned_import_path}#{ext}"
+            new_file_path = file.parent.join(new_relative_file_path)
+            @just_added << new_file_path.to_s
+            copy_file path.to_s, new_file_path if options[:save]
+            say "Copying #{path.to_s} to #{new_file_path} to satisfy import #{import_path} in file: #{file.to_s}", :green if options[:save]
+            say "Will copy #{path.to_s} to #{new_file_path} to satisfy import #{import_path} in file: #{file.to_s}", :yellow unless options[:save]
+            say "----------------------------"
+            true
+          else
+            false
+          end
+        end
+
+        # unless copied
+        #   path = target_path.join("#{cleaned_import_path}")
+
+        #   if path.exist?
+        #     new_relative_file_path = "#{cleaned_import_path}"
+        #     new_file_path = file.parent.join(new_relative_file_path)
+        #     copy_dir(path, new_file_path, options, import_path, file)
+        #   end
+        # end
+
+        unless copied
+          filenames = extensions.map do |ext|
+            target_path.join("#{cleaned_import_path}#{ext}").to_s
+          end
+          say "----------------------------"
+          say "Could not find #{filenames.join(" or ")} to satisfy import #{import_path} in file: #{file.to_s}", :red
+          say "----------------------------"
+        end
+      end
+    end
+
+    def copy_dir(path, new_path, options, import_path, file)
+      
+      path.children.each do |child|
+        new_file_path = new_path.join(child.basename)
+        if child.file?
+          say "----------------------------"
+          @just_added << new_file_path.to_s
+          copy_file child.to_s, new_file_path if options[:save]
+          say "Copying #{child.to_s} to #{new_file_path} to satisfy import #{import_path} in file: #{file.to_s}", :green if options[:save]
+          say "Will copy #{child.to_s} to #{new_file_path} to satisfy import #{import_path} in file: #{file.to_s}", :yellow unless options[:save]
+          say "----------------------------"
+        else
+          copy_dir(child, new_file_path, options, import_path, file)
+        end
+      end
+    end
+
+    def regex_line_to_copy(line)
+      regex = Regexp.new("(import (?:.* from )?['|\"])(.*)['|\"]\s?")
+      match = regex.match(line)
+      if match
+        return match[2]
+      end
+
+      nil
+    end
+  end
+end
+
+FixFiles.start(ARGV)
+

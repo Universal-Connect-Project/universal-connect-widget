@@ -11,12 +11,12 @@ import {
   PropertyTypeMessages,
   PropertyTypeNames,
   PropertyTypes,
-} from 'constants/Account'
+} from '../../../constants/Account'
 
-import { convertToMessages } from 'utils/Localization'
-import { formatCurrencyFactory, formatPercentFactory, isValidNumber } from 'utils/Formatting'
-import * as AccountUtils from 'utils/Account'
-import Validation from 'utils/Validation'
+import { convertToMessages } from '../../../utils/Localization'
+import { formatCurrencyFactory, formatPercentFactory, isValidNumber } from '../../../utils/Formatting'
+import * as AccountUtils from '../../../utils/Account'
+import Validation from '../../../utils/Validation'
 
 export const messages = convertToMessages({
   'Account Balance': 'Account Balance',

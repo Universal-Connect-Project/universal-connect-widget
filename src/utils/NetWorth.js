@@ -9,7 +9,7 @@ import {
   AccountAssetTypes,
   AccountIcons,
   AccountTypeNames,
-} from 'constants/Account'
+} from '../constants/Account'
 
 const { MAX_NUMBER_MONTHS } = ChartRanges
 

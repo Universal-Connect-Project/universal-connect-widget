@@ -13,7 +13,7 @@ import { getExperimentNamesToUserVariantMap } from '../../redux/selectors/Experi
  *  CONNECT_EXPERIMENT,
  *  CONNECT_EXPERIMENT_VARIANT_A,
  *  CONNECT_EXPERIMENT_VARIANT_B,
- * } from 'src/connect/experiments'
+ * } from '../../actions/connect/experiments'
  *
  * const { experimentVariant, variantPath } = useExperiment(CONNECT_EXPERIMENT, {
  *   [CONNECT_EXPERIMENT_VARIANT_A]: '/a-path',

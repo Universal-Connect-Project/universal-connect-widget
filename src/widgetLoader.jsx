@@ -1,7 +1,7 @@
  // LOAD FIRST!
 import './config/init'
 
-import React from 'react' // eslint-disable-line no-unused-vars
+import React from 'react' // eslint-disable-line no-unused-vars'
 import _get from 'lodash/get'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
@@ -16,11 +16,11 @@ import localizationDispatcher, { LocaleSources } from './redux/actions/Localizat
 import { ActionTypes as ClientActionTypes } from './redux/actions/Client'
 import { ActionTypes as WidgetProfileActionTypes } from './redux/actions/WidgetProfile'
 import { ActionTypes as ThemeActionTypes } from './redux/actions/Theme'
-import loadWidget from './utils/LoadWidget'
 import PostMessage, { sendPostMessage } from './utils/PostMessage'
 import Store from './redux/Store'
 import { registerAxiosInterceptors } from './config/axios'
 import { updateTitleWithWidget } from './utils/Widget'
+import * as Connect from './widgets/desktop/Connect'
 
 registerAxiosInterceptors(Store.dispatch)
 
@@ -112,21 +112,21 @@ if (widgetConfig.type !== 'master') {
   updateTitleWithWidget(widgetConfig.type)
 }
 
-loadWidget(widgetConfig.type).then(LoadedWidget => {
-  ReactDOM.render(
-    <Provider store={Store}>
-      <ConnectedTokenProvider>
-        <GlobalErrorBoundary>
-          <WidgetDimensionObserver
-            heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
-          >
-            <AppWrapper>
-              <LoadedWidget />
-            </AppWrapper>
-          </WidgetDimensionObserver>
-        </GlobalErrorBoundary>
-      </ConnectedTokenProvider>
-    </Provider>,
-    document.getElementById('mdWidget'),
-  )
-})
+
+ReactDOM.render(
+  <Provider store={Store}>
+    <ConnectedTokenProvider>
+      <GlobalErrorBoundary>
+        <WidgetDimensionObserver
+          heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
+        >
+          <AppWrapper>
+            <Connect />
+          </AppWrapper>
+        </WidgetDimensionObserver>
+      </GlobalErrorBoundary>
+    </ConnectedTokenProvider>
+  </Provider>,
+  document.getElementById('mdWidget'),
+)
+

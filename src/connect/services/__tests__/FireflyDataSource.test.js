@@ -2,7 +2,7 @@ import { ApiEndpoints, FireflyDataSource } from '../../../connect/services/Firef
 import mxAxios from '../../../connect/services/mxAxios'
 import { AGG_MODE, VERIFY_MODE } from '../../../connect/const/Connect'
 
-jest.mock('src/connect/services/mxAxios')
+jest.mock('../../../actions/connect/services/mxAxios')
 
 const connectAPI = new FireflyDataSource(mxAxios)
 

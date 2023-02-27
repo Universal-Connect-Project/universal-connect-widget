@@ -1,4 +1,3 @@
-import areIntlLocalesSupported from 'intl-locales-supported'
 import IntlPolyfill from 'intl'
 
 import { initGettextLocaleData } from './Personalization'

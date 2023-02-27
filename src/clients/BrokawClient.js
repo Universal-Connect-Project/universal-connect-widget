@@ -1,6 +1,6 @@
 import * as Phoenix from 'phoenix'
 
-import { PostMessages$, EventsToDispatch$ } from '../streams
+import { PostMessages$, EventsToDispatch$ } from '../streams'
 import { WSEventSubject$ } from '../streams/Subjects'
 
 import PostMessage from '../utils/PostMessage'

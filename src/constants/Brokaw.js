@@ -1,0 +1,18 @@
+export const BROKAW_EVENTS = {
+  ACCOUNTS_CREATED: 'accounts/created',
+  ACCOUNTS_DELETED: 'accounts/deleted',
+  ACCOUNTS_UPDATED: 'accounts/updated',
+  CATEGORIES_CREATED: 'categories/created',
+  CATEGORIES_DELETED: 'categories/deleted',
+  CATEGORIES_UPDATED: 'categories/updated',
+  GOALS_CREATED: 'goals/created',
+  GOALS_DELETED: 'goals/deleted',
+  GOALS_UPDATED: 'goals/updated',
+  MEMBERS_CREATED: 'members/created',
+  MEMBERS_DELETED: 'members/deleted',
+  MEMBERS_UPDATED: 'members/updated',
+  MONTHLY_CATEGORY_TOTALS_UPDATED: 'monthly_category_totals/updated',
+  TRANSACTIONS_CREATED: 'transactions/created',
+  TRANSACTIONS_UPDATED: 'transactions/updated',
+  TRANSACTIONS_DELETED: 'transactions/deleted',
+}
