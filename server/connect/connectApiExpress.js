@@ -1,7 +1,11 @@
 
-const {connectService} = require('./connectApi')
+const {ConnectApi} = require('./connectApi')
 
 module.exports = function(app){
+  app.use((req, res, next) => {
+    req.connectService = new ConnectApi(req.context)
+    next()
+  })
   app.get(ApiEndpoints.APPDATA, async (req, res) => {
     res.context = req.body;
     res.context.job_type = res.context.job_type || 'agg';

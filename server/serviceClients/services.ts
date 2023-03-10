@@ -67,7 +67,7 @@ export function getConnection(
   return client.GetConnectionById(connection_id);
 }
 export async function institutions(context: Context) {
-  // const client = getApiClient(context);
+  //const client = getApiClient({provider: config.DefaultProvider});
   const retBanks: Institution[] | null = config.DemoBanks;
   context.connection_id = null;
   // if ((context.institution_id || '').length > 0 && context.provider) {

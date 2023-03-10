@@ -3,65 +3,65 @@ Object.keys(process.env).forEach((k) => {
   processEnv[k.toUpperCase()] = process.env[k];
 });
 
-const providerMapping = {
-  'American Express Credit Card': { id: 'amex', provider: 'sophtron' },
-  'Chase Bank': { id: 'chase', provider: 'sophtron' },
-  Chase: { id: 'chase', provider: 'sophtron' },
-  'Citi Bank': { id: 'citibank', provider: 'sophtron' },
-  Citi: { id: 'citibank', provider: 'sophtron' },
-  'Wells Fargo': { id: 'wells_fargo', provider: 'sophtron' },
-  'Wells Fargo Bank': { id: 'wells_fargo', provider: 'sophtron' },
-};
+const providerMapping = [
+  {'name': 'American Express Credit Card', id: 'amex', provider: 'mx' },
+  {'name': 'Chase Bank', id: 'chase', provider: 'mx' },
+  {'name': 'Chase', id: 'chase', provider: 'mx' },
+  {'name': 'Citi Bank', id: 'citibank', provider: 'mx' },
+  {'name': 'Citi', id: 'citibank', provider: 'sophtron' },
+  {'name': 'Wells Fargo', id: 'wells_fargo', provider: 'mx' },
+  {'name': 'Wells Fargo Bank', id: 'wells_fargo', provider: 'mx' },
+];
 
 const demoBanks = [
-  // {
-  //   id: '4b2eca34-a729-438f-844c-ba8ce51047f9',
-  //   name: 'Citibank',
-  //   url: 'https://online.citi.com/US/login.do',
-  //   logo_url: 'https://sophtron.com/images/banklogos/citibank.png ',
-  //   provider: 'sophtron',
-  // },
   {
-    id: 'citibank',
+    id: '4b2eca34-a729-438f-844c-ba8ce51047f9',
     name: 'Citibank',
     url: 'https://online.citi.com/US/login.do',
     logo_url: 'https://sophtron.com/images/banklogos/citibank.png ',
     provider: 'sophtron',
   },
   // {
-  //   id: 'b2a957e5-7bf2-47c0-bd63-ce96736cdacd',
-  //   name: 'Chase Bank',
-  //   url: 'https://www.chase.com/',
-  //   logo_url: 'https://sophtron.com/images/banklogos/chase.png',
-  //   provider: 'sophtron',
+  //   id: 'citibank',
+  //   name: 'Citibank',
+  //   url: 'https://online.citi.com/US/login.do',
+  //   logo_url: 'https://sophtron.com/images/banklogos/citibank.png ',
+  //   provider: 'mx',
   // },
   {
-    id: 'chase',
+    id: 'b2a957e5-7bf2-47c0-bd63-ce96736cdacd',
     name: 'Chase Bank',
     url: 'https://www.chase.com/',
     logo_url: 'https://sophtron.com/images/banklogos/chase.png',
     provider: 'sophtron',
   },
   // {
-  //   id: 'e3d4c866-1c48-44c3-9cc5-5e9c7db43ef0',
-  //   name: 'Wells Fargo',
-  //   url: 'https://connect.secure.wellsfargo.com/auth/login/present?origin=tpb',
-  //   logo_url: 'https://sophtron.com/images/banklogos/wells%20fargo.png',
-  //   provider: 'sophtron',
+  //   id: 'chase',
+  //   name: 'Chase Bank',
+  //   url: 'https://www.chase.com/',
+  //   logo_url: 'https://sophtron.com/images/banklogos/chase.png',
+  //   provider: 'mx',
   // },
   {
-    id: 'wells_fargo',
+    id: 'e3d4c866-1c48-44c3-9cc5-5e9c7db43ef0',
     name: 'Wells Fargo',
     url: 'https://connect.secure.wellsfargo.com/auth/login/present?origin=tpb',
     logo_url: 'https://sophtron.com/images/banklogos/wells%20fargo.png',
     provider: 'sophtron',
   },
   // {
+  //   id: 'wells_fargo',
+  //   name: 'Wells Fargo',
+  //   url: 'https://connect.secure.wellsfargo.com/auth/login/present?origin=tpb',
+  //   logo_url: 'https://sophtron.com/images/banklogos/wells%20fargo.png',
+  //   provider: 'mx',
+  // },
+  // {
   //   id: '40a24f71-16e4-411c-b6e4-05b55577b66e',
   //   name: 'Ally Bank',
   //   url: 'https://www.ally.com',
   //   logo_url: 'https://sophtron.com/images/banklogos/ally%20bank.png',
-  //   provider: 'sophtron',
+  //   provider: 'mx',
   // },
   {
     id: '3e9fbc88-be07-4478-9a4c-9d3061d5d6d4',
@@ -191,6 +191,7 @@ const config = {
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   Demo: true,
+  DefaultProvider: 'sophtron',
   LogLevel: 'debug',
   Port: '8080',
   Env: 'dev', // mocked
@@ -208,7 +209,7 @@ const config = {
   MxDemoMemberId: 'MBR-32d68a9e-7b50-4826-b215-332bc36ca011',
   MxApiSecret: '',
   ProviderMapping: providerMapping,
-  DemoBanks: demoBanks,
+  DemoBanks:demoBanks
 };
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {

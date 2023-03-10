@@ -167,7 +167,9 @@ export interface IConnectAPI {
   loadMemberByGuid(memberGuid: string): Promise<Member>
   deleteMember(member: Member): Promise<void>
 
-  getInstitutionCredentials(institutionGuid: string): Promise<Credential[]>
+  // this one is different from the FireflyAPI because it needs the institution provider and name information 
+  getInstitutionCredentials(institution: Institution): Promise<Credential[]>
+  
   getMemberCredentials(memberGuid: string): Promise<Credential[]>
 
   // submitConnectFeedBack(feedBack)
