@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import validation from '../../connect/utilities/validation'
+import validation from '../utilities/validation'
 
 /**
  * Simple form hook to manage values, form errors and submit

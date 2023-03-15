@@ -1,8 +1,8 @@
 import _find from 'lodash/find'
 import _every from 'lodash/every'
 
-import { JOB_TYPES, JOB_STATUSES } from '../connect/consts'
-import { VERIFY_MODE, AGG_MODE, REWARD_MODE, TAX_MODE } from '../connect/const/Connect'
+import { JOB_TYPES, JOB_STATUSES } from './consts'
+import { VERIFY_MODE, AGG_MODE, REWARD_MODE, TAX_MODE } from './const/Connect'
 
 const getJobTypeFromMode = mode => {
   if (mode === VERIFY_MODE) return JOB_TYPES.VERIFICATION

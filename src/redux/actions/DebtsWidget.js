@@ -1,7 +1,7 @@
-import { dispatcher as accountsDispatcher } from '../actions/Accounts'
-import { dispatcher as monthlyCashFlowProfileDispatcher } from '../actions/MonthlyCashFlowProfile'
-import goalsDispatcher from '../actions/Goals'
-import { validateGoal } from '../actions/GoalsWidget'
+import { dispatcher as accountsDispatcher } from './Accounts'
+import { dispatcher as monthlyCashFlowProfileDispatcher } from './MonthlyCashFlowProfile'
+import goalsDispatcher from './Goals'
+import { validateGoal } from './GoalsWidget'
 
 import { itemAction, setupAction } from '../../utils/ActionHelpers'
 

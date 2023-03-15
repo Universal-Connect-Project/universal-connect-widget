@@ -10,8 +10,8 @@ import {
   selectInstitutionSuccess,
   selectInstitutionError,
 } from '../../redux/actions/Connect'
-import { ReadableStatuses } from '../../connect/const/Statuses'
-import { VERIFY_MODE } from '../../connect/const/Connect'
+import { ReadableStatuses } from '../const/Statuses'
+import { VERIFY_MODE } from '../const/Connect'
 import FireflyAPI from '../../utils/FireflyAPI'
 import { __ } from '../../utils/Intl'
 

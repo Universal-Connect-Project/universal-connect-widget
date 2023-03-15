@@ -319,16 +319,11 @@ class FixFiles < Thor
     end
 
     def regex_file(file,options)
-      if file.extname == ".js"
-        match = Regexp.new("return \\(").match(File.read(file.to_s))
-
-        if match
-          FileUtils.mv file, "#{file.to_s}x" if options[:save]
-          say "will rename #{file.to_s} to #{file.to_s}x" unless options[:save]
-          say "renamed rename #{file.to_s} to #{file.to_s}x" if options[:save]
-        end
-      end
-      
+      if file.extname == ".jsx"
+        FileUtils.mv file, file.to_s.gsub(/\.jsx\z/, '.js') if options[:save]
+        say "will rename #{file.to_s} to #{file.to_s.gsub(/\.jsx\z/, '.js')}" unless options[:save]
+        say "renamed rename #{file.to_s} to #{file.to_s.gsub(/\.jsx\z/, '.js')}" if options[:save]
+      end    
     end
 
     def copy_files(file, options)

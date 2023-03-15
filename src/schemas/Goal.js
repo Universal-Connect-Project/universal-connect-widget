@@ -1,4 +1,4 @@
-import * as GoalUtils from '../utils/Goal'
+//import * as GoalUtils from '../utils/Goal'
 import { DetailLabels, GoalTypes } from '../constants/Goal'
 
 const GoalSchema = {

@@ -3,7 +3,7 @@ import { updateObject } from '../../utils/Reducer'
 import _find from 'lodash/find'
 import _sortBy from 'lodash/sortBy'
 import _sumBy from 'lodash/sumBy'
-import { getBudgetCategories, getNestedCategories } from '../selectors/Categories'
+import { getBudgetCategories, getNestedCategories } from './Categories'
 import { appendCategoryDetailsToBudget } from '../../utils/Budget'
 
 import * as BudgetUtils from '../../utils/Budget'

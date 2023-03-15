@@ -1,5 +1,5 @@
-import { CredentialTypes } from '../../../connect/const/Credential'
-import { EventActions } from '../../../connect/const/Analytics'
+import { CredentialTypes } from '../../const/Credential'
+import { EventActions } from '../../const/Analytics'
 
 /**
  * Builds our useForm hooks initial values object

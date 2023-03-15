@@ -1,14 +1,11 @@
 {
   "name": "universal-connect-widget",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
   "dependencies": {
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.14.6",
     "@kyper/button": "^3.2.0",
     "@kyper/card": "^2.0.0",
     "@kyper/icon": "^1.15.0",
@@ -29,10 +26,12 @@
     "d3-legacy": "npm:d3@^3.5.6",
     "date-fns": "^2.29.3",
     "dompurify": "^2.3.6",
+    "downshift": "^7.4.1",
     "gettext.js": "^1.2.0",
     "honeybadger-js": "^0.5.1",
     "intl": "^1.2.5",
-    "js-logger": "^1.3.0",
+    "intl-locales-supported": "^1.8.12",
+    "js-logger": "^1.6.1",
     "js-sha256": "^0.9.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
@@ -41,25 +40,54 @@
     "mx-react-components": "^8.4.2",
     "phoenix": "^1.2.1",
     "posthog-js": "^1.40.2",
-    "prop-types":  "^15.7.2",
-    "react-intl-loader": "^1.0.2",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-intl": "^2.3.0",
+    "react-intl-loader": "^1.0.2",
     "react-redux": "^7.1.0",
+    "react-scripts": "^5.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.9",
-    "redux-observable":  "^1.0.0",
+    "redux-observable": "^1.0.0",
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.4",
     "rxjs": "^6.6.2"
   },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
-    "@babel/polyfill": "^7.12.1",
-    "@rollup/plugin-babel": "^6.0.3",
-    "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
-    "@vitejs/plugin-react": "^3.1.0",
-    "vite": "^4.1.0"
+    "@babel/core": "^7.21.3",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "babel-plugin-js-logger": "^1.0.17",
+    "customize-cra": "^1.0.0",
+    "eslint-config-mx": "^4.0.0",
+    "eslint-plugin-redux-namespaced-actions": "^1.0.0",
+    "react-app-rewired": "^2.2.1"
   }
 }

@@ -3,7 +3,7 @@ import { updateObject } from '../../utils/Reducer'
 import * as TransactionUtils from '../../utils/Transaction'
 import FireflyAPI from '../../utils/FireflyAPI'
 
-import categoryTotalsDispatcher from '../actions/CategoryTotals'
+import categoryTotalsDispatcher from './CategoryTotals'
 
 export const ActionTypes = {
   CREATE_MANUAL_TRANSACTION: 'transactions/create_manual_transaction',

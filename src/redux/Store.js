@@ -27,7 +27,7 @@ import { connections } from './reducers/Connections'
 import { devices } from './reducers/Devices'
 import { experiments } from './reducers/Experiments'
 import { finstrong } from './reducers/Finstrong'
-import { goals } from './reducers/Goals'
+// import { goals } from './reducers/Goals'
 import { help } from './reducers/Help'
 import { holdings } from './reducers/Holdings'
 import { institutions } from './reducers/Institutions'
@@ -94,7 +94,7 @@ const reducer = combineReducers({
   devices,
   experiments,
   finstrong,
-  goals,
+  // goals,
   goalsWidget,
   help,
   holdings,

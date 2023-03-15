@@ -1,6 +1,6 @@
 import _clone from 'lodash/clone'
 import _keyBy from 'lodash/keyBy'
-import { setTrackType } from '../../utils/Goal'
+//import { setTrackType } from '../../utils/Goal'
 import { ActionTypes } from '../actions/Goals'
 import { ActionTypes as GoalWidgetActionTypes } from '../actions/GoalsWidget'
 import { createReducer, upsertItem, updateObject } from '../../utils/Reducer'
