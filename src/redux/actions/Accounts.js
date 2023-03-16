@@ -1,4 +1,4 @@
-import { ActionTypes as MemberActionTypes } from '../actions/Members'
+import { ActionTypes as MemberActionTypes } from './Members'
 
 import { itemAction, itemsAction, setupAction } from '../../utils/ActionHelpers'
 import { getSortedAccountsWithMembers } from '../../utils/Account'

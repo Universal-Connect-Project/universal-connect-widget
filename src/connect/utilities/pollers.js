@@ -2,11 +2,11 @@ import Honeybadger from 'honeybadger-js'
 import { defer, interval, of } from 'rxjs'
 import { catchError, scan, switchMap, tap, filter } from 'rxjs/operators'
 
-import { ErrorStatuses, ProcessingStatuses, ReadableStatuses } from '../../connect/const/Statuses'
+import { ErrorStatuses, ProcessingStatuses, ReadableStatuses } from '../const/Statuses'
 
 import { __ } from '../../utils/Intl'
 import FireflyAPI from '../../utils/FireflyAPI'
-import { OauthState } from '../../connect/consts'
+import { OauthState } from '../consts'
 
 export const CONNECTING_MESSAGES = {
   STARTING: __('Starting'),

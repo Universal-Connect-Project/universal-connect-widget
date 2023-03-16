@@ -6,7 +6,7 @@ import _sumBy from 'lodash/sumBy'
 import * as d3 from 'd3'
 import { createSelector } from 'reselect'
 import { Icon, Guid, Name, ThemeName, CategoryTypes } from '../../constants/Category'
-import { getCategoryTotals } from '../selectors/CategoryTotals'
+import { getCategoryTotals } from './CategoryTotals'
 import { getHistory } from '../../utils/Category'
 import { isSpending } from '../../utils/Spending'
 
