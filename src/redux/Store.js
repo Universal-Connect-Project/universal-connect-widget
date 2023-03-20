@@ -51,14 +51,12 @@ import { user, userProfile } from './reducers/User'
 import { userFeatures } from './reducers/UserFeatures'
 import { accounts } from './reducers/Accounts'
 import { accountDetailsDrawer } from './reducers/AccountDetailsDrawer'
-import { goalsWidget } from './reducers/GoalsWidget'
 import { cashFlowWidget } from './reducers/CashFlowWidget'
 import { widgetProfile } from './reducers/WidgetProfile'
 import { userCommunicationProfile } from './reducers/UserCommunicationProfile'
 import { app } from './reducers/App'
 import browser from './reducers/Browser'
 import componentStacks from './reducers/ComponentStacks'
-import debtsWidget from './reducers/DebtsWidget'
 import localization from './reducers/Localization'
 import subscriptions from './reducers/Subscriptions'
 import theme from './reducers/Theme'
@@ -90,12 +88,9 @@ const reducer = combineReducers({
   componentStacks,
   connect,
   connections,
-  debtsWidget,
   devices,
   experiments,
   finstrong,
-  // goals,
-  goalsWidget,
   help,
   holdings,
   initializedClientConfig,

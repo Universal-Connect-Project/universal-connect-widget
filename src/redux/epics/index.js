@@ -24,7 +24,6 @@ import {
   fetchMonthlyHealthScoreSummaries,
   fetchHealthScoreChangeReports,
 } from './Finstrong'
-import { saveGoalForm, markGoalAsComplete } from './GoalsWidget'
 import {
   fetchGoals,
   fetchCreateGoal,
@@ -32,7 +31,6 @@ import {
   fetchRepositionGoals,
   fetchUpdateGoal,
 } from './Goals'
-import { saveDebtForm } from './DebtsWidget'
 import { loadCashFlowWidgetDataForDateRange, loadCashFlowDataTwelveMonths } from './CashFlow'
 import { markAsPaid, refreshCashFlowData, skipEvent } from './CashFlowWidget'
 import { getCategoryTotalsByAccounts } from './SpendingWidget'
@@ -150,14 +148,11 @@ export const rootEpic = combineEpics(
   loadNotificationProfile,
   editNotificationProfile,
   markAsPaid,
-  markGoalAsComplete,
   mfaModalSubmit,
   miniSpending,
   postMessages,
   refreshCashFlowData,
-  saveDebtForm,
   saveEditForm,
-  saveGoalForm,
   saveNotification,
   saveTransactionRule,
   saveCategory,
