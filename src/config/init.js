@@ -1,5 +1,5 @@
 import './honeybadger'
-import '../../loggerInit.js'
+import '../loggerInit.js'
 import '@babel/polyfill'
 
 import { maybeRequireIntlPolyfill } from '../utils/LocaleLoader'

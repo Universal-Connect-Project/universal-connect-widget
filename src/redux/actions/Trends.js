@@ -1,9 +1,9 @@
 import moment from 'moment'
 
-import { dispatcher as accountsDispatcher } from '../actions/Accounts'
-import { dispatcher as monthlyCategoryTotalsDispatcher } from '../actions/MonthlyCategoryTotals'
-import categoriesDispatcher from '../actions/Categories'
-import categoryTotalsDispatcher from '../actions/CategoryTotals'
+import { dispatcher as accountsDispatcher } from './Accounts'
+import { dispatcher as monthlyCategoryTotalsDispatcher } from './MonthlyCategoryTotals'
+import categoriesDispatcher from './Categories'
+import categoryTotalsDispatcher from './CategoryTotals'
 
 export const ActionTypes = {
   TRENDS_WIDGET_LOADING: 'trends/trends_widget_loading',

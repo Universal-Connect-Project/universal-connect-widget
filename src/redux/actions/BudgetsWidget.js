@@ -1,10 +1,10 @@
 import moment from 'moment'
-import { dispatcher as accountsDispatcher } from '../actions/Accounts'
-import budgetsDispatcher from '../actions/Budgets'
-import categoriesDispatcher from '../actions/Categories'
-import categoryTotalsDispatcher from '../actions/CategoryTotals'
-import { dispatcher as monthlyCashFlowProfileDispatcher } from '../actions/MonthlyCashFlowProfile'
-import { dispatcher as monthlyCategoryTotalsDispatcher } from '../actions/MonthlyCategoryTotals'
+import { dispatcher as accountsDispatcher } from './Accounts'
+import budgetsDispatcher from './Budgets'
+import categoriesDispatcher from './Categories'
+import categoryTotalsDispatcher from './CategoryTotals'
+import { dispatcher as monthlyCashFlowProfileDispatcher } from './MonthlyCashFlowProfile'
+import { dispatcher as monthlyCategoryTotalsDispatcher } from './MonthlyCategoryTotals'
 import { itemAction, initiateRequest, setupAction } from '../../utils/ActionHelpers'
 
 export const ActionTypes = {

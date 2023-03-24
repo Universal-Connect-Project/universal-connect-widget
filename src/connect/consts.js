@@ -1,6 +1,6 @@
 import { __ } from '../utils/Intl'
 
-import { ReadableStatuses } from '../connect/const/Statuses'
+import { ReadableStatuses } from './const/Statuses'
 
 export const JOB_TYPES = {
   AGGREGATION: 0,

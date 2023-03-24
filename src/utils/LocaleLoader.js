@@ -1,14 +1,14 @@
 import IntlPolyfill from 'intl'
-
+import areIntlLocalesSupported from 'intl-locales-supported'
 import { initGettextLocaleData } from './Personalization'
 
 const DEFAULT_LOCALE = 'en'
 
 // translation files to be loaded asynchronously with react-intl-loader
 const localeLoaders = {
-  'en-ca': () => require('react-intl-loader?locale=en!constants/language/en-ca'),
+  'en-ca': () => require('react-intl/locale-data/en'),
   fr: () => localeLoaders['fr-ca'](),
-  'fr-ca': () => require('react-intl-loader?locale=fr!constants/language/fr-ca'),
+  'fr-ca': () => require('react-intl/locale-data/fr'),
 }
 
 // Returns a Promise that resolves to the asynchronously loaded messages for the locale.

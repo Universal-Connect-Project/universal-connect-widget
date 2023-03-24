@@ -1,10 +1,10 @@
-const { createReducer } = require('utils/Reducer')
+const { createReducer } = require('../../utils/Reducer')
 
 const {
   NEW_SPENDING_DATA_AVAILABLE,
   SYNC_MINI_SPENDING_DATA,
   SPENDING_DATA_SYNC_COMPLETE,
-} = require('reduxify/actions/miniSpending').ActionTypes
+} = require('../actions/miniSpending').ActionTypes
 
 export const defaultState = {
   newDataAvailable: false,
