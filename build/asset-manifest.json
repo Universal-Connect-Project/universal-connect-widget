@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.js": "/static/js/main.c2d8fd5f.js",
+    "static/media/CheckAccountNumber.svg": "/static/media/CheckAccountNumber.4a304384ba32bdfc616d08a9a84d0c1a.svg",
+    "static/media/CheckRoutingNumber.svg": "/static/media/CheckRoutingNumber.a8a9b2ff8878f58cf9d78f5f652e343e.svg",
+    "static/media/ComeBackGraphic.svg": "/static/media/ComeBackGraphic.580c0c7a74ea5baf11a2c4c059904d82.svg",
+    "static/media/VerifiedGraphic.svg": "/static/media/VerifiedGraphic.769e3aef771563333b1171463b269964.svg",
+    "static/media/CenterGraphicMxLight.svg": "/static/media/CenterGraphicMxLight.7503926de0bb90229c0a66320294d772.svg",
+    "static/media/CenterGraphicMxDark.svg": "/static/media/CenterGraphicMxDark.ed79f43cc73f9fb3d95981f5798644f9.svg",
+    "static/media/HeaderDevice.svg": "/static/media/HeaderDevice.2b66f26b881a25b6f1920e1ec80efaaa.svg",
+    "static/media/HeaderDefaultInstitution.svg": "/static/media/HeaderDefaultInstitution.b062a64e3f31c72e3f9a57c56bd43ba1.svg",
+    "static/media/DefaultDataProviderLogoDark.svg": "/static/media/DefaultDataProviderLogoDark.a30201fe02a134132df2170599edfa29.svg",
+    "static/media/DefaultDataProviderLogoLight.svg": "/static/media/DefaultDataProviderLogoLight.2fbb13b658e525a066094c0765aa4106.svg",
+    "static/media/DefaultDataRecipientLogoDark.svg": "/static/media/DefaultDataRecipientLogoDark.d5bf0fb81be9781518332f8cebc71640.svg",
+    "static/media/DefaultDataRecipientLogoLight.svg": "/static/media/DefaultDataRecipientLogoLight.0e34e7672a571d538b2a3db8794377be.svg",
+    "static/media/HeaderBackdropDark.svg": "/static/media/HeaderBackdropDark.b9ff2588152492f384b3aad8d477c36f.svg",
+    "static/media/HeaderBackdropLight.svg": "/static/media/HeaderBackdropLight.e1026c81272c82a623cf4d257875fc4e.svg",
+    "index.html": "/index.html",
+    "main.c2d8fd5f.js.map": "/static/js/main.c2d8fd5f.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.c2d8fd5f.js"
+  ]
+}

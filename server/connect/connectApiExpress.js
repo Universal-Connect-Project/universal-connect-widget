@@ -1,27 +1,62 @@
 
 const {ConnectApi} = require('./connectApi')
+const fs = require('fs')
+const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
 
 module.exports = function(app){
   app.use((req, res, next) => {
     req.connectService = new ConnectApi(req.context)
     next()
   })
-  app.get(ApiEndpoints.APPDATA, async (req, res) => {
-    res.context = req.body;
-    res.context.job_type = res.context.job_type || 'agg';
-    if (res.context.connection_id) {
-      const conn = await connectService.loadMemberByGuid(res.context.connection_id);
-      if (conn) {
-        res.context.institution_id = conn.institution_code;
-      }
-    }
-    res.send(req.body);
+  
+  app.post(ApiEndpoints.ANALYTICS_SESSION, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/analytics_sessions.json')
   })
+
+  app.get(ApiEndpoints.AGREEMENT, async (req, res) => {
+    res.send("")
+  })
+
+  app.get('/offers/*', async (req, res) => {
+    res.send("")
+  })
+
+  app.get(ApiEndpoints.USER_FEATURES, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/user_features.json')
+  })
+
+  app.post(ApiEndpoints.INSTRUMENTATION, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/instrumentation.json')
+  })
+
+  app.get(ApiEndpoints.TRANSACTION_RULES, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/transaction_rules.json')
+  })
+  //app.get(ApiEndpoints.APPDATA, async (req, res) => {
+  app.get('/raja/data', async (req, res) => {
+    res.sendFile(__dirname + '/stubs/data_master.json')
+  })
+
+  app.post('/raja/extend_session', async (req, res) => {
+    res.sendStatus(200)
+  })
+  // app.get(ApiEndpoints.APPDATA, async (req, res) => {
+  //   res.context = req.body;
+  //   res.context.job_type = res.context.job_type || 'agg';
+  //   if (res.context.connection_id) {
+  //     const conn = await connectService.loadMemberByGuid(res.context.connection_id);
+  //     if (conn) {
+  //       res.context.institution_id = conn.institution_code;
+  //     }
+  //   }
+  //   res.send(req.body);
+  // })
   //async loadMaster()
 
   app.post(ApiEndpoints.MEMBERS, async (req, res) => {
-    let ret = await connectService.addMember(req.body)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/members.json')
+    // let ret = await connectService.addMember(req.body)
+    // res.send(ret)
   })
   // addMember(memberData: MemberData, connectConfig: any, appConfig : any, isHuman : boolean): Promise<{member: Member}>
   // return axiosInstance
@@ -44,8 +79,9 @@ module.exports = function(app){
   //     )
   //     .then(response => response.data)
   app.put(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
-    let ret = await connectService.updateMember(req.body)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/members.json')
+    // let ret = await connectService.updateMember(req.body)
+    // res.send(ret)
   })
   // updateMember(member: Member, connectConfig: any, isHuman: boolean): Promise<Member>
   // return axiosInstance
@@ -60,15 +96,19 @@ module.exports = function(app){
   // )
   // .then(response => response.data.member)
   app.get(ApiEndpoints.MEMBERS, async (req, res) => {
-    let ret = await connectService.loadMembers()
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/members.json')
+
+    // let ret = await connectService.loadMembers()
+    // res.send(ret)
   })
   // loadMembers(): Promise<Member[]>
   // return axiosInstance.get(ApiEndpoints.MEMBERS).then(response => response.data.members)
 
   app.get(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
-    let ret = await connectService.loadMemberByGuid(req.params.member_guid)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/member.json')
+
+    // let ret = await connectService.loadMemberByGuid(req.params.member_guid)
+    // res.send(ret)
   })
   // loadMemberByGuid(memberGuid: string): Promise<Member>
   // return axiosInstance.get(`${ApiEndpoints.MEMBERS}/${memberGuid}`).then(resp => {
@@ -76,8 +116,9 @@ module.exports = function(app){
   // })
 
   app.delete(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
-    let ret = await connectService.deleteMember(req.params.member_guid)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/member.json')
+    // let ret = await connectService.deleteMember(req.params.member_guid)
+    // res.send(ret)
   })
   // deleteMember(member: Member): Promise<void>
   // return axiosInstance
@@ -85,8 +126,9 @@ module.exports = function(app){
   //     .then(response => response.data)
 
   app.get(`${ApiEndpoints.INSTITUTIONS}/:institution_guid/credentials`, async (req, res) => {
-    let ret = await connectService.getInstitutionCredentials(req.params.institution_guid)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/credentials.json')
+    // let ret = await connectService.getInstitutionCredentials(req.params.institution_guid)
+    // res.send(ret)
   })
   // getInstitutionCredentials(institutionGuid: string): Promise<Credential[]>
   // return axiosInstance
@@ -105,8 +147,9 @@ module.exports = function(app){
   // // createSupportTicket(ticket)
 
   app.get(ApiEndpoints.INSTITUTIONS, async (req, res) => {
-    let ret = await connectService.loadInstitutions(req.query.query)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/institutions.json')
+    // let ret = await connectService.loadInstitutions(req.query.query)
+    // res.send(ret)
   })
   // loadInstitutions(query: string): Promise<Institution[]>
   // const url =
@@ -115,10 +158,21 @@ module.exports = function(app){
   //       : `${ApiEndpoints.INSTITUTIONS}${FireflyAPI.buildQueryString(query)}`
 
   //   return axiosInstance.get(url).then(response => response.data)
+  app.get(`${ApiEndpoints.INSTITUTIONS}/favorite`, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/favorite.json')
+    // let ret = await connectService.loadPopularInstitutions()
+    // res.send(ret)
+  })
+  app.get(`${ApiEndpoints.INSTITUTIONS}/discovered`, async (req, res) => {
+    res.sendFile(__dirname + '/stubs/discovered.json')
+    // let ret = await connectService.loadDiscoveredInstitutions()
+    // res.send(ret)
+  })
   app.get(`${ApiEndpoints.INSTITUTIONS}/:institution_guid`, async (req, res) => {
-    let ret = await connectService.loadInstitutionByGuid(req.params.institution_guid)
-    //let ret = await connectService.loadInstitutionByCode(req.params.institution_guid)
-    res.send(ret)
+    res.sendFile(__dirname + '/stubs/institution.json')
+    // let ret = await connectService.loadInstitutionByGuid(req.params.institution_guid)
+    // //let ret = await connectService.loadInstitutionByCode(req.params.institution_guid)
+    // res.send(ret)
   })
   // loadInstitutionByGuid(guid: string): Promise<Institution>
   // return axiosInstance.get(ApiEndpoints.INSTITUTIONS + '/' + guid).then(response => ({
@@ -140,10 +194,6 @@ module.exports = function(app){
   //     // Remove extra level of nesting
   //     credentials: response.data.institution.credentials.map(credential => credential.credential),
   //   }))
-  app.get(`${ApiEndpoints.INSTITUTIONS}/favorite`, async (req, res) => {
-    let ret = await connectService.loadPopularInstitutions()
-    res.send(ret)
-  })
   // loadPopularInstitutions(query: string): Promise<Institution[]>
   // const url =
   //     typeof query === 'undefined'
@@ -154,10 +204,6 @@ module.exports = function(app){
   //     return response.data
   //   })
 
-  app.get(`${ApiEndpoints.INSTITUTIONS}/discovered`, async (req, res) => {
-    let ret = await connectService.loadDiscoveredInstitutions()
-    res.send(ret)
-  })
   // loadDiscoveredInstitutions(): Promise<Institution[]>
   // const url = `${ApiEndpoints.INSTITUTIONS}/discovered`
   //   return axiosInstance.get(url).then(response => response.data)

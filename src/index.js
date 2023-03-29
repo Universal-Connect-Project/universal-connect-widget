@@ -20,11 +20,29 @@ import PostMessage, { sendPostMessage } from './utils/PostMessage'
 import Store from './redux/Store'
 import { registerAxiosInterceptors } from './config/axios'
 import { updateTitleWithWidget } from './utils/Widget'
-import * as Connect from './widgets/desktop/Connect'
+import {ConnectWidget as Connect} from './widgets/desktop/Connect'
 
 registerAxiosInterceptors(Store.dispatch)
-
-window.app = {}
+window.logger = {
+  warn(msg){
+    console.log(msg)
+  },
+  error(msg){
+    console.log(msg)
+  },
+  log(msg){
+    console.log(msg)
+  }
+}
+window.app = {
+  options: {
+    type: 'connect_widget',
+    brokaw_websocket_url: '',
+    brokaw_auth:{
+      url: ''
+    }, 
+  }
+}
 window.app.config = {
   "client_guid": "****",
   "default_selected_widget_type_in_master": 0,

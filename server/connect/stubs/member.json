@@ -1,0 +1,18 @@
+{
+  "member": {
+      "guid": "MBR-asdf",
+      "id": null,
+      "user_guid": "USR-asdf",
+      "user_id": "****",
+      "aggregated_at": null,
+      "background_aggregation_is_disabled": false,
+      "institution_code": "gringotts",
+      "is_being_aggregated": true,
+      "is_managed_by_user": true,
+      "is_oauth": false,
+      "metadata": null,
+      "name": "Gringotts",
+      "successfully_aggregated_at": null,
+      "connection_status": "CREATED"
+  }
+}

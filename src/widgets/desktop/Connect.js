@@ -717,5 +717,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   // above is the default for react-redux, below are overrides
   connectConfig: { ...stateProps.connectClientConfig, ...ownProps.connectConfig },
 })
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Connect)
+export const ConnectWidget = connect(mapStateToProps, mapDispatchToProps, mergeProps)(Connect)
