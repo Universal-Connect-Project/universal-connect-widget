@@ -12,7 +12,15 @@ module.exports = function(app){
   app.post(ApiEndpoints.ANALYTICS_SESSION, async (req, res) => {
     res.sendFile(__dirname + '/stubs/analytics_sessions.json')
   })
-
+  app.post('/analytics_events', async (req, res) => {
+    res.sendStatus(200)
+  })
+  app.post('/analytics_pageviews', async (req, res) => {
+    res.sendStatus(200)
+  })
+  app.post('/feature_visits', async (req, res) => {
+    res.sendStatus(200)
+  })
   app.get(ApiEndpoints.AGREEMENT, async (req, res) => {
     res.send("")
   })
@@ -37,7 +45,7 @@ module.exports = function(app){
     res.sendFile(__dirname + '/stubs/data_master.json')
   })
 
-  app.post('/raja/extend_session', async (req, res) => {
+  app.get('/raja/extend_session', async (req, res) => {
     res.sendStatus(200)
   })
   // app.get(ApiEndpoints.APPDATA, async (req, res) => {
