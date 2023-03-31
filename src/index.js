@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import theme from './constants/Style'
 import AppWrapper from './components/app/AppWrapper'
-import { ConnectedTokenProvider } from './context/ConnectedTokenProvider.js'
+import { TokenProvider } from '@kyper/tokenprovider'
 
 import { GlobalErrorBoundary } from './components/app/GlobalErrorBoundary'
 
@@ -192,7 +192,7 @@ if (widgetConfig.type !== 'master') {
 
 ReactDOM.render(
   <Provider store={Store}>
-    <ConnectedTokenProvider>
+    <TokenProvider tokenOverrides={{}}>
       <GlobalErrorBoundary>
         <WidgetDimensionObserver
           heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
@@ -202,7 +202,7 @@ ReactDOM.render(
           </AppWrapper>
         </WidgetDimensionObserver>
       </GlobalErrorBoundary>
-    </ConnectedTokenProvider>
+    </TokenProvider>
   </Provider>,
   document.getElementById('root'),
 )

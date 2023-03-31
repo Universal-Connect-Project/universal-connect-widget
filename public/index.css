@@ -1,0 +1,177 @@
+/*
+html5doctor.com Reset Stylesheet v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+ */
+ @font-face {
+  font-family: 'ProximaNovaThin';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/thin.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/thin.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/thin.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/thin.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/thin.svg#webfontFl2IlMVK) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: 'ProximaNovaLight';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/light.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/light.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/light.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/light.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/light.svg#webfontgjwfewia) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: 'ProximaNovaRegular';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/regular.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/regular.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/regular.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/regular.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/regular.svg#webfonttLdMzI8n) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: 'ProximaNovaRegularItalic';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/italic.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/italic.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/italic.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/italic.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/italic.svg#webfontjQHW7Ll4) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: 'ProximaNovaSemibold';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/semibold.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/semibold.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/semibold.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/semibold.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/semibold.svg#webfont0AWgWg75) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+@font-face {
+  font-family: 'ProximaNovaBold';
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/bold.eot);
+  src: url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/bold.eot?iefix) format("eot"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/bold.woff) format("woff"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/bold.ttf) format("truetype"), url(//s3.amazonaws.com/MD_Assets/fonts/proxima-nova/bold.svg#webfont0AWgWg75) format("svg");
+  font-weight: normal;
+  font-style: normal; }
+/* line 74, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  background: transparent;
+  font-weight: normal;
+  font-family: ProximaNovaRegular, Helvetica, Arial, san-serif;
+  tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; }
+
+/* line 98, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1; }
+
+/* line 104, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+/* line 109, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+nav ul {
+  list-style: none; }
+
+/* line 113, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+blockquote, q {
+  quotes: none; }
+
+/* line 117, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+/* line 123, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+a {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent; }
+
+/* change colours to suit your needs */
+/* line 132, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none; }
+
+/* change colours to suit your needs */
+/* line 139, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold; }
+
+/* line 146, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+del {
+  text-decoration: line-through; }
+
+/* line 150, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+abbr[title], dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help; }
+
+/* line 155, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* change border colour to suit your needs */
+/* line 161, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0; }
+
+/* line 170, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+input, select {
+  vertical-align: middle; }
+
+/* line 174, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+input {
+  font-family: ProximaNovaRegular, Helvetica, Arial, san-serif; }
+
+/* line 178, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/reset.scss */
+input[type=text]::-ms-clear {
+  display: none; }
+
+/* MX resets */
+/* Fixes Firefox button sizes.
+ * See: http://www.aheadcreative.com/removing-unwanted-button-padding-in-firefox/
+ */
+/* line 6, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/mx-reset.scss */
+button {
+  font-family: "ProximaNovaRegular";
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none; }
+
+/* line 12, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/mx-reset.scss */
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+/* line 16, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/mx-reset.scss */
+p {
+  line-height: 1.4em; }
+
+/*
+ * Accessibility
+ */
+/* line 25, /srv/firefly/releases/20230315165854/app/assets/stylesheets/raja/base/mx-reset.scss */
+button:focus {
+  outline: none;
+  box-shadow: 0px 0px 0px 2px rgba(82, 138, 224, 0.8); }
