@@ -33,25 +33,13 @@ function fromMxInstitution(ins: InstitutionResponse): Institution {
 }
 
 export class MxApi implements ProviderApiClient {
+  
   apiClient = MxPlatformApiFactory(new Configuration(mxConfig));
-
-  async ListFavorateInstitutions(): Promise<Institution[]> {
-    const res = await this.apiClient.listFavoriteInstitutions();
-    return res.data.institutions!.map(fromMxInstitution);
-  }
 
   async GetInstitutionById(id: string): Promise<Institution> {
     const res = await this.apiClient.readInstitution(id);
     const ins = res.data.institution!;
     return fromMxInstitution(ins);
-  }
-
-  async SearchInstitutions(name: string): Promise<Institutions> {
-    const res = await this.apiClient.listInstitutions(name);
-    const inss = res.data.institutions!;
-    return {
-      institutions: inss.map(fromMxInstitution),
-    };
   }
 
   async ListInstitutionCredentials(
@@ -63,6 +51,8 @@ export class MxApi implements ProviderApiClient {
     return res.data.credentials!.map((item) => ({
       id: item.guid!,
       label: item.field_name!,
+      field_type: item.field_type!,
+      field_name: item.field_name!,
     }));
   }
 
@@ -73,7 +63,7 @@ export class MxApi implements ProviderApiClient {
     // console.log(request);
     // console.log(userId)
     // console.log(mxConfig.demoMemberId)
-    if (request.institution_id === 'mxbank' && userId === mxConfig.demoUserId) {
+    if ((request.institution_id === 'mxbank' || request.institution_id === 'mx_bank_oauth') && userId === mxConfig.demoUserId) {
       const existing = await this.apiClient.listMembers(userId);
       logger.info(`Deleting demo members: ${existing.data.members.length}`);
       await Promise.all(
@@ -87,8 +77,9 @@ export class MxApi implements ProviderApiClient {
     // console.log(request)
     const memberRes = await this.apiClient.createMember(userId, {
       member: {
-        skip_aggregation: request.initial_job_type !== 'agg',
-        credentials: request.credentials.map(
+        skip_aggregation: request.skip_aggregation || request.initial_job_type !== 'agg',
+        is_oauth: request.is_oauth,
+        credentials: request.credentials?.map(
           (c) =>
             <CredentialRequest>{
               guid: c.id,
@@ -100,15 +91,18 @@ export class MxApi implements ProviderApiClient {
     });
     // console.log(ret.data)
     const member = memberRes.data.member!;
+    // console.log(member)
     if (request.initial_job_type === 'verify') {
       await this.apiClient.verifyMember(member.id, userId);
     } else if (request.initial_job_type === 'identify') {
       await this.apiClient.identifyMember(member.id, userId);
     }
     return {
-      id: member.id!,
+      id: member.guid!,
       cur_job_id: member.guid!,
       institution_code: entityId, // TODO
+      is_oauth: member.is_oauth,
+      oauth_window_uri: member.oauth_window_uri,
     };
   }
 
@@ -193,6 +187,7 @@ export class MxApi implements ProviderApiClient {
             c.data = item.image_data;
             break;
           case 'IMAGE_OPTIONS':
+            console.log(c)
             c.type = ChallengeType.IMAGE_OPTIONS;
             c.data = (item.image_options || []).map((io) => ({
               key: io.label || io.value!,

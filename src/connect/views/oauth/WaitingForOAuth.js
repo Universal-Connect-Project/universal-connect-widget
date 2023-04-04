@@ -60,7 +60,8 @@ export const WaitingForOAuth = ({
       mergeMap(latestState => pollOauthState(latestState.guid)),
       map(pollingState => {
         const oauthState = pollingState.currentResponse
-
+        console.log(pollingState)
+        console.log(oauthState)
         return {
           error: oauthState.auth_status === OauthState.AuthStatus.ERRORED,
           errorReason: OauthState.ReadableErrorReason[oauthState.error_reason],

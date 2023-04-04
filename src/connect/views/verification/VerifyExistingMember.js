@@ -7,6 +7,7 @@ import { Button } from '@kyper/button'
 import { Text } from '@kyper/text'
 import { UtilityRow } from '@kyper/utilityrow'
 import { InstitutionLogo } from '@kyper/institutionlogo'
+// import { InstitutionLogo } from '../../components/InstitutionLogo'
 
 import { __, _n } from '../../../utils/Intl'
 import FireflyAPI from '../../../utils/FireflyAPI'

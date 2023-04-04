@@ -32,6 +32,8 @@ const mocks = {
   },
   wget: {
     // '/widget/preferences/paystand.json': (url) => ({fish: false, contactEmail: 'contact@paystand.com', valid: true}),
+    '/api/institutions': (url) => http.wget(url),
+    '/api/institution/resolve': (url) => http.wget(url),
     default: (url) => {
       console.log(`Default mock wget: ${url}`);
       return http.wget(url);

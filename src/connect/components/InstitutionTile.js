@@ -5,7 +5,8 @@ import { css } from '@mxenabled/cssinjs'
 import { __ } from '../../utils/Intl'
 
 import { useTokens } from '@kyper/tokenprovider'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from './InstitutionLogo'
 import { ChevronRight } from '@kyper/icon/ChevronRight'
 
 export const InstitutionTile = props => {
@@ -24,7 +25,7 @@ export const InstitutionTile = props => {
     >
       <div style={styles.institutionBodyContainer}>
         <div style={styles.iconColumn}>
-          <InstitutionLogo alt="" institutionGuid={institution.guid} size={size} />
+          <InstitutionLogo alt="" institution={institution} size={size} />
         </div>
 
         <div style={styles.textColumn}>

@@ -6,7 +6,8 @@ import { fadeOut } from '../../utilities/Animation'
 
 import { Text } from '@kyper/text'
 import { Button } from '@kyper/button'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from '../../components/InstitutionLogo'
 import { useTokens } from '@kyper/tokenprovider'
 import { ChevronRight as ChevronRightIcon } from '@kyper/icon/ChevronRight'
 
@@ -40,7 +41,7 @@ export const Connected = ({
 
   const [showFeedBack, setShowFeedBack] = useState(false)
 
-  const { guid: institutionGuid, name: institutionName } = institution
+  const { name: institutionName } = institution
 
   const [ariaLiveRegionMessage, setAriaLiveRegionMessage] = useState(
     __('You have successfully connected to %1!', institutionName),
@@ -68,7 +69,7 @@ export const Connected = ({
           <SlideDown delay={getNextDelay()}>
             <InstitutionLogo
               alt=""
-              institutionGuid={institutionGuid}
+              institution={institution}
               size={64}
               style={styles.institutionLogo}
             />

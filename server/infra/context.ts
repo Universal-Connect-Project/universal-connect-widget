@@ -19,7 +19,7 @@ const key = Buffer.from(config.CryptoKey, 'hex'); // crypto.randomBytes(32) todo
 const iv = Buffer.from(config.CryptoIv, 'hex'); // crypto.randomBytes(16)
 
 function encrypt(text: string) {
-  if ((text || '') === '') {
+  if (!text) {
     return '';
   }
   const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
@@ -30,9 +30,10 @@ function encrypt(text: string) {
 }
 
 function decrypt(text: string) {
-  if ((text || '') === '') {
+  if (!text) {
     return '';
   }
+  // console.log(text)
   const encryptedText = Buffer.from(text, 'hex');
   const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
   let decrypted = decipher.update(encryptedText);
@@ -41,7 +42,7 @@ function decrypt(text: string) {
 }
 
 function get(req: Request) {
-  if ((req.headers.meta || '').length > 0) {
+  if (req.headers.meta?.length > 0) {
     const decrypted = decrypt(<string>req.headers.meta);
     req.context = JSON.parse(decrypted);
     if (!req.context.user_id) {
@@ -63,11 +64,15 @@ export function contextHandler(
   next: NextFunction
 ) {
   res.context = get(req);
+  // console.log('context res')
+  // console.log(res.context)
   const { send } = res;
   res.send = function (...args: any): any {
     res.send = send;
     set(res);
     send.apply(res, args);
+    // console.log('context send')
+    // console.log(res.context)
   };
   next();
 }

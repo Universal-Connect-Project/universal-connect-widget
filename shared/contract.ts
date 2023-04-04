@@ -4,6 +4,7 @@ export interface Context {
   user_id?: string;
   provider?: string;
   job_type?: string;
+  token?: string;
 }
 
 export interface KeyValuePair {
@@ -15,6 +16,8 @@ export interface Credential {
   id: string;
   label?: string;
   value?: string;
+  field_type?: string;
+  field_name?: string;
 }
 export enum ConnectionStatus {
   CREATED,
@@ -85,12 +88,14 @@ export interface CreateConnectionRequest {
   credentials: Array<Credential>;
   institution_id: string;
   is_oauth?: boolean;
+  skip_aggregation?: boolean;
   metadata?: string;
 }
 
 export interface Connection {
   id: string | null;
   cur_job_id?: string | null;
+  reference_id?: string | null;
   last_refresh_utc?: string | null;
   last_refreshed_utc?: string | null;
   last_updated_utc?: string | null;
@@ -107,6 +112,7 @@ export interface Connection {
   has_transactions?: boolean | null;
   is_authenticated?: boolean | null;
   vc?: string | null;
+  oauth_window_uri?: string | null;
 }
 export interface UpdateConnectionRequest {
   id: string | undefined;
@@ -139,8 +145,6 @@ export enum EventEnum {
 export interface ProviderApiClient {
   GetInstitutionById(id: string): Promise<Institution>;
   ListInstitutionCredentials(institutionId: string): Promise<Array<Credential>>;
-  SearchInstitutions(name: string): Promise<Institutions>;
-  ListFavorateInstitutions(): Promise<Institution[]>;
 
   CreateConnection(
     connection: CreateConnectionRequest,

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { __ } from '../../utils/Intl'
 
 import { useTokens } from '@kyper/tokenprovider'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from './InstitutionLogo'
 
 export const InstitutionBlock = ({ institution, style }) => {
   const { guid, name, url } = institution
@@ -13,7 +14,7 @@ export const InstitutionBlock = ({ institution, style }) => {
 
   return (
     <div style={{ ...styles.institutionBlock, ...style }}>
-      <InstitutionLogo alt="" institutionGuid={guid} size={64} />
+      <InstitutionLogo alt="" institution={institution} size={64} />
       <div style={styles.institutionInfo}>
         <div style={styles.institutionName}>
           {guid.startsWith('INS-MANUAL') ? __('Manual Institution') : name}

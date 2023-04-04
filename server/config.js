@@ -187,11 +187,13 @@ const demoBanks = [
 ];
 
 const config = {
+  SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
   SophtronAutoSuggestEndpoint: 'https://sophtron-prod.com/autoSuggest',
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   Demo: true,
   DefaultProvider: 'sophtron',
+  OrgName: 'sophtron',
   LogLevel: 'debug',
   Port: '8080',
   Env: 'dev', // mocked
@@ -199,13 +201,13 @@ const config = {
   CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2',
   CryptoIv: '453687d854d55101f001b5999b68bc3d',
   CryptoAlgorithm: 'aes-256-cbc',
-  ResourcePrefix: 'http://localhost:3000', 
+  ResourcePrefix: 'http://localhost:3000', // 'http://static.sophtron-prod.com/widget',
   ResourceVersion: '', // 'development'
-  SophtronApiUserId: '',
+  SophtronApiUserId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
   SophtronApiUserSecret: '',
-  MxClientId: '',
-  MxDemoUserId: '',
-  MxDemoMemberId: '',
+  MxClientId: 'cb102a7c-14a2-4b4a-8241-076d5eedd115',
+  MxDemoUserId: 'USR-753b539c-6281-4a71-b68b-347e68876035',
+  MxDemoMemberId: 'MBR-32d68a9e-7b50-4826-b215-332bc36ca011',
   MxApiSecret: '',
   ProviderMapping: providerMapping,
   DemoBanks:demoBanks

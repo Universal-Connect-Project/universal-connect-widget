@@ -44,7 +44,7 @@ export interface Credential {
 }
 
 export interface Member {
-  aggregation_status: number //
+  //aggregation_status: number //
   institution_guid: string //INS-asdf
   institution_name?: string //
   institution_url?: string //https://gringotts.qa.internal.mx/
@@ -89,9 +89,12 @@ export interface Member {
   process_status?: {
     credentials: Array<Credential>
   }
+  skip_aggregation?: boolean | null;
   credentials?: Credential[]
 }
-
+export interface MemberResponse{
+  member: Member;
+}
 // export interface CredentialRequest {
 //   guid?: string;
 //   value?: string;

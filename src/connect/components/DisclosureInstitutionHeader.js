@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from './InstitutionLogo'
 import { useTokens } from '@kyper/tokenprovider'
 
 import { COLOR_SCHEME } from '../const/Connect'
@@ -38,7 +39,7 @@ export const DisclosureInstitutionHeader = () => {
         {institution.guid && !defaultImage ? (
           <InstitutionLogo
             alt=""
-            institutionGuid={institution.guid}
+            institution={institution}
             onError={() => setDefaultImage(true)}
             size={64}
           />

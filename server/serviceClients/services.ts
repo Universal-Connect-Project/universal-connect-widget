@@ -5,58 +5,28 @@ import {
   Context,
   Institution,
   ProviderApiClient,
+  Credential,
   VcType,
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
 import { MxApi, SophtronApi } from './providers';
 
-const mxClient = new MxApi();
-const sophtronClient = new SophtronApi();
+const SearchClient = require('./searchClient');
+const searchApi = new SearchClient();
 
 function getApiClient(context: Context): ProviderApiClient {
   switch (context?.provider) {
     case 'mx':
-      return mxClient;
+      return new MxApi();
     case 'sophtron':
-      return sophtronClient;
     default:
-      return sophtronClient;
+      return new SophtronApi(context.token);
   }
 }
 
-function mapProvider(inst: Institution) {
-  const mapping: any = (config.ProviderMapping as any)[inst.name];
-  if (mapping) {
-    inst.provider = mapping.provider;
-    inst.id = mapping.id;
-  } else {
-    inst.provider = 'sophtron';
-  }
-  return inst;
-}
-
-// async function getAccounts(userInstitutionID: string, context: Context){
-//     let client = getApiClient(context);
-
-//     var ret = await client.getUserInstitutionAccounts(userInstitutionID, context.user_id);
-//     if((ret||[]).length > 0){
-//         ret = ret.map(item => ({
-//             AccountID: item.AccountID,
-//             AccountName: item.AccountName,
-//             AccountNumber: item.AccountNumber,
-//             AccountType: item.AccountType,
-//             //FullAccountNumber: item.FullAccountNumber,
-//             //RoutingNumber: item.RoutingNumber,
-//             SubType: item.SubType
-//         }));
-//         return ret;
-//     }
-// }
 export async function search(query: string, _: Context) {
-  const client = sophtronClient; // getApiClient(context);
-  const list = await client.SearchInstitutions(query);
-  list.institutions = list.institutions.map(mapProvider);
+  const list = await searchApi.institutions(query);
   return list;
 }
 export function getConnection(
@@ -66,45 +36,15 @@ export function getConnection(
   const client = getApiClient(context);
   return client.GetConnectionById(connection_id);
 }
-export async function institutions(context: Context) {
-  //const client = getApiClient({provider: config.DefaultProvider});
-  const retBanks: Institution[] | null = config.DemoBanks;
-  context.connection_id = null;
-  // if ((context.institution_id || '').length > 0 && context.provider) {
-  //   const ret = await client.GetInstitutionById(context.institution_id!);
-  //   if (ret && ret.id) {
-  //     retBanks = [mapProvider(ret)];
-  //   } else {
-  //     delete context.institution_id;
-  //   }
-  // }
-  // if (!retBanks) {
-  //   retBanks = await client.ListFavorateInstitutions();
-  // }
-  context.user_id = context.user_id || config.MxDemoUserId;
-  return { institutions: retBanks };
-}
-export async function selectInstitution(
-  institution: Institution,
-  context: Context
-) {
-  logger.debug(`Selecting institution ${institution.id}`);
-  if (institution.provider) {
-    context.provider = institution.provider;
-  }
-  if (!context.provider) {
-    context.provider = 'sophtron';
-  }
+export function getInstitution(guid: string, context: Context): Promise<Institution>{
   const client = getApiClient(context);
-  if (institution.id) {
-    const credentials = await client.ListInstitutionCredentials(institution.id);
-    if (!institution.url) {
-      institution = await client.GetInstitutionById(institution.id);
-    }
-    return { institution, credentials };
-  }
-  return { error: 'invalid institution selected' };
+  return client.GetInstitutionById(guid);
 }
+export function getInstitutionCredentials(guid: string, context: Context): Promise<Credential[]>{
+  const client = getApiClient(context);
+  return client.ListInstitutionCredentials(guid);
+}
+
 export async function login(
   institution_id: string,
   connection_id: string | null,

@@ -1,6 +1,7 @@
-import {Credential, IConnectAPI, Member} from '../../shared/connect/contract'
+import {Credential, Member, MemberResponse} from '../../shared/connect/contract'
 import {
   Challenge,
+  ChallengeType,
   Connection,
   ConnectionStatus,
   Context,
@@ -11,74 +12,169 @@ import {
 import * as config from '../config';
 import * as logger from '../infra/logger';
 import { MxApi, SophtronApi } from '../serviceClients/providers';
+const SearchClient = require('../serviceClients/searchClient');
 
 const mxClient = new MxApi();
 const sophtronClient = new SophtronApi();
+const searchApi = new SearchClient();
 
 function getApiClient(context?: Context | undefined): ProviderApiClient {
+  return mxClient;
   switch (context?.provider) {
     case 'mx':
       return mxClient;
     case 'sophtron':
       return sophtronClient;
     default:
-      return sophtronClient;
+      return config.DefaultProvider === 'sophtron' ? sophtronClient : mxClient;
   }
+}
+
+function mapInstitution(ins: Institution){
+  return ({
+    guid: ins.id,
+    name: ins.name,
+    url: ins.url?.trim(),
+    logo_url: ins.logo_url?.trim(),
+    instructional_data: {},
+    credentials: [] as any[],
+    supports_oauth: ins.name.indexOf('Oauth') >= 0
+    // credentials: credentials?.map((c: any) => ({
+    //   guid: c.id,
+    //   ...c
+    // }))
+  });
 }
 
 function mapConnection(connection: Connection): Member{
   return {
-    ...connection, 
+    //...connection, 
     institution_guid: connection.institution_code, 
-    guid: connection.id, 
-    aggregation_status: connection.status,
+    guid: connection.reference_id || connection.id, 
+    connection_status: connection.status,
+    most_recent_job_guid: connection.status === ConnectionStatus.CONNECTED ? null : connection.cur_job_id,
+    is_oauth: connection.is_oauth,
+    oauth_window_uri: connection.oauth_window_uri,
     mfa: {
-      credentials: connection.challenges?.map(c => ({
-        guid: c.id,
-        label: c.question,
-        type: c.type
-      }))
+      credentials: connection.challenges?.map(c => {
+          let ret = {
+            guid: c.id,
+            credential_guid: c.id,
+            label: c.question,
+            type: c.type,
+            options: [] as any[]
+          } as any;
+          switch(c.type){
+            case ChallengeType.QUESTION:
+              ret.type = 0;
+              ret.label = (c.data as any[])?.[0].value || c.question;
+              break;
+            case ChallengeType.TOKEN:
+              ret.type = 2; // ?
+              ret.label = `${c.question}: ${c.data}`
+              break;
+            case ChallengeType.IMAGE:
+              ret.type = 13;
+              ret.meta_data = (c.data as string).startsWith('data:image') ? c.data : ('data:image/png;base64, ' + c.data);
+              break;
+            case ChallengeType.OPTIONS:
+              ret.type = 2;
+              ret.options = (c.data as any[]).map(d => ({
+                guid: d.key,
+                label: d.value,
+                value: d.value,
+                credential_guid: c.id
+              }));
+              break;
+            case ChallengeType.IMAGE_OPTIONS:
+              ret.type = 14;
+              ret.options = (c.data as any[]).map(d => ({
+                guid: d.key,
+                label: d.key,
+                data_uri: d.value,
+                credential_guid: c.id
+              }));
+              break;
+          }
+          return ret;
+        }
+      )
     }
-  }
+  } as any
 }
 
-function mapInstitutionProvider(ins: Institution){
-  let conf = config.ProviderMapping.find((i: any) => i.name === ins.name)
-  if(conf){
-    ins.provider = conf.provider
-    ins.id = conf.id
-  }
-  return ins;
-}
-
-export class ConnectApi implements IConnectAPI{
+export class ConnectApi{
+  // req: any
   context: Context
-  constructor(context: Context){
-    this.context = context
+  constructor(req: any){
+    this.context = req.context
   }
-
-  async addMember(memberData: Member): Promise<{ member: Member; }> {
+  async resolveInstitution(id: string): Promise<string>{
+    // return id;
+    if (!this.context.provider) {
+      let resolved = await searchApi.resolve(id);
+      if(resolved){
+        logger.debug(`resolved institution ${id} to provider ${resolved.provider} ${resolved.target_id}`);
+        id = resolved.target_id;
+        this.context.provider = resolved.provider;
+      }
+    }
+    if (!this.context.provider) {
+      this.context.provider = 'sophtron';
+    }
+    this.context.institution_id = id
+    return id;
+  }
+  async addMember(memberData: Member): Promise<MemberResponse> {
     let client = getApiClient(this.context);
     let connection = await client.CreateConnection({
       institution_id: memberData.institution_guid,
-      credentials: memberData.credentials.map(c => ({
+      is_oauth: memberData.is_oauth,
+      skip_aggregation: memberData.skip_aggregation,
+      initial_job_type: 'agg',
+      credentials: memberData.credentials?.map(c => ({
         id: c.guid,
         value: c.value
       }))
-    });
+    }, this.context.user_id);
     return {member: mapConnection(connection)}
   }
-  async updateMember(member: Member): Promise<Member> {
+  async updateMember(member: Member): Promise<MemberResponse> {
     let client = getApiClient(this.context);
-    if(member.mfa?.credentials?.length > 0){
+    // console.log(member.credentials);
+    if(member.credentials?.length > 0){
       await client.AnswerChallenge({
         id: member.guid,
-        challenges: member.mfa.credentials.map(c => ({
-          id: c.guid,
-          type: c.type,
-          response: c.value
-        }))
-      })
+        challenges: member.credentials.map(c => {
+          let ret = {
+            id: c.guid,
+            type: c.type,
+            response: c.value
+          };
+          let challenge = member.mfa.credentials.find(m => m.guid === c.guid) // widget posts everything back
+          // console.log(challenge)
+          // console.log(ret)
+          switch(challenge.type){
+            case 0:
+              ret.type = ChallengeType.QUESTION
+              break;
+            case 13:
+              ret.type = ChallengeType.IMAGE
+              break;
+            case 2:
+              ret.type = c.value ? ChallengeType.OPTIONS : ChallengeType.TOKEN
+              if(c.value){
+                ret.response = challenge.options.find((o:any) => o.guid === c.value)?.value
+                if(!ret.response){
+                  logger.error('Unexpected challege option: ${c.value}', challenge)
+                }
+              }
+              break;
+          }
+          return ret;
+        })
+      }, this.context.user_id)
+      return {member};
     }else{
       let connection = await client.UpdateConnection({
         id: member.guid,
@@ -86,70 +182,74 @@ export class ConnectApi implements IConnectAPI{
           id: c.guid,
           value: c.value
         }))
-      })
-      return mapConnection(connection);
+      }, this.context.user_id)
+      return {member};
     }
   }
-  loadMembers(): Promise<Member[]> {
-    let client = getApiClient(this.context);
-    throw new Error('Method not implemented.');
+  async loadMembers(): Promise<Member[]> {
+    return []
   }
-  async loadMemberByGuid(memberGuid: string): Promise<Member> {
+  async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
     let client = getApiClient(this.context);
-    //let connection = await client.GetConnectionById(memberGuid)
-    let connection = await client.GetConnectionStatus(memberGuid)
-    return mapConnection(connection);
+    // let connection = await client.GetConnectionById(memberGuid)
+    let mfa = await client.GetConnectionStatus(memberGuid, this.context.user_id)
+    return {member: mapConnection(mfa)};
   }
-  async deleteMember(member: Member): Promise<void> {
+  async getOauthStates(memberGuid: string){
     let client = getApiClient(this.context);
-    await client.DeleteConnection(member.guid)
-  }
-  async getInstitutionCredentials(institution: Institution): Promise<Credential[]> {
-    // loading credentials means the institution is selected. at this stage, use config to find the prefered provider.
-    institution = mapInstitutionProvider(institution);
-    let client = getApiClient({provider: this.context.provider = institution.provider});
-    if(!institution.id){
-      // in case if the config map is missing provider specific id, use name search to find it.
-      // TODO: build a universal search service to provider proper id mappings and use it here.
-      institution = (await client.SearchInstitutions(institution.name)).institutions?.[0]
-      if(!institution){
-        logger.error(`Unable to find institution by provider: ${institution.provider}, name: ${institution.name}`)
-        return
-      }
+    let connection = await client.GetConnectionStatus(memberGuid, this.context.user_id)
+    let ret = {
+      inbound_member_guid: memberGuid,
+      auth_status: connection.status === ConnectionStatus.PENDING ? 1 : ConnectionStatus.CONNECTED ? 2 : 3,
+    } as any
+    if(ret.auth_status === 3){
+      ret.error_reason = connection.status
     }
-    this.context.institution_id = institution.id
-    let crs = await client.ListInstitutionCredentials(institution.id)
-    return crs.map(c => ({
-      guid: c.id,
-      ...c
-    }))
+    return {oauth_states: ret};
   }
   getMemberCredentials(memberGuid: string): Promise<Credential[]> {
     let client = getApiClient(this.context);
     throw new Error('Method not implemented.');
   }
-  async loadInstitutions(query: string): Promise<Institution[]> {
-    let client = getApiClient({provider: config.DefaultProvider});
-    let list = await client.SearchInstitutions(query);
-    return list.institutions;
-  }
-  async loadInstitutionByGuid(guid: string): Promise<Institution> {
+  async deleteMember(member: Member): Promise<void> {
     let client = getApiClient(this.context);
-    let inst = await client.GetInstitutionById(guid)
-    return inst
+    await client.DeleteConnection(member.guid, this.context.user_id)
   }
-  loadInstitutionByCode(code: string): Promise<Institution> {
-    let client = getApiClient({provider: config.DefaultProvider});
-    throw new Error('Method not implemented.');
+  async getInstitutionCredentials(guid: string): Promise<any> {
+    // let id = await this.resolveInstitution(guid)
+    let client = getApiClient(this.context);
+    let crs = await client.ListInstitutionCredentials(guid)
+    return {credentials: crs.map(c => ({
+      ...c,
+      guid: c.id,
+      field_type: c.field_type === 'PASSWORD' ? 1 : 3,
+    }))}
   }
-  async loadPopularInstitutions(query: string): Promise<Institution[]> {
-    let client = getApiClient({provider: config.DefaultProvider});
-    let list = await client.ListFavorateInstitutions()
-    return list;
+  async loadInstitutions(query: string): Promise<any> {
+    if (query?.length >= 3) {
+      let list = await searchApi.institutions(query);
+      return list.institutions.map(mapInstitution);
+    }
+    return []
   }
-  loadDiscoveredInstitutions(): Promise<Institution[]> {
-    let client = getApiClient({provider: config.DefaultProvider});
-    throw new Error('Method not implemented.');
+  async loadInstitutionByGuid(guid: string): Promise<any> {
+    let id = await this.resolveInstitution(guid)
+    let client = getApiClient(this.context);
+    let inst = await client.GetInstitutionById(id)
+    //let crs = await client.ListInstitutionCredentials(id)
+    return {institution: mapInstitution(inst)};
+  }
+  // loadInstitutionByCode(code: string): Promise<Institution> {
+  //   let client = getApiClient({provider: config.DefaultProvider});
+  //   throw new Error('Method not implemented.');
+  // }
+  async loadPopularInstitutions(query: string) {
+    let ret = await searchApi.institutions();
+    return ret.institutions.map(mapInstitution)
+  }
+  async loadDiscoveredInstitutions(): Promise<Institution[]> {
+    return []
   }
 
 }
+
