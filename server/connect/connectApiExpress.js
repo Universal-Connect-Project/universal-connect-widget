@@ -30,7 +30,12 @@ module.exports = function(app){
     let ret = await req.connectService.updateMember(req.body);
     res.send(ret)
   })
-  app.get(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
+  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/oauth_window_uri`, async (req, res) => {
+    let ret = await req.connectService.getOauthWindowUri(req.params.member_guid);
+    res.send(ret);
+    // res.sendFile(__dirname + '/stubs/member.json')
+  })
+  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/`, async (req, res) => {
     let ret = await req.connectService.loadMemberByGuid(req.params.member_guid);
     res.send(ret);
     // res.sendFile(__dirname + '/stubs/member.json')
@@ -89,6 +94,10 @@ module.exports = function(app){
   })
   app.get('/oauth_states', async (req, res) => {
     let ret = await req.connectService.getOauthStates(req.query.outbound_member_guid)
+    res.send(ret)
+  })
+  app.get('/oauth_states/:guid', async (req, res) => {
+    let ret = await req.connectService.getOauthState(req.params.guid)
     res.send(ret)
   })
   app.get(ApiEndpoints.MEMBERS, async (req, res) => {

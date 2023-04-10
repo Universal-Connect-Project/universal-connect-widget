@@ -14,7 +14,6 @@ export const InstitutionTile = props => {
 
   const tokens = useTokens()
   const styles = getStyles(tokens)
-
   return (
     <button
       aria-label={__('Add account with %1', institution.name)}
@@ -25,7 +24,7 @@ export const InstitutionTile = props => {
     >
       <div style={styles.institutionBodyContainer}>
         <div style={styles.iconColumn}>
-          <InstitutionLogo alt="" institution={institution} size={size} />
+          <InstitutionLogo alt={Object.keys(institution.providers || {}).join(',')} institution={institution} size={size} />
         </div>
 
         <div style={styles.textColumn}>

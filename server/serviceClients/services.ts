@@ -18,7 +18,7 @@ const searchApi = new SearchClient();
 function getApiClient(context: Context): ProviderApiClient {
   switch (context?.provider) {
     case 'mx':
-      return new MxApi();
+      return new MxApi(false);
     case 'sophtron':
     default:
       return new SophtronApi(context.token);

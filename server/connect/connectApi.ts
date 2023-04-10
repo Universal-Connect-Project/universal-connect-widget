@@ -14,15 +14,17 @@ import * as logger from '../infra/logger';
 import { MxApi, SophtronApi } from '../serviceClients/providers';
 const SearchClient = require('../serviceClients/searchClient');
 
-const mxClient = new MxApi();
+const mxClient = new MxApi(false);
+const mxIntClient = new MxApi(true);
 const sophtronClient = new SophtronApi();
 const searchApi = new SearchClient();
 
 function getApiClient(context?: Context | undefined): ProviderApiClient {
-  return mxClient;
   switch (context?.provider) {
     case 'mx':
       return mxClient;
+    case 'mx_int':
+      return mxIntClient;
     case 'sophtron':
       return sophtronClient;
     default:
@@ -38,7 +40,8 @@ function mapInstitution(ins: Institution){
     logo_url: ins.logo_url?.trim(),
     instructional_data: {},
     credentials: [] as any[],
-    supports_oauth: ins.name.indexOf('Oauth') >= 0
+    supports_oauth: ins.name.indexOf('Oauth') >= 0,
+    providers: ins.providers
     // credentials: credentials?.map((c: any) => ({
     //   guid: c.id,
     //   ...c
@@ -110,17 +113,22 @@ export class ConnectApi{
     this.context = req.context
   }
   async resolveInstitution(id: string): Promise<string>{
-    // return id;
-    if (!this.context.provider) {
+    // if(id === 'mxbank' || id === 'mx_bank_oauth'){
+    //   this.context.provider = 'mx-int';
+    //   this.context.institution_id = id
+    //   return id;
+    // }
+    if (!this.context.provider || (this.context.institution_uid && this.context.institution_uid != id && this.context.institution_id != id)) {
       let resolved = await searchApi.resolve(id);
       if(resolved){
         logger.debug(`resolved institution ${id} to provider ${resolved.provider} ${resolved.target_id}`);
-        id = resolved.target_id;
         this.context.provider = resolved.provider;
+        this.context.institution_uid = id;
+        id = resolved.target_id;
       }
     }
     if (!this.context.provider) {
-      this.context.provider = 'sophtron';
+      this.context.provider = config.DefaultProvider;
     }
     this.context.institution_id = id
     return id;
@@ -130,7 +138,7 @@ export class ConnectApi{
     let connection = await client.CreateConnection({
       institution_id: memberData.institution_guid,
       is_oauth: memberData.is_oauth,
-      skip_aggregation: memberData.skip_aggregation,
+      skip_aggregation: memberData.skip_aggregation && memberData.is_oauth,
       initial_job_type: 'agg',
       credentials: memberData.credentials?.map(c => ({
         id: c.guid,
@@ -195,17 +203,31 @@ export class ConnectApi{
     let mfa = await client.GetConnectionStatus(memberGuid, this.context.user_id)
     return {member: mapConnection(mfa)};
   }
-  async getOauthStates(memberGuid: string){
+  async getOauthWindowUri(memberGuid: string){
+    let ret = await this.loadMemberByGuid(memberGuid);
+    return ret?.member?.oauth_window_uri;
+  }
+  async getOauthState(memberGuid: string){
     let client = getApiClient(this.context);
     let connection = await client.GetConnectionStatus(memberGuid, this.context.user_id)
     let ret = {
       inbound_member_guid: memberGuid,
+      outbound_member_guid: memberGuid,
+      guid: memberGuid,
       auth_status: connection.status === ConnectionStatus.PENDING ? 1 : ConnectionStatus.CONNECTED ? 2 : 3,
     } as any
     if(ret.auth_status === 3){
       ret.error_reason = connection.status
     }
-    return {oauth_states: ret};
+    return {oauth_state: ret};
+  }
+  async getOauthStates(memberGuid: string){
+    let state = await this.getOauthState(memberGuid);
+    return {
+      oauth_states: [
+        state.oauth_state
+      ]
+    }
   }
   getMemberCredentials(memberGuid: string): Promise<Credential[]> {
     let client = getApiClient(this.context);
@@ -228,12 +250,14 @@ export class ConnectApi{
   async loadInstitutions(query: string): Promise<any> {
     if (query?.length >= 3) {
       let list = await searchApi.institutions(query);
-      return list.institutions.map(mapInstitution);
+      return list?.institutions?.map(mapInstitution).sort((a:any,b:any) => a.name.length - b.name.length);
     }
     return []
   }
   async loadInstitutionByGuid(guid: string): Promise<any> {
     let id = await this.resolveInstitution(guid)
+    // console.log(this.context);
+    // console.log(id);
     let client = getApiClient(this.context);
     let inst = await client.GetInstitutionById(id)
     //let crs = await client.ListInstitutionCredentials(id)

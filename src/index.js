@@ -43,6 +43,28 @@ window.app = {
     }, 
   }
 }
+window.app.clientConfig = {
+  is_mobile_webview: false,
+  target_origin_referrer: null,
+  ui_message_protocol: 'post_message',
+  ui_message_version: 1,
+  ui_message_webview_url_scheme: 'mx',
+  color_scheme: 'light',
+  connect: {
+    // mode: AGG_MODE,
+    current_institution_code: null, // 'mxbank',
+    current_institution_guid: null,
+    current_member_guid: null,
+    current_microdeposit_guid: null,
+    disable_background_agg: null,
+    disable_institution_search: false,
+    include_identity: null,
+    include_transactions: null,
+    // oauth_referral_source: REFERRAL_SOURCES.BROWSER,
+    update_credentials: false,
+    wait_for_full_aggregation: false,
+  },
+};
 window.app.config = {
   "client_guid": "****",
   "default_selected_widget_type_in_master": 0,

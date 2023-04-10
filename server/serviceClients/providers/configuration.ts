@@ -1,6 +1,6 @@
 import * as config from '../../config';
 
-export const mx = {
+export const mxInt = {
   username: config.MxClientId,
   password: config.MxApiSecret,
   basePath: 'https://int-api.mx.com',
@@ -9,8 +9,19 @@ export const mx = {
       Accept: 'application/vnd.mx.api.v1+json',
     },
   },
-  demoMemberId: config.MxDemoMemberId,
   demoUserId: config.MxDemoUserId,
+};
+
+export const mxProd = {
+  username: config.MxClientIdProd,
+  password: config.MxApiSecretProd,
+  basePath: 'https://api.mx.com',
+  baseOptions: {
+    headers: {
+      Accept: 'application/vnd.mx.api.v1+json',
+    },
+  },
+  demoUserId: config.MxDemoUserIdProd,
 };
 
 export const sophtron = {

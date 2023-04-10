@@ -1,5 +1,6 @@
 export interface Context {
   institution_id?: string;
+  institution_uid?: string;
   connection_id?: string;
   user_id?: string;
   provider?: string;
@@ -74,6 +75,7 @@ export interface Institution {
   code?: string | null;
   instructional_text?: string | null;
   small_logo_url?: string | null;
+  providers?: Object | {};
 }
 
 export interface Institutions {
