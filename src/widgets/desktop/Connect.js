@@ -353,7 +353,6 @@ export class Connect extends React.Component {
       )
     } else if (step === STEPS.ENTER_CREDENTIALS) {
       let showOAuth = false
-
       // To show OAuth step, the client profile must be set
       if (this.props.clientProfile.uses_oauth) {
         // If there is a current member, look to wether it supports oauth or
@@ -717,5 +716,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   // above is the default for react-redux, below are overrides
   connectConfig: { ...stateProps.connectClientConfig, ...ownProps.connectConfig },
 })
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Connect)
+export const ConnectWidget = connect(mapStateToProps, mapDispatchToProps, mergeProps)(Connect)

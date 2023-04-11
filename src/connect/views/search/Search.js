@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect, useReducer, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { zip, from, of } from 'rxjs'
@@ -187,7 +189,6 @@ export const Search = props => {
             analyticType: INSTITUTION_TYPES.POPULAR,
           }
         })
-
         const updatedDiscoveredInstitutions = discoveredInstitutions.map(discovered => {
           return {
             ...discovered,

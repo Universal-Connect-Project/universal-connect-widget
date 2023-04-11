@@ -3,6 +3,8 @@
   "extends": ["plugin:jest/recommended", "mx"],
   "plugins": ["jest", "jsx-a11y", "eslint-plugin-redux-namespaced-actions"],
   "rules": {
+
+    "no-console": "off",
     "redux-namespaced-actions/redux-namespaced-actions": 2,
     "jsx-max-props-per-line": 0,
     "jsx-a11y/accessible-emoji": 2,

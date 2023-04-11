@@ -5,7 +5,8 @@ import { css } from '@mxenabled/cssinjs'
 import { __ } from '../../utils/Intl'
 
 import { useTokens } from '@kyper/tokenprovider'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from './InstitutionLogo'
 import { ChevronRight } from '@kyper/icon/ChevronRight'
 
 export const InstitutionTile = props => {
@@ -13,7 +14,6 @@ export const InstitutionTile = props => {
 
   const tokens = useTokens()
   const styles = getStyles(tokens)
-
   return (
     <button
       aria-label={__('Add account with %1', institution.name)}
@@ -24,7 +24,7 @@ export const InstitutionTile = props => {
     >
       <div style={styles.institutionBodyContainer}>
         <div style={styles.iconColumn}>
-          <InstitutionLogo alt="" institutionGuid={institution.guid} size={size} />
+          <InstitutionLogo alt={Object.keys(institution.providers || {}).join(',')} institution={institution} size={size} />
         </div>
 
         <div style={styles.textColumn}>

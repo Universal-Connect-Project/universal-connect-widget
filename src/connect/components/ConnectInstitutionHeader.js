@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { InstitutionLogo } from '@kyper/institutionlogo'
+//import { InstitutionLogo } from '@kyper/institutionlogo'
+import { InstitutionLogo } from './InstitutionLogo'
 import { useTokens } from '@kyper/tokenprovider'
 
 import { COLOR_SCHEME } from '../const/Connect'
@@ -11,7 +12,7 @@ import HeaderBackdropDark from '../images/header/HeaderBackdropDark.svg'
 import HeaderBackdropLight from '../images/header/HeaderBackdropLight.svg'
 
 const propTypes = {
-  institutionGuid: PropTypes.string,
+  institution: PropTypes.object,
 }
 
 export const ConnectInstitutionHeader = props => {
@@ -28,8 +29,8 @@ export const ConnectInstitutionHeader = props => {
       </div>
       <SVGImage image={HeaderDevice} styles={styles.device} />
       <div style={styles.institutionLogo}>
-        {props.institutionGuid ? (
-          <InstitutionLogo alt="" institutionGuid={props.institutionGuid} size={64} />
+        {props.institution ? (
+          <InstitutionLogo alt="" institution={props.institution} size={64} />
         ) : (
           <SVGImage image={HeaderDefaultInstitution} />
         )}

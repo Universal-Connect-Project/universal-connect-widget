@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import theme from './constants/Style'
 import AppWrapper from './components/app/AppWrapper'
-import { ConnectedTokenProvider } from './context/ConnectedTokenProvider.js'
+import { TokenProvider } from '@kyper/tokenprovider'
 
 import { GlobalErrorBoundary } from './components/app/GlobalErrorBoundary'
 
@@ -20,11 +20,51 @@ import PostMessage, { sendPostMessage } from './utils/PostMessage'
 import Store from './redux/Store'
 import { registerAxiosInterceptors } from './config/axios'
 import { updateTitleWithWidget } from './utils/Widget'
-import * as Connect from './widgets/desktop/Connect'
+import {ConnectWidget as Connect} from './widgets/desktop/Connect'
 
 registerAxiosInterceptors(Store.dispatch)
-
-window.app = {}
+window.logger = {
+  warn(msg){
+    console.log(msg)
+  },
+  error(msg){
+    console.log(msg)
+  },
+  log(msg){
+    console.log(msg)
+  }
+}
+window.app = {
+  options: {
+    type: 'connect_widget',
+    brokaw_websocket_url: '',
+    brokaw_auth:{
+      url: ''
+    }, 
+  }
+}
+window.app.clientConfig = {
+  is_mobile_webview: false,
+  target_origin_referrer: null,
+  ui_message_protocol: 'post_message',
+  ui_message_version: 1,
+  ui_message_webview_url_scheme: 'mx',
+  color_scheme: 'light',
+  connect: {
+    // mode: AGG_MODE,
+    current_institution_code: null, // 'mxbank',
+    current_institution_guid: null,
+    current_member_guid: null,
+    current_microdeposit_guid: null,
+    disable_background_agg: null,
+    disable_institution_search: false,
+    include_identity: null,
+    include_transactions: null,
+    // oauth_referral_source: REFERRAL_SOURCES.BROWSER,
+    update_credentials: false,
+    wait_for_full_aggregation: false,
+  },
+};
 window.app.config = {
   "client_guid": "****",
   "default_selected_widget_type_in_master": 0,
@@ -174,7 +214,7 @@ if (widgetConfig.type !== 'master') {
 
 ReactDOM.render(
   <Provider store={Store}>
-    <ConnectedTokenProvider>
+    <TokenProvider tokenOverrides={{}}>
       <GlobalErrorBoundary>
         <WidgetDimensionObserver
           heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
@@ -184,7 +224,7 @@ ReactDOM.render(
           </AppWrapper>
         </WidgetDimensionObserver>
       </GlobalErrorBoundary>
-    </ConnectedTokenProvider>
+    </TokenProvider>
   </Provider>,
   document.getElementById('root'),
 )

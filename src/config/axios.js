@@ -3,10 +3,25 @@ import _get from 'lodash/get'
 import { dispatcher as appDispatcher } from '../redux/actions/App'
 import FireflyAPI from '../utils/FireflyAPI'
 
+let meta = ''; //TODO move this to state
+
 export function registerAxiosInterceptors(dispatch) {
   FireflyAPI.registerAxiosInterceptor(
+    'request',
+    request => {
+      // console.log(meta)
+      request.headers.meta = meta
+      return request;
+    }
+  )
+
+  FireflyAPI.registerAxiosInterceptor(
     'response',
-    response => response,
+    response => {
+      meta = response.headers.meta || ''
+      // console.log(meta)
+      return response;
+    },
     error => {
       const status = _get(error, ['response', 'status'], 'UNKNOWN')
 

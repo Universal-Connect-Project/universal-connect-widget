@@ -82,6 +82,7 @@ export const formatBalanceFactory = intl => account =>
   formatCurrencyFactory(intl)(account.currency_code)(account.balance)
 
 export const getLogoUrl = (account = {}) => {
+  console.log(account)
   if (account.is_manual) {
     return 'https://content.moneydesktop.com/storage/MD_Assets/serenity/manual_account.png'
   } else if (account.institution_guid) {

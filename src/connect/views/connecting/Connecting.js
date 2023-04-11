@@ -276,7 +276,7 @@ export const Connecting = props => {
     <Container>
       <div ref={connectingRef} style={styles.container}>
         <SlideDown delay={getNextDelay()}>
-          <ConnectInstitutionHeader institutionGuid={institution.guid} />
+          <ConnectInstitutionHeader institution={institution} />
           <Text style={styles.subHeader} tag="h2">
             {__('Connecting to %1', institution.name)}
           </Text>
