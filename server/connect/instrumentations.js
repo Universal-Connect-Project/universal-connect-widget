@@ -26,9 +26,6 @@ module.exports = function(app){
   app.get(ApiEndpoints.USER_FEATURES, async (req, res) => {
     res.sendFile(__dirname + '/stubs/user_features.json')
   })
-  app.post(ApiEndpoints.INSTRUMENTATION, async (req, res) => {
-    res.sendFile(__dirname + '/stubs/instrumentation.json')
-  })
   app.get(ApiEndpoints.TRANSACTION_RULES, async (req, res) => {
     res.sendFile(__dirname + '/stubs/transaction_rules.json')
   })

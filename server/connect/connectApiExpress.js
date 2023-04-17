@@ -7,12 +7,12 @@ const instrumentation = require('./instrumentations.js');
 const { get } = require('../serviceClients/http/mock');
 
 module.exports = function(app){
+  instrumentation(app)
   app.use(contextHandler);
   app.use((req, res, next) => {
     req.connectService = new ConnectApi(req)
     next()
   })
-  instrumentation(app)
   // stubs(app)
 
   app.post(ApiEndpoints.MEMBERS, async (req, res) => {
@@ -104,5 +104,10 @@ module.exports = function(app){
     //res.sendFile(__dirname + '/stubs/members.json')
     //the widget looks for members with pending job for resuming, we don't need this for now 
     res.send({members:[]})
+  })
+
+  app.post(ApiEndpoints.INSTRUMENTATION, async (req, res) => {
+    await req.connectService.instrumentation(req.body)
+    res.sendStatus(200);
   })
 }

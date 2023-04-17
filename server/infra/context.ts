@@ -64,14 +64,14 @@ export function contextHandler(
   next: NextFunction
 ) {
   res.context = get(req);
-  // console.log('context res')
+  // console.log('context res: ' + req.path)
   // console.log(res.context)
   const { send } = res;
   res.send = function (...args: any): any {
     res.send = send;
     set(res);
     send.apply(res, args);
-    // console.log('context send')
+    // console.log('context send: ' + req.path)
     // console.log(res.context)
   };
   next();

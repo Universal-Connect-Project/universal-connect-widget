@@ -25,12 +25,102 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
-    <script>
-      
-    </script>
     <link rel="stylesheet" href="%PUBLIC_URL%/index.css" />
   </head>
   <body>
     <div id="root"></div>
+    <script type="text/javascript">
+      window.app = {
+        options: {
+          type: 'connect_widget',
+          brokaw_websocket_url: '',
+          brokaw_auth:{
+            url: ''
+          }, 
+        },
+        clientConfig: {
+          is_mobile_webview: false,
+          target_origin_referrer: null,
+          ui_message_protocol: 'post_message',
+          ui_message_version: 1,
+          ui_message_webview_url_scheme: 'mx',
+          color_scheme: 'light',
+          connect: {
+            mode: 'agg',
+            current_institution_code: '$current_institution_code', // 'mxbank',
+            current_institution_guid: null,
+            current_member_guid: '$current_member_guid',
+            current_provider: '$current_provider',
+            current_microdeposit_guid: null,
+            disable_background_agg: null,
+            disable_institution_search: false,
+            include_identity: null,
+            include_transactions: null,
+            oauth_referral_source: '$oauth_referral_source',
+            update_credentials: false,
+            wait_for_full_aggregation: false,
+          },
+        },
+        config: {
+          client_guid: '$client_guid',
+          default_selected_widget_type_in_master: 0,
+          display_account_actions_in_connection_details: true,
+          display_account_number_in_accounts: false,
+          display_add_manual_transaction_in_transactions: true,
+          display_all_accounts_sidebar_in_accounts: true,
+          display_available_balance_in_accounts: false,
+          display_delete_option_in_connect: true,
+          display_disclosure_in_connect: false,
+          display_email_edit_field_in_settings: true,
+          display_full_external_account_number: true,
+          display_mobile_devices_in_settings: false,
+          display_notification_settings_in_settings: false,
+          display_only_external_accounts_in_accounts: false,
+          display_password_options_in_settings: true,
+          display_sms_edit_field_in_settings: true,
+          display_terms_and_conditions: false,
+          display_user_profile_in_settings: false,
+          display_user_transaction_rules_in_settings: true,
+          enable_add_account_in_zero_state: true,
+          enable_aggregation_prompts: true,
+          enable_circular_institution_logos: false,
+          enable_goals_redesign: false,
+          enable_high_contrast_budget_bubbles: false,
+          enable_ie_11_deprecation: false,
+          enable_manual_accounts: true,
+          enable_mark_account_closed_for_held_accounts: true,
+          enable_mark_account_duplicate_for_held_accounts: true,
+          enable_renaming_home_accounts: true,
+          enable_springboard_in_mini_net_worth: false,
+          enable_springboard_in_mini_spending: false,
+          enable_support_requests: true,
+          keepalive_url:null,
+          session_timeout:null,
+          session_timeout_url:null,
+          show_accounts_widget_in_master: true,
+          show_budgets_widget_in_master: true,
+          show_cash_flow_widget_in_master: true,
+          show_connections_widget_in_master: true,
+          show_debts_widget_in_master: true,
+          show_finstrong_widget_in_master: true,
+          show_full_experience_link_in_pulse_mini_widget: false,
+          show_goals_widget_in_master: true,
+          show_help_widget_in_master: true,
+          show_investments_widget_in_master: true,
+          show_net_worth_widget_in_master: true,
+          show_notifications_widget_in_master: true,
+          show_settings_widget_in_master: true,
+          show_spending_plan_widget_in_master: true,
+          show_spending_widget_in_master: true,
+          show_transactions_widget_in_master: true,
+          show_trends_widget_in_master: true,
+          use_iav_when_shared_routing_number_in_connect: false,
+          widgets_display_name: null,
+          websocket: {
+            url: ''
+          }
+        }
+      };
+    </script>
   </body>
 </html>

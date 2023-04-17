@@ -9,7 +9,7 @@ export function registerAxiosInterceptors(dispatch) {
   FireflyAPI.registerAxiosInterceptor(
     'request',
     request => {
-      // console.log(meta)
+      // console.log('request: ' + request.url + ' meta: ' + meta)
       request.headers.meta = meta
       return request;
     }
@@ -18,8 +18,11 @@ export function registerAxiosInterceptors(dispatch) {
   FireflyAPI.registerAxiosInterceptor(
     'response',
     response => {
-      meta = response.headers.meta || ''
-      // console.log(meta)
+      if(response.headers.meta){
+        meta = response.headers.meta
+      }
+      // console.log(response)
+      // console.log('response: ' + response?.config?.url + ' meta: ' + meta)
       return response;
     },
     error => {

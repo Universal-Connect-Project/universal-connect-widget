@@ -18,7 +18,8 @@ const config = {
   CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2',
   CryptoIv: '453687d854d55101f001b5999b68bc3d',
   CryptoAlgorithm: 'aes-256-cbc',
-  ResourcePrefix: 'http://localhost:3000', // 'http://static.sophtron-prod.com/widget',
+  // ResourcePrefix: 'http://localhost:3000',
+  ResourcePrefix: 'local', //
   ResourceVersion: '', // 'development'
   SophtronApiUserId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
   SophtronApiUserSecret: '',

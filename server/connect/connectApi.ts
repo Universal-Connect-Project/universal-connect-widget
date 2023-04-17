@@ -199,9 +199,9 @@ export class ConnectApi{
   }
   async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
     let client = getApiClient(this.context);
-    // let connection = await client.GetConnectionById(memberGuid)
-    let mfa = await client.GetConnectionStatus(memberGuid, this.context.user_id)
-    return {member: mapConnection(mfa)};
+    let connection = await client.GetConnectionById(memberGuid, this.context.user_id);
+    let mfa = await client.GetConnectionStatus(memberGuid, this.context.user_id);
+    return {member: mapConnection({...mfa, ...connection})};
   }
   async getOauthWindowUri(memberGuid: string){
     let ret = await this.loadMemberByGuid(memberGuid);
@@ -274,6 +274,10 @@ export class ConnectApi{
   async loadDiscoveredInstitutions(): Promise<Institution[]> {
     return []
   }
-
+  async instrumentation(config: any){
+    if(config.instrumentation.current_member_guid && config.instrumentation.current_provider){
+      this.context.provider = config.instrumentation.current_provider;
+    }
+  }
 }
 
