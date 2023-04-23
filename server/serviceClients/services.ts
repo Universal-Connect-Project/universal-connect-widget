@@ -97,6 +97,7 @@ export async function mfa(job_id: string, context: Context) {
   }
   res.provider = context.provider;
   if (res.status === ConnectionStatus.CONNECTED) {
+    logger.debug('mfa finishing, checking vc', context)
     if (
       context.job_type?.startsWith('vc_') &&
       context.user_id.startsWith('did:')
@@ -119,9 +120,9 @@ export async function mfa(job_id: string, context: Context) {
         try {
           /* eslint-disable no-await-in-loop */
           const vc = await this.getVC(res.id, vcType, context);
-          res.vc = Buffer.from(JSON.stringify(vc)).toString('base64');
-          /* eslint-disable no-await-in-loop */
-          return res;
+          // res.vc = Buffer.from(JSON.stringify(vc)).toString('base64');
+          // /* eslint-disable no-await-in-loop */
+          // return res;
         } catch (err) {
           logger.error('Failed to retrieve VC', err);
         }

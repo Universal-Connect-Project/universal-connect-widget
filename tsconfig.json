@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "declaration": true,
+    "target": "esnext",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "types": ["node"],
+    "allowJs": true
+  },
+  "include": [
+    "server"
+  ],
+  "exclude": ["dist", "node_modules", "./build"]
+}

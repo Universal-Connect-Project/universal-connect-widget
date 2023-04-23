@@ -1,19 +1,6 @@
 const crypto = require('crypto');
 const axios = require('axios');
 const logger = require('../../infra/logger');
-const config = require('../../config');
-
-function buildAuthCode(httpMethod, url) {
-  const authPath = url.substring(url.lastIndexOf('/')).toLowerCase();
-  const integrationKey = Buffer.from(config.SophtronApiUserSecret, 'base64');
-  const plainKey = `${httpMethod.toUpperCase()}\n${authPath}`;
-  const b64Sig = crypto
-    .createHmac('sha256', integrationKey)
-    .update(plainKey)
-    .digest('base64');
-  const authString = `FIApiAUTH:${config.SophtronApiUserId}:${b64Sig}:${authPath}`;
-  return authString;
-}
 
 function stream(url, data, target) {
   // logger.debug(`stream request: ${url}`);
@@ -95,6 +82,5 @@ module.exports = {
   get,
   wget,
   post,
-  stream,
-  buildAuthCode,
+  stream
 };

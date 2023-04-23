@@ -50,23 +50,23 @@ export const ErrorDisplay = ({ colorScheme, subtitle, theme, title, tokens }) =>
       justifyContent: 'center',
       flexDirection: 'column',
       height: '100%',
-      padding: theme.Spacing.XSMALL,
+      padding: theme?.Spacing?.XSMALL,
     },
     icon: {
-      fill: colorScheme === 'dark' ? tokens.TextColor.Default : theme.Colors.GRAY_700,
+      fill: colorScheme === 'dark' ? tokens.TextColor.Default : theme?.Colors?.GRAY_700,
     },
     h1: {
       width: '100%', // IE 11 text wrapping in flex children
-      color: colorScheme === 'dark' ? tokens.TextColor.Default : theme.Colors.GRAY_700,
-      fontFamily: theme.Fonts.SEMIBOLD,
-      fontSize: theme.FontSizes.XXLARGE,
-      marginBottom: theme.Spacing.SMALL,
+      color: colorScheme === 'dark' ? tokens.TextColor.Default : theme?.Colors?.GRAY_700,
+      fontFamily: theme?.Fonts?.SEMIBOLD,
+      fontSize: theme?.FontSizes?.XXLARGE,
+      marginBottom: theme?.Spacing?.SMALL,
       textAlign: 'center',
     },
     h4: {
       width: '100%', // IE 11 text wrapping in flex children
-      color: colorScheme === 'dark' ? tokens.TextColor.Default : theme.Colors.GRAY_700,
-      fontSize: theme.FontSizes.LARGE,
+      color: colorScheme === 'dark' ? tokens.TextColor.Default : theme?.Colors?.GRAY_700,
+      fontSize: theme?.FontSizes?.LARGE,
       textAlign: 'center',
     },
   }

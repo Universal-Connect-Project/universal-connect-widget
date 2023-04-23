@@ -199,9 +199,10 @@ export class ConnectApi{
   }
   async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
     let client = getApiClient(this.context);
-    let connection = await client.GetConnectionById(memberGuid, this.context.user_id);
     let mfa = await client.GetConnectionStatus(memberGuid, this.context.user_id);
-    return {member: mapConnection({...mfa, ...connection})};
+    // let connection = await client.GetConnectionById(memberGuid, this.context.user_id);
+    // return {member: mapConnection({...mfa, ...connection})};
+    return {member: mapConnection({...mfa})};
   }
   async getOauthWindowUri(memberGuid: string){
     let ret = await this.loadMemberByGuid(memberGuid);
@@ -248,9 +249,15 @@ export class ConnectApi{
     }))}
   }
   async loadInstitutions(query: string): Promise<any> {
+    // console.log(query)
+    let q = query as any;
+    if(q.search_name){
+      query = q.search_name;
+    }
     if (query?.length >= 3) {
       let list = await searchApi.institutions(query);
-      return list?.institutions?.map(mapInstitution).sort((a:any,b:any) => a.name.length - b.name.length);
+    // console.log(list)
+    return list?.institutions?.map(mapInstitution).sort((a:any,b:any) => a.name.length - b.name.length);
     }
     return []
   }
@@ -259,9 +266,9 @@ export class ConnectApi{
     // console.log(this.context);
     // console.log(id);
     let client = getApiClient(this.context);
-    let inst = await client.GetInstitutionById(id)
+      let inst = await client.GetInstitutionById(id)
+      return {institution: mapInstitution(inst)};
     //let crs = await client.ListInstitutionCredentials(id)
-    return {institution: mapInstitution(inst)};
   }
   // loadInstitutionByCode(code: string): Promise<Institution> {
   //   let client = getApiClient({provider: config.DefaultProvider});

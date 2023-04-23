@@ -1,0 +1,8 @@
+https://medium.com/how-to-react/convert-your-existing-react-js-app-to-android-or-ios-app-using-the-ionic-capacitor-a127deda75bd
+
+echo "legacy-peer-deps=true" >> .npmrc
+npm install @capacitor/core --save
+npm install @capacitor/cli --save
+npx cap sync android
+
+

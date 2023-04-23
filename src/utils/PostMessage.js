@@ -96,6 +96,8 @@ const PostMessage = {
   },
 
   postMessage(payload, url) {
+    console.log('posting message, url: ' + url)
+    console.log(payload)
     try {
       if (window.parent) {
         window.parent.postMessage(payload, url)

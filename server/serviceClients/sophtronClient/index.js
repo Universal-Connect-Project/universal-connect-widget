@@ -1,17 +1,16 @@
-const crypto = require('crypto');
-const http = require('../http');
+///const http = require('../http');
+const {Http} = require('@capacitor-community/http');
 const config = require('../../config');
 const logger = require('../../infra/logger');
-
-function buildAuthCode(httpMethod, url) {
-  const authPath = url.substring(url.lastIndexOf('/')).toLowerCase();
-  const integrationKey = Buffer.from(config.SophtronApiUserSecret, 'base64');
-  const plainKey = `${httpMethod.toUpperCase()}\n${authPath}`;
-  const b64Sig = crypto
-    .createHmac('sha256', integrationKey)
-    .update(plainKey)
-    .digest('base64');
-  const authString = `FIApiAUTH:${config.SophtronApiUserId}:${b64Sig}:${authPath}`;
+const CryptoJS = require("crypto-js");
+const http = Http;
+function buildAuthCode(httpMethod, url){
+  var authPath = url.substring(url.lastIndexOf('/')).toLowerCase();
+  var text = httpMethod.toUpperCase() + '\n' + authPath;
+  let hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, CryptoJS.enc.Base64.parse(config.SophtronApiUserSecret));
+  hmac.update(text);
+  var b64Sig = CryptoJS.enc.Base64.stringify(hmac.finalize());
+  var authString = 'FIApiAUTH:' + config.SophtronApiUserId + ':' + b64Sig + ':' + authPath;
   return authString;
 }
 
@@ -208,13 +207,29 @@ module.exports = class SophtronClient{
   async post(path, data, onPhrase) {
     if(!this.integrationKey){
       const authHeader = buildAuthCode('post', path);
-      const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {
-        Authorization: authHeader,
-      });
-      return ret;
+      try{
+        const options = {
+          // url: 'http://192.168.111.217:9080/echo', 
+          url: config.SophtronApiServiceEndpoint + path,
+          headers: { Authorization: authHeader, 'content-type': 'application/json'},
+          webFetchExtra: { mode: 'no-cors' },
+          responseType: 'text',
+          data,
+        }
+        //logger.debug('posting: ' + options.url);
+        const ret = await http.post(options);
+        logger.debug('Api post response received: ' + path);
+        // logger.debug('Api post response data: ' + path, ret.data);
+        // const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {
+        //   Authorization: authHeader,
+        // });
+        return ret.data;
+      }catch(err){
+        logger.error('Api post response error', err)
+      }
     }
-    console.log(buildAuthCode('get', path))
-    console.log(this.integrationKey)
+    // console.log(buildAuthCode('get', path))
+    // console.log(this.integrationKey)
     const phrase = await http.get(`${config.SophtronAuthResolverEndpoint}v1/phrase?path=${encodeURIComponent(path)}&method=${'post'}`, {
       IntegrationKey: this.integrationKey,
       // Authorization: buildAuthCode('get', path),

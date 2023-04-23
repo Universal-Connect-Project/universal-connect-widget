@@ -1,4 +1,5 @@
-import * as Phoenix from 'phoenix'
+/* eslint-disable no-unused-vars */
+// import * as Phoenix from 'phoenix'
 
 import { PostMessages$, EventsToDispatch$ } from '../streams'
 import { WSEventSubject$ } from '../streams/Subjects'
@@ -32,49 +33,49 @@ const BrokawClient = {
     const { brokaw_websocket_url, brokaw_auth } = window.app.options
     const channelName = `user:${userGuid}`
 
-    try {
+    // try {
       // heartbeatIntervalMs is the number of milliseconds between sending a hearbeat to the server
       // 20sec seems to be fast enough to avoid getting the connection dropped because of an idle timeout
-      socket = new Phoenix.Socket(brokaw_websocket_url, {
-        heartbeatIntervalMs: 20000,
-      })
-      socket.connect()
+    //   socket = new Phoenix.Socket(brokaw_websocket_url, {
+    //     heartbeatIntervalMs: 20000,
+    //   })
+    //   socket.connect()
 
-      channel = socket.channel(channelName, brokaw_auth)
+    //   channel = socket.channel(channelName, brokaw_auth)
 
-      channel
-        .join()
-        .receive('ok', () => {
-          logger.log(`subscribed to event stream for ${userGuid}`)
-        })
-        .receive('error', msg => {
-          logger.error('failed to subscribe', msg)
-        })
+    //   channel
+    //     .join()
+    //     .receive('ok', () => {
+    //       logger.log(`subscribed to event stream for ${userGuid}`)
+    //     })
+    //     .receive('error', msg => {
+    //       logger.error('failed to subscribe', msg)
+    //     })
 
-      // subscribe to the postmessage streams and actually send each one out
-      // via post message
-      postMessageSub = PostMessages$.subscribe({
-        next: ({ type, payload }) => PostMessage.send(type, payload),
-        error: err => logger.error('PostMessages error: ', err),
-        complete: () => logger.warn('PostMessages completed'),
-      })
+    //   // subscribe to the postmessage streams and actually send each one out
+    //   // via post message
+    //   postMessageSub = PostMessages$.subscribe({
+    //     next: ({ type, payload }) => PostMessage.send(type, payload),
+    //     error: err => logger.error('PostMessages error: ', err),
+    //     complete: () => logger.warn('PostMessages completed'),
+    //   })
 
-      // subscribe to the actions streams and actually dispatch each one out
-      // to redux.
-      eventsToDispatchSub = EventsToDispatch$.subscribe({
-        next: action => dispatch(action),
-        error: err => logger.error('Websocket dispatch error: ', err),
-        completed: () => logger.warn('Websocket dispatch completed'),
-      })
+    //   // subscribe to the actions streams and actually dispatch each one out
+    //   // to redux.
+    //   eventsToDispatchSub = EventsToDispatch$.subscribe({
+    //     next: action => dispatch(action),
+    //     error: err => logger.error('Websocket dispatch error: ', err),
+    //     completed: () => logger.warn('Websocket dispatch completed'),
+    //   })
 
-      channel.onMessage = BrokawClient.handleBrokawMessage.bind(this)
-    } catch (e) {
-      socket = null
-      channel = null
-      postMessageSub = null
-      eventsToDispatchSub = null
-      logger.error('subscription error', { brokaw_websocket_url, brokaw_auth, channelName }, e)
-    }
+    //   channel.onMessage = BrokawClient.handleBrokawMessage.bind(this)
+    // } catch (e) {
+    //   socket = null
+    //   channel = null
+    //   postMessageSub = null
+    //   eventsToDispatchSub = null
+    //   logger.error('subscription error', { brokaw_websocket_url, brokaw_auth, channelName }, e)
+    // }
   },
 
   unsubscribe() {

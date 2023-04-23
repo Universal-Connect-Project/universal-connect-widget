@@ -24,7 +24,12 @@
  * @param {array} loginFields
  * @returns {object}
  */
+/* eslint-disable no-param-reassign */
 export const buildInitialValues = loginFields => {
+  // console.log('overriding loginFilds')
+  // if(!loginFields.reduce){
+  //   loginFields = loginFields.credentials;
+  // }
   return loginFields.reduce((acc, currentField) => {
     return {
       ...acc,
@@ -66,6 +71,9 @@ export const buildInitialValues = loginFields => {
  * @returns {object}
  */
 export const buildFormSchema = loginFields => {
+  // if(!loginFields.reduce){
+  //   loginFields = loginFields.credentials;
+  // }
   return loginFields.reduce((acc, currentField) => {
     return {
       ...acc,

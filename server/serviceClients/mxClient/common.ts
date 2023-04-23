@@ -130,10 +130,31 @@ export const toPathString = function (url: URL) {
  *
  * @export
  */
+const {Http} = require('@capacitor-community/http');
+const CryptoJS = require("crypto-js");
 export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxios: AxiosInstance, BASE_PATH: string, configuration?: Configuration) {
-    return <T = unknown, R = AxiosResponse<T>>(axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+    return async <T = unknown, R = AxiosResponse<T>>(axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
         const axiosRequestArgs = {...axiosArgs.options, url: (configuration?.basePath || basePath) + axiosArgs.url};
-        console.log(axiosRequestArgs)
-        return axios.request<T, R>(axiosRequestArgs);
+        // console.log(axiosRequestArgs)
+        const encodedWord = CryptoJS.enc.Utf8.parse(axiosRequestArgs.auth.username + ':' + axiosRequestArgs.auth.password);
+        let authHeader = 'Basic ' + CryptoJS.enc.Base64.stringify(encodedWord);
+        let options = {
+          url: axiosRequestArgs.url,
+          headers: {
+            ...axiosRequestArgs.headers,
+            Authorization: authHeader,
+            'content-type':'application/json',
+          },
+          data: axiosRequestArgs.data,
+          webFetchExtra: { mode: 'no-cors' },
+          responseType: 'text',
+        } ;
+        if(process?.env?.HOME){
+          // if it's running on node
+          delete options.webFetchExtra
+        }
+        const ret = await Http[axiosRequestArgs.method.toLowerCase().replace('delete', 'del')](options);
+          // console.log(ret)
+          return ret;
     };
 }

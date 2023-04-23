@@ -52,8 +52,8 @@ export const initialize = (member, recentJob, config) => {
  */
 export const onJobFinished = (schedule, finishedJob) => {
   let hasSetActiveJob = false
-
   const updatedJobs = schedule.jobs.map(scheduledJob => {
+
     if (finishedJob.job_type === scheduledJob.type) {
       // If the finished job's type matched the scheduled one, mark it as done
       return { ...scheduledJob, status: JOB_STATUSES.DONE }
@@ -66,7 +66,6 @@ export const onJobFinished = (schedule, finishedJob) => {
 
     return scheduledJob
   })
-
   return { isInitialized: true, jobs: updatedJobs }
 }
 

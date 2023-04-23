@@ -228,7 +228,6 @@ export class Connect extends React.Component {
       'connect/selectedInstitution',
       _pick(institution, ['name', 'guid', 'url', 'code']),
     )
-
     // The institution doesn't have credentials until we request it again from server
     this.props.selectInstitution(institution.guid)
   }

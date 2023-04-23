@@ -78,7 +78,7 @@ export const loadConnect = actions$ =>
  * - Get the institution
  * - Check to see if we should show the existing member modal
  */
-export const selectInstitution = (actions$, state$) =>
+export const selectInstitution = (actions$, state$) => 
   actions$.pipe(
     ofType(ActionTypes.SELECT_INSTITUTION),
     pluck('payload'),

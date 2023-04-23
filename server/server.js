@@ -18,11 +18,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/ping', function (req, res) {
   res.send('ok');
 });
-
+app.post('/echo',function (req, res) {
+  logger.info(`echo`, req.headers)
+  logger.info(`echo`, req.body)
+  res.send('ok');
+})
 if (config.env !== 'prod') {
   example(app);
 }
-
 useConnect(app)
 
 const pageQueries = new RegExp([
@@ -30,7 +33,8 @@ const pageQueries = new RegExp([
   'client_guid',
   'current_member_guid',
   'current_provider',
-  'oauth_referral_source'
+  'oauth_referral_source',
+  'server'
 ].map(r => `\\$${r}`).join('|'), 'g');
 
 if(config.ResourcePrefix !== 'local'){

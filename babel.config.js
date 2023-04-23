@@ -1,6 +1,13 @@
 module.exports = {
+  sourceType: "unambiguous",
   presets: [
-    '@babel/env',
+    [
+      '@babel/env',
+      {
+        "useBuiltIns": "entry",
+        "modules": 'commonjs'
+      }
+    ],
     '@babel/preset-react',
   ],
   plugins: [

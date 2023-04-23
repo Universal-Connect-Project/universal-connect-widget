@@ -1,11 +1,11 @@
 const http = require('../http');
 const config = require('../../config');
-const logger = require('../../infra/logger');
 
 module.exports = class SophtronClient{
 
-  institutions(name){
-    return http.wget(`${config.SophtronSearchEndpoint}institutions?query=${encodeURIComponent(name || '')}&partner=${config.OrgName}`)
+  async institutions(name){
+    let url = `${config.SophtronSearchEndpoint}institutions?query=${encodeURIComponent(name || '')}&partner=${config.OrgName}`;
+    return http.wget(url)
   }
 
   resolve(id){

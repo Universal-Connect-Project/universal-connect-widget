@@ -1807,5 +1807,15 @@ export function getNavigatorMimeTypeNames(mimeTypes) {
 
   return mimeTypeNames.sort().join(',')
 }
-
-export default FireflyAPI
+// const apiBridge = require('../../shared/connect/fireflyApiBridge')
+let bridge = require('../../shared/connect/fireflyApiBridge');
+if(!_get(window, ['app', 'options', 'server'])){
+  console.log('Connection through bff server, not using bridge, ')
+  bridge = {}
+}else{
+  console.log('Using firefly api bridge, ')
+}
+export default {
+  ...FireflyAPI,
+  ...bridge,
+}

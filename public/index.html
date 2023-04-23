@@ -30,9 +30,11 @@
   <body>
     <div id="root"></div>
     <script type="text/javascript">
+      var exports = {};
       window.app = {
         options: {
           type: 'connect_widget',
+          server: '$server',
           brokaw_websocket_url: '',
           brokaw_auth:{
             url: ''
@@ -47,9 +49,9 @@
           color_scheme: 'light',
           connect: {
             mode: 'agg',
-            current_institution_code: '$current_institution_code', // 'mxbank',
+            current_institution_code: '', // 'mxbank',
             current_institution_guid: null,
-            current_member_guid: '$current_member_guid',
+            current_member_guid: '',
             current_provider: '$current_provider',
             current_microdeposit_guid: null,
             disable_background_agg: null,

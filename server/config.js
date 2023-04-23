@@ -12,22 +12,22 @@ const config = {
   DefaultProvider: 'sophtron',
   OrgName: 'sophtron',
   LogLevel: 'debug',
-  Port: '8080',
-  Env: 'dev', // mocked
+  Port: '9080',
+  Env: 'pre', // mocked
   Version: '',
   CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2',
   CryptoIv: '453687d854d55101f001b5999b68bc3d',
   CryptoAlgorithm: 'aes-256-cbc',
-  // ResourcePrefix: 'http://localhost:3000',
-  ResourcePrefix: 'local', //
+  ResourcePrefix: 'http://192.168.111.217:3001',
+  // ResourcePrefix: 'local', //
   ResourceVersion: '', // 'development'
   SophtronApiUserId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
-  SophtronApiUserSecret: '',
+  SophtronApiUserSecret: 'NjY2MjI2MDgtN2RiNS00MjBhLTkzZDUtODRkZDc0NmM1MWNm',
   MxClientId:'861c3518-79df-4ed2-99cc-a21637694ea6',
   MxClientIdProd: 'cb102a7c-14a2-4b4a-8241-076d5eedd115',
   MxDemoUserIdProd: 'USR-753b539c-6281-4a71-b68b-347e68876035',
   MxDemoUserId: 'USR-0434788a-7791-49ac-8be7-503b587a0d5c',
-  MxApiSecret: '', //mx-int credential for testing
+  MxApiSecret: '34bb538ce1d2fb626fb2f45f70165dd5457e103e', //mx-int credential for testing
   MxApiSecretProd: '',
 };
 const arr = Object.keys(config);
