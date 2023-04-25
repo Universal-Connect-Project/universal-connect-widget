@@ -63,26 +63,26 @@ module.exports = async function (app) {
       }
     })
   );
-  app.get('/example/*', async (req, res) => {
-    // console.log('loading default page');
-    const resourcePath = `${config.ResourcePrefix}${
-      config.ResourceVersion
-    }/${req.path.replace('/example/', '').replace('did', 'loader')}.html`;
-    logger.trace(`serving: ${resourcePath}`);
-    await http
-      .get(resourcePath)
-      .then((r) => {
-        res.setHeader('content-type', 'text/html');
-        res.send(
-          r.replace(
-            '$did_demo',
-            req.path.indexOf('did') > -1 ? 'true' : 'false'
-          )
-        );
-      })
-      .catch((err) => {
-        res.sendStatus(500);
-        logger.error(`Unable to load idnex resource from ${resourcePath}`, err);
-      });
-  });
+  // app.get('/example/*', async (req, res) => {
+  //   // console.log('loading default page');
+  //   const resourcePath = `${config.ResourcePrefix}${
+  //     config.ResourceVersion
+  //   }/${req.path.replace('/example/', '').replace('did', 'loader')}.html`;
+  //   logger.trace(`serving: ${resourcePath}`);
+  //   await http
+  //     .get(resourcePath)
+  //     .then((r) => {
+  //       res.setHeader('content-type', 'text/html');
+  //       res.send(
+  //         r.replace(
+  //           '$did_demo',
+  //           req.path.indexOf('did') > -1 ? 'true' : 'false'
+  //         )
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       res.sendStatus(500);
+  //       logger.error(`Unable to load idnex resource from ${resourcePath}`, err);
+  //     });
+  // });
 };

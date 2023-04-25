@@ -1,21 +1,29 @@
 // Overrides create-react-app webpack configs without ejecting
 // https://github.com/timarney/react-app-rewired
 
-const { override, useBabelRc, addWebpackModuleRule } = require("customize-cra");
+const { override, useBabelRc, addWebpackModuleRule, addWebpackPlugin } = require("customize-cra");
 const path = require("path");
 const { removeModuleScopePlugin } = require('customize-cra')
-
+const { DefinePlugin, EnvironmentPlugin } = require('webpack')
 module.exports = removeModuleScopePlugin()
 module.exports = override(
   useBabelRc(),
   removeModuleScopePlugin(),
-  addWebpackModuleRule(
-    {
-      test: /\.js$/,
-      include: path.resolve(__dirname, 'node_modules/@kyper/'),
-      exclude: [/__tests__/],
-      loader: 'babel-loader',
-      options: {"sourceType": "unambiguous",
+  addWebpackPlugin(new DefinePlugin({
+    // This is to pass the api keys to client code for mobile use
+    // TODO: try to see a better way to auth mobile app with api server
+    'process.client_envs': process.env.mobile ? {
+      MxApiSecret: JSON.stringify(process.env.MxApiSecret),
+      MxApiSecretProd: JSON.stringify(process.env.MxApiSecretProd),
+      SophtronApiUserSecret: JSON.stringify(process.env.SophtronApiUserSecret),
+    }: {}
+  })),
+  addWebpackModuleRule({
+    test: /\.js$/,
+    include: path.resolve(__dirname, 'node_modules/@kyper/'),
+    exclude: [/__tests__/],
+    loader: 'babel-loader',
+    options: {"sourceType": "unambiguous",
       presets: [
         [
           "@babel/env",
@@ -24,11 +32,24 @@ module.exports = override(
             "corejs": "3.29",
             "modules": "commonjs"
           }
-        ],'@babel/preset-react'],
-        sourceType: "unambiguous"
-      },
+        ],
+        '@babel/preset-react'
+      ],
+      sourceType: "unambiguous"
     },
-  ),
+  }),
+  // addWebpackModuleRule(
+  //   {
+  //     test: /\.(jpg|png|svg)$/,
+  //     type: 'asset/inline'
+  //     // use: {
+  //     //   loader: 'file-loader',
+  //     //   options: {
+  //     //     limit: 50000,
+  //     //   }
+  //     // }
+  //   }
+  // ),
   function override(config) {
     config.resolve = {
       ...config.resolve,

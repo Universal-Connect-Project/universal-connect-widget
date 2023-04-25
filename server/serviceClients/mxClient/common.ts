@@ -135,7 +135,6 @@ const CryptoJS = require("crypto-js");
 export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxios: AxiosInstance, BASE_PATH: string, configuration?: Configuration) {
     return async <T = unknown, R = AxiosResponse<T>>(axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
         const axiosRequestArgs = {...axiosArgs.options, url: (configuration?.basePath || basePath) + axiosArgs.url};
-        // console.log(axiosRequestArgs)
         const encodedWord = CryptoJS.enc.Utf8.parse(axiosRequestArgs.auth.username + ':' + axiosRequestArgs.auth.password);
         let authHeader = 'Basic ' + CryptoJS.enc.Base64.stringify(encodedWord);
         let options = {
@@ -149,12 +148,15 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
           webFetchExtra: { mode: 'no-cors' },
           responseType: 'text',
         } ;
-        if(process?.env?.HOME){
+        if(typeof process !== 'undefined'){
           // if it's running on node
           delete options.webFetchExtra
         }
+        // console.log(typeof process)
+        // console.log(options)
+        // console.log(axiosRequestArgs)
         const ret = await Http[axiosRequestArgs.method.toLowerCase().replace('delete', 'del')](options);
-          // console.log(ret)
-          return ret;
+        // console.log(ret)
+        return ret;
     };
 }

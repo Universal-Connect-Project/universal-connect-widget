@@ -1,5 +1,5 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
-
+// this file doesn't seem to be in effect, use config-overrides.js instead
 module.exports = {
   module: {
     rules: [
@@ -12,6 +12,10 @@ module.exports = {
               presets: ['@babel/preset-react'],
           },
         },
+        {
+          test: /\.svg$/,
+          type: "asset/inline",
+        }
     ],
   },
   plugins: [

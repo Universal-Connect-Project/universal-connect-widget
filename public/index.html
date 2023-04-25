@@ -49,9 +49,9 @@
           color_scheme: 'light',
           connect: {
             mode: 'agg',
-            current_institution_code: '', // 'mxbank',
+            current_institution_code: '$current_institution_code', // 'mxbank',
             current_institution_guid: null,
-            current_member_guid: '',
+            current_member_guid: '$current_member_guid',
             current_provider: '$current_provider',
             current_microdeposit_guid: null,
             disable_background_agg: null,
@@ -123,6 +123,12 @@
           }
         }
       };
+      if(window.app.clientConfig.connect.current_institution_code.startsWith('$')){
+        window.app.clientConfig.connect.current_institution_code = ''
+      }
+      if(window.app.clientConfig.connect.current_member_guid.startsWith('$')){
+        window.app.clientConfig.connect.current_member_guid = ''
+      }
     </script>
   </body>
 </html>

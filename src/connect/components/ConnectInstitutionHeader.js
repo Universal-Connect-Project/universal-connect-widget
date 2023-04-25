@@ -81,8 +81,10 @@ const SVGImage = props => {
     zIndex: 20,
     ...props.styles,
   }
-
-  return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
+  // return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
+  return (<div style={styles}>
+    <img alt='svg' src={ props.image } />
+  </div>)
 }
 
 SVGImage.propTypes = SVGImagePropTypes

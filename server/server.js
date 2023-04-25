@@ -38,41 +38,40 @@ const pageQueries = new RegExp([
 ].map(r => `\\$${r}`).join('|'), 'g');
 
 if(config.ResourcePrefix !== 'local'){
+  app.get('/', function (req, res) {
+    logger.info(`serving resources from ${config.ResourcePrefix}`)
+    req.metricsPath = '/catchall';
+    const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}${req.path}`;
+    http.wget(resourcePath).then(html => {
+      if(req.query.current_member_guid && !req.query.current_provider){
+        delete req.query.current_member_guid;
+      }
+      let queries = {
+        current_member_guid: req.query.connection_id,
+        current_institution_code: req.query.bankid,
+        ...req.query,
+      }
+      res.send(html.replaceAll(pageQueries, q => queries[q.substring(1)] || ''));
+    })
+  })
   app.get('*', function (req, res) {
     logger.info(`serving resources from ${config.ResourcePrefix}`)
     req.metricsPath = '/catchall';
     const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}${req.path}`;
-    if(req.path === '/'){
-      http.wget(resourcePath).then(html => {
-        if(req.query.current_member_guid && !req.query.current_provider){
-          delete req.query.current_member_guid;
-        }
-        res.send(html.replaceAll(pageQueries, q => req.query[q.substring(1)] || ''));
-      })
-    }else{
-      http.stream(resourcePath, null, res);
-    }
-    // if (req.path.indexOf('_next/webpack-hmr') === -1) {
-    //   http.stream(resourcePath, null, res);
-    // } else {
-    //   res.sendStatus(404);
-    // }
+    http.stream(resourcePath, null, res);
   });
 }else{
   logger.info(`using local resources from "../build"`)
   const fs = require('fs');
-  app.use('/', (req, res, next) => {
-    if(req.path === '/'){
-      fs.readFile(path.join(__dirname, '../', 'build', 'index.html'), 'utf8', (err, html) => {
-        if(req.query.current_member_guid && !req.query.current_provider){
-          delete req.query.current_member_guid;
-        }
-        res.send(html.replaceAll(pageQueries, q => req.query[q.substring(1)] || ''));
-      })
-    }else{
-      next()
-    }
-  }, express.static(path.join(__dirname, '../build')));
+  app.get('/', (req, res) => {
+    fs.readFile(path.join(__dirname, '../', 'build', 'index.html'), 'utf8', (err, html) => {
+      if(req.query.current_member_guid && !req.query.current_provider){
+        delete req.query.current_member_guid;
+      }
+      res.send(html.replaceAll(pageQueries, q => req.query[q.substring(1)] || ''));
+    })
+  });
+  app.get('*', express.static(path.join(__dirname, '../build')))
 }
 
 app.listen(config.Port, () => {
