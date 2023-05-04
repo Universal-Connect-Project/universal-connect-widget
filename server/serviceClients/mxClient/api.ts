@@ -59,6 +59,12 @@ export interface AccountNumberResponse {
     'member_guid'?: string | null;
     /**
      * 
+     * @type {boolean}
+     * @memberof AccountNumberResponse
+     */
+    'passed_validation'?: boolean | null;
+    /**
+     * 
      * @type {string}
      * @memberof AccountNumberResponse
      */
@@ -136,7 +142,19 @@ export interface AccountOwnerResponse {
      * @type {string}
      * @memberof AccountOwnerResponse
      */
+    'first_name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountOwnerResponse
+     */
     'guid'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountOwnerResponse
+     */
+    'last_name'?: string | null;
     /**
      * 
      * @type {string}
@@ -543,6 +561,58 @@ export interface AccountsResponseBody {
 /**
  * 
  * @export
+ * @interface AuthorizationCodeRequest
+ */
+export interface AuthorizationCodeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorizationCodeRequest
+     */
+    'scope'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface AuthorizationCodeRequestBody
+ */
+export interface AuthorizationCodeRequestBody {
+    /**
+     * 
+     * @type {AuthorizationCodeRequest}
+     * @memberof AuthorizationCodeRequestBody
+     */
+    'authorization_code'?: AuthorizationCodeRequest;
+}
+/**
+ * 
+ * @export
+ * @interface AuthorizationCodeResponse
+ */
+export interface AuthorizationCodeResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthorizationCodeResponse
+     */
+    'code'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface AuthorizationCodeResponseBody
+ */
+export interface AuthorizationCodeResponseBody {
+    /**
+     * 
+     * @type {Array<AuthorizationCodeResponse>}
+     * @memberof AuthorizationCodeResponseBody
+     */
+    'authorization_code'?: Array<AuthorizationCodeResponse>;
+}
+/**
+ * 
+ * @export
  * @interface CategoriesResponseBody
  */
 export interface CategoriesResponseBody {
@@ -800,7 +870,19 @@ export interface ConnectWidgetRequest {
      * @type {boolean}
      * @memberof ConnectWidgetRequest
      */
+    'disable_background_agg'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectWidgetRequest
+     */
     'disable_institution_search'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectWidgetRequest
+     */
+    'include_identity'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -819,6 +901,12 @@ export interface ConnectWidgetRequest {
      * @memberof ConnectWidgetRequest
      */
     'mode'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectWidgetRequest
+     */
+    'oauth_referral_source'?: string;
     /**
      * 
      * @type {number}
@@ -2255,12 +2343,6 @@ export interface MemberCreateRequest {
     'background_aggregation_is_disabled'?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof MemberCreateRequest
-     */
-    'client_redirect_url'?: string;
-    /**
-     * 
      * @type {Array<CredentialRequest>}
      * @memberof MemberCreateRequest
      */
@@ -2302,6 +2384,12 @@ export interface MemberCreateRequest {
  * @interface MemberCreateRequestBody
  */
 export interface MemberCreateRequestBody {
+    /**
+     * 
+     * @type {string}
+     * @memberof MemberCreateRequestBody
+     */
+    'client_redirect_url'?: string;
     /**
      * 
      * @type {MemberCreateRequest}
@@ -2852,6 +2940,70 @@ export interface PaginationResponse {
 /**
  * 
  * @export
+ * @interface PaymentProcessorAuthorizationCodeRequest
+ */
+export interface PaymentProcessorAuthorizationCodeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PaymentProcessorAuthorizationCodeRequest
+     */
+    'account_guid'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaymentProcessorAuthorizationCodeRequest
+     */
+    'member_guid'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaymentProcessorAuthorizationCodeRequest
+     */
+    'user_guid'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface PaymentProcessorAuthorizationCodeRequestBody
+ */
+export interface PaymentProcessorAuthorizationCodeRequestBody {
+    /**
+     * 
+     * @type {PaymentProcessorAuthorizationCodeRequest}
+     * @memberof PaymentProcessorAuthorizationCodeRequestBody
+     */
+    'payment_processor_authorization_code'?: PaymentProcessorAuthorizationCodeRequest;
+}
+/**
+ * 
+ * @export
+ * @interface PaymentProcessorAuthorizationCodeResponse
+ */
+export interface PaymentProcessorAuthorizationCodeResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof PaymentProcessorAuthorizationCodeResponse
+     */
+    'authorization_code'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface PaymentProcessorAuthorizationCodeResponseBody
+ */
+export interface PaymentProcessorAuthorizationCodeResponseBody {
+    /**
+     * 
+     * @type {PaymentProcessorAuthorizationCodeResponse}
+     * @memberof PaymentProcessorAuthorizationCodeResponseBody
+     */
+    'payment_processor_authorization_code'?: PaymentProcessorAuthorizationCodeResponse;
+}
+/**
+ * 
+ * @export
  * @interface StatementResponse
  */
 export interface StatementResponse {
@@ -3171,6 +3323,105 @@ export interface TagsResponseBody {
      * @memberof TagsResponseBody
      */
     'tags'?: Array<TagResponse>;
+}
+/**
+ * 
+ * @export
+ * @interface TaxDocumentResponse
+ */
+export interface TaxDocumentResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'content_hash'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'created_at'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'document_type'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'guid'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'issued_on'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'member_guid'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'tax_year'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'updated_at'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'uri'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TaxDocumentResponse
+     */
+    'user_guid'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface TaxDocumentResponseBody
+ */
+export interface TaxDocumentResponseBody {
+    /**
+     * 
+     * @type {TaxDocumentResponse}
+     * @memberof TaxDocumentResponseBody
+     */
+    'tax_document'?: TaxDocumentResponse;
+}
+/**
+ * 
+ * @export
+ * @interface TaxDocumentsResponseBody
+ */
+export interface TaxDocumentsResponseBody {
+    /**
+     * 
+     * @type {PaginationResponse}
+     * @memberof TaxDocumentsResponseBody
+     */
+    'pagination'?: PaginationResponse;
+    /**
+     * 
+     * @type {Array<TaxDocumentResponse>}
+     * @memberof TaxDocumentsResponseBody
+     */
+    'tax_documents'?: Array<TaxDocumentResponse>;
 }
 /**
  * 
@@ -3850,7 +4101,19 @@ export interface WidgetRequest {
      * @type {boolean}
      * @memberof WidgetRequest
      */
+    'disable_background_agg'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof WidgetRequest
+     */
     'disable_institution_search'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof WidgetRequest
+     */
+    'include_identity'?: boolean;
     /**
      * 
      * @type {boolean}
@@ -3869,6 +4132,12 @@ export interface WidgetRequest {
      * @memberof WidgetRequest
      */
     'mode'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WidgetRequest
+     */
+    'oauth_referral_source'?: string;
     /**
      * 
      * @type {number}
@@ -4827,6 +5096,46 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * (This endpoint is deprecated. Clients should use `/authorization_code`.) Clients use this endpoint to request an authorization_code according to a user, member, and account specified in the request body. Clients then pass this code to processors. Processor access is scoped only to the user/member/account specified in this request. Before requesting an authorization_code, clients must have verified the specified member.
+         * @summary (Deprecated) Request an authorization code.
+         * @param {PaymentProcessorAuthorizationCodeRequestBody} paymentProcessorAuthorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deprecatedRequestPaymentProcessorAuthorizationCode: async (paymentProcessorAuthorizationCodeRequestBody: PaymentProcessorAuthorizationCodeRequestBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'paymentProcessorAuthorizationCodeRequestBody' is not null or undefined
+            assertParamExists('deprecatedRequestPaymentProcessorAuthorizationCode', 'paymentProcessorAuthorizationCodeRequestBody', paymentProcessorAuthorizationCodeRequestBody)
+            const localVarPath = `/payment_processor_authorization_code`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(paymentProcessorAuthorizationCodeRequestBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Use this endpoint to download a specified statement PDF.
          * @summary Download statement pdf
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -4845,6 +5154,52 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             const localVarPath = `/users/{user_guid}/members/{member_guid}/statements/{statement_guid}.pdf`
                 .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
                 .replace(`{${"statement_guid"}}`, encodeURIComponent(String(statementGuid)))
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Use this endpoint to download a PDF version of the specified tax document. The endpoint URL is the base URL appended with the uri of the tax_document.
+         * @summary Download a Tax Document PDF
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadTaxDocument: async (taxDocumentGuid: string, memberGuid: string, userGuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'taxDocumentGuid' is not null or undefined
+            assertParamExists('downloadTaxDocument', 'taxDocumentGuid', taxDocumentGuid)
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('downloadTaxDocument', 'memberGuid', memberGuid)
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('downloadTaxDocument', 'userGuid', userGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/tax_documents/{tax_document_guid}.pdf`
+                .replace(`{${"tax_document_guid"}}`, encodeURIComponent(String(taxDocumentGuid)))
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
                 .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4968,6 +5323,48 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'userGuid' is not null or undefined
             assertParamExists('fetchStatements', 'userGuid', userGuid)
             const localVarPath = `/users/{user_guid}/members/{member_guid}/fetch_statements`
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Use this endpoint to fetch (aggregate) the tax documents associated with the specified member. This request **does not** return the latest tax documents. It just starts the document aggregation process and returns the initial state of the process. You must interact with the newly aggregated data using the other document endpoints in this reference. This request may also trigger multi-factor authentication which requires end-user input and a specific process for answering authentication challenges.
+         * @summary Fetch Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fetchTaxDocuments: async (memberGuid: string, userGuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('fetchTaxDocuments', 'memberGuid', memberGuid)
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('fetchTaxDocuments', 'userGuid', userGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/fetch_tax_documents`
                 .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
                 .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5878,6 +6275,63 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * This endpoint returns a list of all the accounts associated with the specified `member`.
+         * @summary List accounts by member
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMemberAccounts: async (userGuid: string, memberGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('listMemberAccounts', 'userGuid', userGuid)
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('listMemberAccounts', 'memberGuid', memberGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/accounts`
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)))
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (memberIsManagedByUser !== undefined) {
+                localVarQueryParameter['member_is_managed_by_user'] = memberIsManagedByUser;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (recordsPerPage !== undefined) {
+                localVarQueryParameter['records_per_page'] = recordsPerPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Use this endpoint for information on what multi-factor authentication challenges need to be answered in order to aggregate a member. If the aggregation is not challenged, i.e., the member does not have a connection status of `CHALLENGED`, then code `204 No Content` will be returned. If the aggregation has been challenged, i.e., the member does have a connection status of `CHALLENGED`, then code `200 OK` will be returned - along with the corresponding credentials.
          * @summary List member challenges
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -6222,6 +6676,58 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * Use this endpoint to get a paginated list of tax documents.
+         * @summary List Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTaxDocuments: async (memberGuid: string, userGuid: string, page?: number, recordsPerPage?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('listTaxDocuments', 'memberGuid', memberGuid)
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('listTaxDocuments', 'userGuid', userGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/tax_documents`
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (recordsPerPage !== undefined) {
+                localVarQueryParameter['records_per_page'] = recordsPerPage;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Use this endpoint to read the attributes of all existing transaction rules belonging to the user.
          * @summary List transaction rules
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
@@ -6517,12 +7023,13 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
          * This endpoint returns a list of all the accounts associated with the specified `user`.
          * @summary List accounts
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserAccounts: async (userGuid: string, page?: number, recordsPerPage?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listUserAccounts: async (userGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userGuid' is not null or undefined
             assertParamExists('listUserAccounts', 'userGuid', userGuid)
             const localVarPath = `/users/{user_guid}/accounts`
@@ -6541,6 +7048,10 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             // authentication basicAuth required
             // http basic authentication required
             setBasicAuthToObject(localVarRequestOptions, configuration)
+
+            if (memberIsManagedByUser !== undefined) {
+                localVarQueryParameter['member_is_managed_by_user'] = memberIsManagedByUser;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -6566,10 +7077,13 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
          * @summary List users
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
+         * @param {string} [id] The user &#x60;id&#x60; to search for.
+         * @param {string} [email] The user &#x60;email&#x60; to search for.
+         * @param {boolean} [isDisabled] Search for users that are diabled.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUsers: async (page?: number, recordsPerPage?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listUsers: async (page?: number, recordsPerPage?: number, id?: string, email?: string, isDisabled?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6592,6 +7106,18 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
 
             if (recordsPerPage !== undefined) {
                 localVarQueryParameter['records_per_page'] = recordsPerPage;
+            }
+
+            if (id !== undefined) {
+                localVarQueryParameter['id'] = id;
+            }
+
+            if (email !== undefined) {
+                localVarQueryParameter['email'] = email;
+            }
+
+            if (isDisabled !== undefined) {
+                localVarQueryParameter['is_disabled'] = isDisabled;
             }
 
 
@@ -6620,6 +7146,52 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             assertParamExists('readAccount', 'userGuid', userGuid)
             const localVarPath = `/users/{user_guid}/accounts/{account_guid}`
                 .replace(`{${"account_guid"}}`, encodeURIComponent(String(accountGuid)))
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * This endpoint allows you to read the attributes of an `account` resource.
+         * @summary Read account by member
+         * @param {string} accountGuid The unique id for an &#x60;account&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readAccountByMember: async (accountGuid: string, memberGuid: string, userGuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountGuid' is not null or undefined
+            assertParamExists('readAccountByMember', 'accountGuid', accountGuid)
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('readAccountByMember', 'memberGuid', memberGuid)
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('readAccountByMember', 'userGuid', userGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/accounts/{account_guid}`
+                .replace(`{${"account_guid"}}`, encodeURIComponent(String(accountGuid)))
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
                 .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7236,6 +7808,52 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
+         * Use this endpoint to read the attributes of the specified tax document.
+         * @summary Read a Tax Document
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readTaxDocument: async (taxDocumentGuid: string, memberGuid: string, userGuid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'taxDocumentGuid' is not null or undefined
+            assertParamExists('readTaxDocument', 'taxDocumentGuid', taxDocumentGuid)
+            // verify required parameter 'memberGuid' is not null or undefined
+            assertParamExists('readTaxDocument', 'memberGuid', memberGuid)
+            // verify required parameter 'userGuid' is not null or undefined
+            assertParamExists('readTaxDocument', 'userGuid', userGuid)
+            const localVarPath = `/users/{user_guid}/members/{member_guid}/tax_documents/{tax_document_guid}`
+                .replace(`{${"tax_document_guid"}}`, encodeURIComponent(String(taxDocumentGuid)))
+                .replace(`{${"member_guid"}}`, encodeURIComponent(String(memberGuid)))
+                .replace(`{${"user_guid"}}`, encodeURIComponent(String(userGuid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Requests to this endpoint will return the attributes of the specified `transaction`.
          * @summary Read transaction
          * @param {string} transactionGuid The unique id for a &#x60;transaction&#x60;.
@@ -7351,6 +7969,46 @@ export const MxPlatformApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Clients use this endpoint to request an authorization code according to the parameters specified in the scope. Clients then pass this code to processors. Processor access is scoped only to the GUIDs and features specified in this request. Before requesting an authorization code which includes a member in the scope, clients must have verified that member.
+         * @summary Request an authorization code.
+         * @param {AuthorizationCodeRequestBody} authorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestAuthorizationCode: async (authorizationCodeRequestBody: AuthorizationCodeRequestBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'authorizationCodeRequestBody' is not null or undefined
+            assertParamExists('requestAuthorizationCode', 'authorizationCodeRequestBody', authorizationCodeRequestBody)
+            const localVarPath = `/authorization_code`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication basicAuth required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(authorizationCodeRequestBody, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8397,6 +9055,17 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * (This endpoint is deprecated. Clients should use `/authorization_code`.) Clients use this endpoint to request an authorization_code according to a user, member, and account specified in the request body. Clients then pass this code to processors. Processor access is scoped only to the user/member/account specified in this request. Before requesting an authorization_code, clients must have verified the specified member.
+         * @summary (Deprecated) Request an authorization code.
+         * @param {PaymentProcessorAuthorizationCodeRequestBody} paymentProcessorAuthorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody: PaymentProcessorAuthorizationCodeRequestBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentProcessorAuthorizationCodeResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Use this endpoint to download a specified statement PDF.
          * @summary Download statement pdf
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -8407,6 +9076,19 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          */
         async downloadStatementPDF(memberGuid: string, statementGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.downloadStatementPDF(memberGuid, statementGuid, userGuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Use this endpoint to download a PDF version of the specified tax document. The endpoint URL is the base URL appended with the uri of the tax_document.
+         * @summary Download a Tax Document PDF
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async downloadTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.downloadTaxDocument(taxDocumentGuid, memberGuid, userGuid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8442,6 +9124,18 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          */
         async fetchStatements(memberGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MemberResponseBody>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.fetchStatements(memberGuid, userGuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Use this endpoint to fetch (aggregate) the tax documents associated with the specified member. This request **does not** return the latest tax documents. It just starts the document aggregation process and returns the initial state of the process. You must interact with the newly aggregated data using the other document endpoints in this reference. This request may also trigger multi-factor authentication which requires end-user input and a specific process for answering authentication challenges.
+         * @summary Fetch Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async fetchTaxDocuments(memberGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MemberResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.fetchTaxDocuments(memberGuid, userGuid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8680,6 +9374,21 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * This endpoint returns a list of all the accounts associated with the specified `member`.
+         * @summary List accounts by member
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listMemberAccounts(userGuid: string, memberGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountsResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMemberAccounts(userGuid, memberGuid, memberIsManagedByUser, page, recordsPerPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Use this endpoint for information on what multi-factor authentication challenges need to be answered in order to aggregate a member. If the aggregation is not challenged, i.e., the member does not have a connection status of `CHALLENGED`, then code `204 No Content` will be returned. If the aggregation has been challenged, i.e., the member does have a connection status of `CHALLENGED`, then code `200 OK` will be returned - along with the corresponding credentials.
          * @summary List member challenges
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -8773,6 +9482,20 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Use this endpoint to get a paginated list of tax documents.
+         * @summary List Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listTaxDocuments(memberGuid: string, userGuid: string, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaxDocumentsResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTaxDocuments(memberGuid, userGuid, page, recordsPerPage, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Use this endpoint to read the attributes of all existing transaction rules belonging to the user.
          * @summary List transaction rules
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
@@ -8852,13 +9575,14 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          * This endpoint returns a list of all the accounts associated with the specified `user`.
          * @summary List accounts
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUserAccounts(userGuid: string, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountsResponseBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserAccounts(userGuid, page, recordsPerPage, options);
+        async listUserAccounts(userGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountsResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserAccounts(userGuid, memberIsManagedByUser, page, recordsPerPage, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8866,11 +9590,14 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          * @summary List users
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
+         * @param {string} [id] The user &#x60;id&#x60; to search for.
+         * @param {string} [email] The user &#x60;email&#x60; to search for.
+         * @param {boolean} [isDisabled] Search for users that are diabled.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUsers(page?: number, recordsPerPage?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersResponseBody>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listUsers(page, recordsPerPage, options);
+        async listUsers(page?: number, recordsPerPage?: number, id?: string, email?: string, isDisabled?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UsersResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUsers(page, recordsPerPage, id, email, isDisabled, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -8883,6 +9610,19 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          */
         async readAccount(accountGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountResponseBody>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.readAccount(accountGuid, userGuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * This endpoint allows you to read the attributes of an `account` resource.
+         * @summary Read account by member
+         * @param {string} accountGuid The unique id for an &#x60;account&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async readAccountByMember(accountGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.readAccountByMember(accountGuid, memberGuid, userGuid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9054,6 +9794,19 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Use this endpoint to read the attributes of the specified tax document.
+         * @summary Read a Tax Document
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async readTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TaxDocumentResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.readTaxDocument(taxDocumentGuid, memberGuid, userGuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Requests to this endpoint will return the attributes of the specified `transaction`.
          * @summary Read transaction
          * @param {string} transactionGuid The unique id for a &#x60;transaction&#x60;.
@@ -9086,6 +9839,17 @@ export const MxPlatformApiFp = function(configuration?: Configuration) {
          */
         async readUser(userGuid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponseBody>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.readUser(userGuid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Clients use this endpoint to request an authorization code according to the parameters specified in the scope. Clients then pass this code to processors. Processor access is scoped only to the GUIDs and features specified in this request. Before requesting an authorization code which includes a member in the scope, clients must have verified that member.
+         * @summary Request an authorization code.
+         * @param {AuthorizationCodeRequestBody} authorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async requestAuthorizationCode(authorizationCodeRequestBody: AuthorizationCodeRequestBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthorizationCodeResponseBody>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.requestAuthorizationCode(authorizationCodeRequestBody, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -9535,6 +10299,16 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
             return localVarFp.deleteUser(userGuid, options).then((request) => request(axios, basePath));
         },
         /**
+         * (This endpoint is deprecated. Clients should use `/authorization_code`.) Clients use this endpoint to request an authorization_code according to a user, member, and account specified in the request body. Clients then pass this code to processors. Processor access is scoped only to the user/member/account specified in this request. Before requesting an authorization_code, clients must have verified the specified member.
+         * @summary (Deprecated) Request an authorization code.
+         * @param {PaymentProcessorAuthorizationCodeRequestBody} paymentProcessorAuthorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody: PaymentProcessorAuthorizationCodeRequestBody, options?: any): AxiosPromise<PaymentProcessorAuthorizationCodeResponseBody> {
+            return localVarFp.deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Use this endpoint to download a specified statement PDF.
          * @summary Download statement pdf
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -9545,6 +10319,18 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
          */
         downloadStatementPDF(memberGuid: string, statementGuid: string, userGuid: string, options?: any): AxiosPromise<any> {
             return localVarFp.downloadStatementPDF(memberGuid, statementGuid, userGuid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Use this endpoint to download a PDF version of the specified tax document. The endpoint URL is the base URL appended with the uri of the tax_document.
+         * @summary Download a Tax Document PDF
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        downloadTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: any): AxiosPromise<any> {
+            return localVarFp.downloadTaxDocument(taxDocumentGuid, memberGuid, userGuid, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this endpoint to categorize, cleanse, and classify transactions. These transactions are not persisted or stored on the MX platform.
@@ -9577,6 +10363,17 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
          */
         fetchStatements(memberGuid: string, userGuid: string, options?: any): AxiosPromise<MemberResponseBody> {
             return localVarFp.fetchStatements(memberGuid, userGuid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Use this endpoint to fetch (aggregate) the tax documents associated with the specified member. This request **does not** return the latest tax documents. It just starts the document aggregation process and returns the initial state of the process. You must interact with the newly aggregated data using the other document endpoints in this reference. This request may also trigger multi-factor authentication which requires end-user input and a specific process for answering authentication challenges.
+         * @summary Fetch Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fetchTaxDocuments(memberGuid: string, userGuid: string, options?: any): AxiosPromise<MemberResponseBody> {
+            return localVarFp.fetchTaxDocuments(memberGuid, userGuid, options).then((request) => request(axios, basePath));
         },
         /**
          * The identify endpoint begins an identification process for an already-existing member.
@@ -9797,6 +10594,20 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
             return localVarFp.listManagedTransactions(accountGuid, memberGuid, userGuid, page, recordsPerPage, options).then((request) => request(axios, basePath));
         },
         /**
+         * This endpoint returns a list of all the accounts associated with the specified `member`.
+         * @summary List accounts by member
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMemberAccounts(userGuid: string, memberGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: any): AxiosPromise<AccountsResponseBody> {
+            return localVarFp.listMemberAccounts(userGuid, memberGuid, memberIsManagedByUser, page, recordsPerPage, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Use this endpoint for information on what multi-factor authentication challenges need to be answered in order to aggregate a member. If the aggregation is not challenged, i.e., the member does not have a connection status of `CHALLENGED`, then code `204 No Content` will be returned. If the aggregation has been challenged, i.e., the member does have a connection status of `CHALLENGED`, then code `200 OK` will be returned - along with the corresponding credentials.
          * @summary List member challenges
          * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -9883,6 +10694,19 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
             return localVarFp.listTags(userGuid, page, recordsPerPage, options).then((request) => request(axios, basePath));
         },
         /**
+         * Use this endpoint to get a paginated list of tax documents.
+         * @summary List Tax Documents
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {number} [page] Specify current page.
+         * @param {number} [recordsPerPage] Specify records per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTaxDocuments(memberGuid: string, userGuid: string, page?: number, recordsPerPage?: number, options?: any): AxiosPromise<TaxDocumentsResponseBody> {
+            return localVarFp.listTaxDocuments(memberGuid, userGuid, page, recordsPerPage, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Use this endpoint to read the attributes of all existing transaction rules belonging to the user.
          * @summary List transaction rules
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
@@ -9957,24 +10781,28 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
          * This endpoint returns a list of all the accounts associated with the specified `user`.
          * @summary List accounts
          * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserAccounts(userGuid: string, page?: number, recordsPerPage?: number, options?: any): AxiosPromise<AccountsResponseBody> {
-            return localVarFp.listUserAccounts(userGuid, page, recordsPerPage, options).then((request) => request(axios, basePath));
+        listUserAccounts(userGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: any): AxiosPromise<AccountsResponseBody> {
+            return localVarFp.listUserAccounts(userGuid, memberIsManagedByUser, page, recordsPerPage, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this endpoint to list every user you\'ve created in the MX Platform API.
          * @summary List users
          * @param {number} [page] Specify current page.
          * @param {number} [recordsPerPage] Specify records per page.
+         * @param {string} [id] The user &#x60;id&#x60; to search for.
+         * @param {string} [email] The user &#x60;email&#x60; to search for.
+         * @param {boolean} [isDisabled] Search for users that are diabled.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUsers(page?: number, recordsPerPage?: number, options?: any): AxiosPromise<UsersResponseBody> {
-            return localVarFp.listUsers(page, recordsPerPage, options).then((request) => request(axios, basePath));
+        listUsers(page?: number, recordsPerPage?: number, id?: string, email?: string, isDisabled?: boolean, options?: any): AxiosPromise<UsersResponseBody> {
+            return localVarFp.listUsers(page, recordsPerPage, id, email, isDisabled, options).then((request) => request(axios, basePath));
         },
         /**
          * This endpoint returns the specified `account` resource.
@@ -9986,6 +10814,18 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
          */
         readAccount(accountGuid: string, userGuid: string, options?: any): AxiosPromise<AccountResponseBody> {
             return localVarFp.readAccount(accountGuid, userGuid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This endpoint allows you to read the attributes of an `account` resource.
+         * @summary Read account by member
+         * @param {string} accountGuid The unique id for an &#x60;account&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readAccountByMember(accountGuid: string, memberGuid: string, userGuid: string, options?: any): AxiosPromise<AccountResponseBody> {
+            return localVarFp.readAccountByMember(accountGuid, memberGuid, userGuid, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this endpoint to read the attributes of either a default category or a custom category.
@@ -10142,6 +10982,18 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
             return localVarFp.readTagging(taggingGuid, userGuid, options).then((request) => request(axios, basePath));
         },
         /**
+         * Use this endpoint to read the attributes of the specified tax document.
+         * @summary Read a Tax Document
+         * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+         * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+         * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: any): AxiosPromise<TaxDocumentResponseBody> {
+            return localVarFp.readTaxDocument(taxDocumentGuid, memberGuid, userGuid, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Requests to this endpoint will return the attributes of the specified `transaction`.
          * @summary Read transaction
          * @param {string} transactionGuid The unique id for a &#x60;transaction&#x60;.
@@ -10172,6 +11024,16 @@ export const MxPlatformApiFactory = function (configuration?: Configuration, bas
          */
         readUser(userGuid: string, options?: any): AxiosPromise<UserResponseBody> {
             return localVarFp.readUser(userGuid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Clients use this endpoint to request an authorization code according to the parameters specified in the scope. Clients then pass this code to processors. Processor access is scoped only to the GUIDs and features specified in this request. Before requesting an authorization code which includes a member in the scope, clients must have verified that member.
+         * @summary Request an authorization code.
+         * @param {AuthorizationCodeRequestBody} authorizationCodeRequestBody The scope for the authorization code.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestAuthorizationCode(authorizationCodeRequestBody: AuthorizationCodeRequestBody, options?: any): AxiosPromise<AuthorizationCodeResponseBody> {
+            return localVarFp.requestAuthorizationCode(authorizationCodeRequestBody, options).then((request) => request(axios, basePath));
         },
         /**
          * This endpoint will return a URL for an embeddable version of MX Connect.
@@ -10644,6 +11506,18 @@ export class MxPlatformApi extends BaseAPI {
     }
 
     /**
+     * (This endpoint is deprecated. Clients should use `/authorization_code`.) Clients use this endpoint to request an authorization_code according to a user, member, and account specified in the request body. Clients then pass this code to processors. Processor access is scoped only to the user/member/account specified in this request. Before requesting an authorization_code, clients must have verified the specified member.
+     * @summary (Deprecated) Request an authorization code.
+     * @param {PaymentProcessorAuthorizationCodeRequestBody} paymentProcessorAuthorizationCodeRequestBody The scope for the authorization code.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody: PaymentProcessorAuthorizationCodeRequestBody, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).deprecatedRequestPaymentProcessorAuthorizationCode(paymentProcessorAuthorizationCodeRequestBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Use this endpoint to download a specified statement PDF.
      * @summary Download statement pdf
      * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -10655,6 +11529,20 @@ export class MxPlatformApi extends BaseAPI {
      */
     public downloadStatementPDF(memberGuid: string, statementGuid: string, userGuid: string, options?: AxiosRequestConfig) {
         return MxPlatformApiFp(this.configuration).downloadStatementPDF(memberGuid, statementGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Use this endpoint to download a PDF version of the specified tax document. The endpoint URL is the base URL appended with the uri of the tax_document.
+     * @summary Download a Tax Document PDF
+     * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public downloadTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).downloadTaxDocument(taxDocumentGuid, memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10693,6 +11581,19 @@ export class MxPlatformApi extends BaseAPI {
      */
     public fetchStatements(memberGuid: string, userGuid: string, options?: AxiosRequestConfig) {
         return MxPlatformApiFp(this.configuration).fetchStatements(memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Use this endpoint to fetch (aggregate) the tax documents associated with the specified member. This request **does not** return the latest tax documents. It just starts the document aggregation process and returns the initial state of the process. You must interact with the newly aggregated data using the other document endpoints in this reference. This request may also trigger multi-factor authentication which requires end-user input and a specific process for answering authentication challenges.
+     * @summary Fetch Tax Documents
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public fetchTaxDocuments(memberGuid: string, userGuid: string, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).fetchTaxDocuments(memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10948,6 +11849,22 @@ export class MxPlatformApi extends BaseAPI {
     }
 
     /**
+     * This endpoint returns a list of all the accounts associated with the specified `member`.
+     * @summary List accounts by member
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
+     * @param {number} [page] Specify current page.
+     * @param {number} [recordsPerPage] Specify records per page.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public listMemberAccounts(userGuid: string, memberGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).listMemberAccounts(userGuid, memberGuid, memberIsManagedByUser, page, recordsPerPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Use this endpoint for information on what multi-factor authentication challenges need to be answered in order to aggregate a member. If the aggregation is not challenged, i.e., the member does not have a connection status of `CHALLENGED`, then code `204 No Content` will be returned. If the aggregation has been challenged, i.e., the member does have a connection status of `CHALLENGED`, then code `200 OK` will be returned - along with the corresponding credentials.
      * @summary List member challenges
      * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
@@ -11048,6 +11965,21 @@ export class MxPlatformApi extends BaseAPI {
     }
 
     /**
+     * Use this endpoint to get a paginated list of tax documents.
+     * @summary List Tax Documents
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {number} [page] Specify current page.
+     * @param {number} [recordsPerPage] Specify records per page.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public listTaxDocuments(memberGuid: string, userGuid: string, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).listTaxDocuments(memberGuid, userGuid, page, recordsPerPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Use this endpoint to read the attributes of all existing transaction rules belonging to the user.
      * @summary List transaction rules
      * @param {string} userGuid The unique id for a &#x60;user&#x60;.
@@ -11132,14 +12064,15 @@ export class MxPlatformApi extends BaseAPI {
      * This endpoint returns a list of all the accounts associated with the specified `user`.
      * @summary List accounts
      * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {boolean} [memberIsManagedByUser] List only accounts whose member is managed by the user.
      * @param {number} [page] Specify current page.
      * @param {number} [recordsPerPage] Specify records per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MxPlatformApi
      */
-    public listUserAccounts(userGuid: string, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig) {
-        return MxPlatformApiFp(this.configuration).listUserAccounts(userGuid, page, recordsPerPage, options).then((request) => request(this.axios, this.basePath));
+    public listUserAccounts(userGuid: string, memberIsManagedByUser?: boolean, page?: number, recordsPerPage?: number, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).listUserAccounts(userGuid, memberIsManagedByUser, page, recordsPerPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11147,12 +12080,15 @@ export class MxPlatformApi extends BaseAPI {
      * @summary List users
      * @param {number} [page] Specify current page.
      * @param {number} [recordsPerPage] Specify records per page.
+     * @param {string} [id] The user &#x60;id&#x60; to search for.
+     * @param {string} [email] The user &#x60;email&#x60; to search for.
+     * @param {boolean} [isDisabled] Search for users that are diabled.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MxPlatformApi
      */
-    public listUsers(page?: number, recordsPerPage?: number, options?: AxiosRequestConfig) {
-        return MxPlatformApiFp(this.configuration).listUsers(page, recordsPerPage, options).then((request) => request(this.axios, this.basePath));
+    public listUsers(page?: number, recordsPerPage?: number, id?: string, email?: string, isDisabled?: boolean, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).listUsers(page, recordsPerPage, id, email, isDisabled, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11166,6 +12102,20 @@ export class MxPlatformApi extends BaseAPI {
      */
     public readAccount(accountGuid: string, userGuid: string, options?: AxiosRequestConfig) {
         return MxPlatformApiFp(this.configuration).readAccount(accountGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This endpoint allows you to read the attributes of an `account` resource.
+     * @summary Read account by member
+     * @param {string} accountGuid The unique id for an &#x60;account&#x60;.
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public readAccountByMember(accountGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).readAccountByMember(accountGuid, memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11351,6 +12301,20 @@ export class MxPlatformApi extends BaseAPI {
     }
 
     /**
+     * Use this endpoint to read the attributes of the specified tax document.
+     * @summary Read a Tax Document
+     * @param {string} taxDocumentGuid The unique id for a &#x60;tax_document&#x60;.
+     * @param {string} memberGuid The unique id for a &#x60;member&#x60;.
+     * @param {string} userGuid The unique id for a &#x60;user&#x60;.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public readTaxDocument(taxDocumentGuid: string, memberGuid: string, userGuid: string, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).readTaxDocument(taxDocumentGuid, memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Requests to this endpoint will return the attributes of the specified `transaction`.
      * @summary Read transaction
      * @param {string} transactionGuid The unique id for a &#x60;transaction&#x60;.
@@ -11386,6 +12350,18 @@ export class MxPlatformApi extends BaseAPI {
      */
     public readUser(userGuid: string, options?: AxiosRequestConfig) {
         return MxPlatformApiFp(this.configuration).readUser(userGuid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Clients use this endpoint to request an authorization code according to the parameters specified in the scope. Clients then pass this code to processors. Processor access is scoped only to the GUIDs and features specified in this request. Before requesting an authorization code which includes a member in the scope, clients must have verified that member.
+     * @summary Request an authorization code.
+     * @param {AuthorizationCodeRequestBody} authorizationCodeRequestBody The scope for the authorization code.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MxPlatformApi
+     */
+    public requestAuthorizationCode(authorizationCodeRequestBody: AuthorizationCodeRequestBody, options?: AxiosRequestConfig) {
+        return MxPlatformApiFp(this.configuration).requestAuthorizationCode(authorizationCodeRequestBody, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11616,5 +12592,4 @@ export class MxPlatformApi extends BaseAPI {
         return MxPlatformApiFp(this.configuration).verifyMember(memberGuid, userGuid, options).then((request) => request(this.axios, this.basePath));
     }
 }
-
 

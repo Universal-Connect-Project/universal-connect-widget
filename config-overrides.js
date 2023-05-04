@@ -4,7 +4,8 @@
 const { override, useBabelRc, addWebpackModuleRule, addWebpackPlugin } = require("customize-cra");
 const path = require("path");
 const { removeModuleScopePlugin } = require('customize-cra')
-const { DefinePlugin, EnvironmentPlugin } = require('webpack')
+const { DefinePlugin } = require('webpack')
+
 module.exports = removeModuleScopePlugin()
 module.exports = override(
   useBabelRc(),
@@ -19,37 +20,26 @@ module.exports = override(
     }: {}
   })),
   addWebpackModuleRule({
-    test: /\.js$/,
-    include: path.resolve(__dirname, 'node_modules/@kyper/'),
-    exclude: [/__tests__/],
-    loader: 'babel-loader',
-    options: {"sourceType": "unambiguous",
-      presets: [
-        [
-          "@babel/env",
-          {
-            "useBuiltIns": "entry",
-            "corejs": "3.29",
-            "modules": "commonjs"
-          }
+      test: /\.js$/,
+      include: path.resolve(__dirname, 'node_modules/@kyper/'),
+      exclude: [/__tests__/],
+      loader: 'babel-loader',
+      options: {"sourceType": "unambiguous",
+        presets: [
+          [
+            "@babel/env",
+            {
+              "useBuiltIns": "entry",
+              "corejs": "3.29",
+              "modules": "commonjs"
+            }
+          ],
+          '@babel/preset-react'
         ],
-        '@babel/preset-react'
-      ],
-      sourceType: "unambiguous"
+        sourceType: "unambiguous"
+      },
     },
-  }),
-  // addWebpackModuleRule(
-  //   {
-  //     test: /\.(jpg|png|svg)$/,
-  //     type: 'asset/inline'
-  //     // use: {
-  //     //   loader: 'file-loader',
-  //     //   options: {
-  //     //     limit: 50000,
-  //     //   }
-  //     // }
-  //   }
-  // ),
+  ),
   function override(config) {
     config.resolve = {
       ...config.resolve,
@@ -73,10 +63,14 @@ module.exports = override(
           default: false,
         },
       },
-      runtimeChunk: false
+      runtimeChunk: false,
     }
+    config.plugins[0].userOptions.minify.minifyJS = false
     // console.log(JSON.stringify(config))
     delete config.module.rules[1].oneOf[4].include
+    // config.module.rules[1].oneOf.unshift(
+    //   { test: /\.html$/, use: {loader: 'html?minimize=false'} }
+    //   )
     return config;
   }
 )

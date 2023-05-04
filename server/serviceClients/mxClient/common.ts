@@ -11,7 +11,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-
+import * as logger from '../../infra/logger'
 
 import { Configuration } from "./configuration";
 import { RequiredError, RequestArgs } from "./base";
@@ -156,7 +156,9 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
         // console.log(options)
         // console.log(axiosRequestArgs)
         const ret = await Http[axiosRequestArgs.method.toLowerCase().replace('delete', 'del')](options);
-        // console.log(ret)
+        if(ret.status >= 400){
+          logger.error(`Error calling mx api `, ret)
+        }
         return ret;
     };
 }

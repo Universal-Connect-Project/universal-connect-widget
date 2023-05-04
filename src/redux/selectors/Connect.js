@@ -10,7 +10,7 @@ import { ReadableStatuses } from '../../constants/Member'
 const getMemberByGuid = (members, guid) => {
   if (guid === '') return {}
 
-  return _find(members, { guid }) || {}
+  return _find(members, { guid }) || {guid}
 }
 
 /**

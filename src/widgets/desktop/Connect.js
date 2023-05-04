@@ -450,7 +450,7 @@ export class Connect extends React.Component {
           onDeleteConnectionClick={() =>
             this.setState({ memberToDelete: this.props.currentMember })
           }
-          onRefreshClick={() => this.props.stepToConnecting()}
+          onRefreshClick={() => this.props.stepToUpdateCredentials() || true || this.props.stepToConnecting()}
           onUpdateCredentialsClick={() => this.props.stepToUpdateCredentials()}
           sendAnalyticsEvent={this.props.sendAnalyticsEvent}
           sendPostMessage={this.props.sendPostMessage}

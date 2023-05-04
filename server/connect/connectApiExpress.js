@@ -16,18 +16,28 @@ module.exports = function(app){
   // stubs(app)
 
   app.post(ApiEndpoints.MEMBERS, async (req, res) => {
-    // res.sendFile(__dirname + '/stubs/member.json')
+    // res.send(require('./stubs/member.js'))
+    // return;
     let ret = await req.connectService.addMember(req.body);
     res.send(ret)
   })
-  app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
-    res.sendFile(__dirname + '/stubs/member.json')
-    // let ret = await req.connectService.updateMember(req.body);
-    // res.send(ret)
-  })
   app.put(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
-    // res.sendFile(__dirname + '/stubs/member.json')
+    // res.send(require('./stubs/member.js'))
+    // return;
     let ret = await req.connectService.updateMember(req.body);
+    res.send(ret)
+  })
+  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/`, async (req, res) => {
+    // res.send(require('./stubs/member.js'))
+    // return;
+    let ret = await req.connectService.loadMemberByGuid(req.params.member_guid);
+    res.send(ret);
+    // res.sendFile(__dirname + '/stubs/member.json')
+  })
+  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/credentials`, async (req, res) => {
+    // res.send(require('./stubs/member_credentials.js'))
+    // return;
+    let ret = await req.connectService.getMemberCredentials(req.params.member_guid)
     res.send(ret)
   })
   app.get(`${ApiEndpoints.MEMBERS}/:member_guid/oauth_window_uri`, async (req, res) => {
@@ -35,19 +45,10 @@ module.exports = function(app){
     res.send(ret);
     // res.sendFile(__dirname + '/stubs/member.json')
   })
-  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/`, async (req, res) => {
-    let ret = await req.connectService.loadMemberByGuid(req.params.member_guid);
-    res.send(ret);
-    // res.sendFile(__dirname + '/stubs/member.json')
-  })
   app.delete(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
     res.sendFile(__dirname + '/stubs/member.json')
     // let ret = await req.connectService.deleteMember(req.params.member_guid)
     // res.send(ret)
-  })
-  app.get(`${ApiEndpoints.MEMBERS}/:member_guid/credentials`, async (req, res) => {
-    let ret = await req.connectService.getMemberCredentials(req.params.member_guid)
-    res.send(ret)
   })
   app.get(`${ApiEndpoints.INSTITUTIONS}/:institution_guid/credentials`, async (req, res) => {
     let credentials = await req.connectService.getInstitutionCredentials(req.params.institution_guid);
@@ -101,13 +102,32 @@ module.exports = function(app){
     res.send(ret)
   })
   app.get(ApiEndpoints.MEMBERS, async (req, res) => {
-    //res.sendFile(__dirname + '/stubs/members.json')
-    //the widget looks for members with pending job for resuming, we don't need this for now 
-    res.send({members:[]})
+    let ret = await req.connectService.loadMembers()
+    res.send({
+      members: ret
+    })
   })
 
   app.post(ApiEndpoints.INSTRUMENTATION, async (req, res) => {
-    await req.connectService.instrumentation(req.body)
+    if(await req.connectService.instrumentation(req.body)){
+      res.sendStatus(200);
+      return
+    }
+    res.sendStatus(400);
+  })
+  // oauth/redirect_from?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.&state=1526452cd3dbfa71e9b13bf12f95c40d
+  app.get('/oauth/:provider/redirect_from',  async (req, res) => {
+    // const { error, error_description, state } = req.query;
+    const { member_guid, status,error_reason } = req.query;
+    const { provider } = req.params
+    // console.log(req.params);
+    // console.log(req.query)
     res.sendStatus(200);
+  })
+  app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
+    res.send({"member":{"job_guid":"JOB-179e7c31-53d6-4cfb-b95d-6b2686d1b817","status":8}}) // RECONNECTED?
+    return;
+    // let ret = await req.connectService.updateMember(req.body);
+    // res.send(ret)
   })
 }

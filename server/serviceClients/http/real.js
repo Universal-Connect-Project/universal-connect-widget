@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const axios = require('axios');
 const logger = require('../../infra/logger');
+const {Http} = require('@capacitor-community/http');
 
 function stream(url, data, target) {
   // logger.debug(`stream request: ${url}`);
@@ -36,46 +37,55 @@ function stream(url, data, target) {
     });
 }
 
-function wget(url) {
+async function wget(url) {
   logger.debug(`wget request: ${url}`);
-  return axios
-    .get(url)
-    .then((res) => {
-      logger.debug(`Received wget response from ${url}`);
-      return res.data;
-    })
-    .catch((error) => {
-      logger.error(`error from ${url}`, error);
-      throw error;
-    });
+  const options = {
+    url,
+    webFetchExtra: { mode: 'no-cors' },
+    responseType: 'text',
+  }
+  const res = await Http.get(options).catch((error) => {
+    logger.error(`error from ${url}`, error);
+    throw error;
+  });
+  logger.debug(`Received wget response from ${url}`);
+  return res.data;
 }
 
-function get(url, headers, returnFullResObject) {
+async function get(url, headers, returnFullResObject) {
   logger.debug(`get request: ${url}`);
-  return axios
-    .get(url, { headers })
-    .then((res) => {
-      logger.debug(`Received get response from ${url}`);
-      return returnFullResObject ? res : res.data;
-    })
-    .catch((error) => {
-      logger.error(`error from ${url}`, error);
-      throw error;
-    });
+  const options = {
+    url,
+    headers,
+    webFetchExtra: { mode: 'no-cors' },
+    responseType: 'text',
+  }
+  const res = await Http.get(options).catch((error) => {
+    logger.error(`error from ${url}`, error);
+    throw error;
+  });
+  logger.debug(`Received get response from ${url}`);
+  return returnFullResObject ? res : res.data;
 }
 
-function post(url, data, headers, returnFullResObject) {
+async function post(url, data, headers, returnFullResObject) {
   logger.debug(`post request: ${url}`);
-  return axios
-    .post(url, data, { headers })
-    .then((res) => {
-      logger.debug(`Received post response from ${url}`);
-      return returnFullResObject ? res : res.data;
-    })
-    .catch((error) => {
-      logger.error(`error from ${url}`, error);
-      throw error;
-    });
+  const options = {
+    url,
+    headers: {...headers, 'content-type': 'application/json'},
+    webFetchExtra: { mode: 'no-cors' },
+    responseType: 'text',
+    data: data || {},
+  }
+  // console.log(data)
+  //logger.debug('posting: ' + options.url);
+  const res = await Http.post(options).catch((error) => {
+    logger.error(`error from ${url}`, error);
+    throw error;
+  });
+  // console.log(res)
+  logger.debug(`Received post response from ${url}`);
+  return returnFullResObject ? res : res.data;
 }
 
 module.exports = {

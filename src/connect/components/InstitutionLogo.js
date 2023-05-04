@@ -21,11 +21,12 @@ export const InstitutionLogo = ({
       className={`${css({
         borderRadius: tokens.BorderRadius.Medium,
       })} kyper-institutionlogo ${className}`}
-      height={size}
       onError={e => (e.target.src = backUpSrc)}
       src={src}
-      style={style}
-      width={size}
+      style={{
+        ...style, 
+        maxHeight:size, 
+        maxWidth:size}}
       {...rest}
     />
   )

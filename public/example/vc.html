@@ -23,7 +23,7 @@
                     <p style="margin-left:auto; margin-right: auto;font-weight: bold;">Identity Credential</p>
                     <div class="image-container">
                         <img class="cert" src="/static/cert.png"> 
-                        <img class="chase" v-bind:src="identityVc.obj.credentialSubject.fiAttributes[1].value">
+                        <img class="chase" v-bind:src="identityVc.obj.credentialSubject.fiAttributes?.[1].value">
                     </div>
                     <p style="font-weight: bold; margin-top: 2%;margin-bottom: 1%!important">{{ identityName }}</p>
                     <p style="margin-bottom: 1%!important">{{ identityEmail}}</p>
@@ -48,7 +48,7 @@
                     <p style="margin-left:auto; margin-right: auto;font-weight: bold;">Bank Account Credential</p>
                     <div class="image-container">
                         <img class="cert" src="/static/cert.png"> 
-                        <img class="chase" v-bind:src="bankingVc.obj.credentialSubject.fiAttributes[1].value">
+                        <img class="chase" v-bind:src="bankingVc.obj.credentialSubject.fiAttributes?.[1].value">
                     </div>
                     <p style="font-weight: bold; margin-top: 2%;margin-bottom: 1%!important">Account Number:{{ bankingVcLatestAccount.accountNumber}}</p>
                     <p style="margin-bottom: 1%!important">Routing Number: {{ bankingVcLatestAccount.routingTransitNumber}}</p>
@@ -167,6 +167,7 @@
                             env: params.env || 'preview',
                             user_id: params.user_id,
                             jobType,
+                            onEvent: onEvent,
                             onShow: onEvent,
                             onInit: onEvent,
                             onClose: onEvent,
@@ -188,14 +189,14 @@
                 },
                 showBankingVc(){
                   let {user_id} = getUrlVars(window.location);
-                    axios.get(`/example/did/vc/banking/${this.connection.provider}/${this.connection.id}/${user_id}`).then(res => {
+                    axios.get(`/example/did/vc/banking/${this.connection.provider}/${this.connection.id}/${this.connection.user_guid || user_id}`).then(res => {
                         this.bankingVc.show = true;
                         this.bankingVc.obj = res.data;
                     });
                 },
                 showIdentityVc(){
                   let {user_id} = getUrlVars(window.location);
-                    axios.get(`/example/did/vc/identity/${this.connection.provider}/${this.connection.id}/${user_id}`).then(res => {
+                    axios.get(`/example/did/vc/identity/${this.connection.provider}/${this.connection.id}/${this.connection.user_guid || user_id}`).then(res => {
                         this.identityVc.show = true;
                         this.identityVc.obj = res.data;
                     });

@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 import type { NextFunction, Request, Response } from 'express';
 
 import * as config from '../config';
+import * as logger from './logger';
 
 declare global {
   namespace Express {
@@ -45,9 +46,6 @@ function get(req: Request) {
   if (req.headers.meta?.length > 0) {
     const decrypted = decrypt(<string>req.headers.meta);
     req.context = JSON.parse(decrypted);
-    if (!req.context.user_id) {
-      req.context.user_id = config.MxDemoUserId;
-    }
   } else {
     req.context = {};
   }

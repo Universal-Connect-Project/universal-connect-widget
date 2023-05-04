@@ -410,8 +410,8 @@ const upsertMember = (state, action) => {
 }
 
 function getStartingStep(members, member, microdeposit, config, institution, widgetProfile) {
-  const shouldUpdateCredentials =
-    member && (config.update_credentials || member.connection_status === ReadableStatuses.DENIED)
+  const shouldUpdateCredentials = !!member;
+    // member && (config.update_credentials || member.connection_status === ReadableStatuses.DENIED)
 
   if (shouldUpdateCredentials) {
     return STEPS.ENTER_CREDENTIALS

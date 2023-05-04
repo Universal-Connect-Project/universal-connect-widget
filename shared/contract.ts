@@ -2,6 +2,7 @@ export interface Context {
   institution_id?: string;
   institution_uid?: string;
   connection_id?: string;
+  current_job_id?: string;
   user_id?: string;
   provider?: string;
   job_type?: string;
@@ -97,7 +98,6 @@ export interface CreateConnectionRequest {
 export interface Connection {
   id: string | null;
   cur_job_id?: string | null;
-  reference_id?: string | null;
   last_refresh_utc?: string | null;
   last_refreshed_utc?: string | null;
   last_updated_utc?: string | null;
@@ -147,7 +147,8 @@ export enum EventEnum {
 export interface ProviderApiClient {
   GetInstitutionById(id: string): Promise<Institution>;
   ListInstitutionCredentials(institutionId: string): Promise<Array<Credential>>;
-
+  ListConnectionCredentials(connectionId: string, userId: string): Promise<Array<Credential>>;
+  ListConnections( userId: string): Promise<Array<Connection>>;
   CreateConnection(
     connection: CreateConnectionRequest,
     userId?: string
@@ -155,6 +156,7 @@ export interface ProviderApiClient {
   DeleteConnection(connectionId: string, userId?: string): Promise<void>;
   AnswerChallenge(
     request: UpdateConnectionRequest,
+    jobId: string,
     userId?: string
   ): Promise<boolean>;
   UpdateConnection(
@@ -166,7 +168,8 @@ export interface ProviderApiClient {
     userId?: string
   ): Promise<Connection | undefined>;
   GetConnectionStatus(
-    connectionIdOrJobId: string,
+    connectionId: string,
+    jobId: string,
     userId?: string
   ): Promise<Connection | undefined>;
   GetVc(

@@ -145,10 +145,18 @@ export function sendPostMessage(event, data, scheme = 'mx') {
 
   try {
     if (window.parent) {
-      window.parent.postMessage(message, postUrl)
+      if(window === window.parent){
+        console.log('Post message: ' + postUrl);
+        console.log(message)
+      }else{
+        window.parent.postMessage(message, postUrl)
+      }
+      return;
     }
     if (window.opener) {
+      console.log('window.opener')
       window.opener.postMessage(message, postUrl)
+      return;
     }
   } catch (error) {
     // This will quiet the noise in the console, while hopefully removing the error from honeybadger

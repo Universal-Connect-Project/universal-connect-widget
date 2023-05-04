@@ -107,7 +107,9 @@
     "eslint-config-mx": "^4.0.0",
     "eslint-plugin-redux-namespaced-actions": "^1.0.0",
     "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.1",
     "react-app-rewired": "^2.2.1",
+    "terser-webpack-plugin": "^5.3.7",
     "ts-import-plugin": "^3.0.0",
     "url-loader": "^4.1.1"
   }

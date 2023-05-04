@@ -9,7 +9,6 @@ export const mxInt = {
       Accept: 'application/vnd.mx.api.v1+json',
     },
   },
-  demoUserId: config.MxDemoUserId,
 };
 
 export const mxProd = {
@@ -21,7 +20,6 @@ export const mxProd = {
       Accept: 'application/vnd.mx.api.v1+json',
     },
   },
-  demoUserId: config.MxDemoUserIdProd,
 };
 
 export const sophtron = {

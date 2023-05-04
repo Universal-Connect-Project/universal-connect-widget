@@ -54,11 +54,11 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async GetInstitutionById(id: string): Promise<Institution> {
-    if (!uuid.test(id)) {
-      const name = id;
-      const res = await this.apiClient.getInstitutionsByName(name);
-      return fromSophtronInstitution(res?.[0]);
-    }
+    // if (!uuid.test(id)) {
+    //   const name = id;
+    //   const res = await this.apiClient.getInstitutionsByName(name);
+    //   return fromSophtronInstitution(res?.[0]);
+    // }
     const ins = await this.apiClient.getInstitutionById(id);
     return fromSophtronInstitution(ins);
   }
@@ -88,6 +88,18 @@ export class SophtronApi implements ProviderApiClient {
     ];
   }
 
+  async ListConnectionCredentials(connectionId: string, userId: string): Promise<Credential[]> {
+    const uins = await this.apiClient.getUserInstitutionById(connectionId);
+    if(uins){
+      return this.ListInstitutionCredentials(uins.InstitutionID);
+    }
+    return [];
+  }
+
+  ListConnections(userId: string): Promise<Connection[]> {
+    return Promise.resolve([]);
+  }
+
   async CreateConnection(
     request: CreateConnectionRequest
   ): Promise<Connection | undefined> {
@@ -109,7 +121,7 @@ export class SophtronApi implements ProviderApiClient {
       }
     }
     let ret: { JobID: string; UserInstitutionID: string } | null = null;
-    switch ((request.initial_job_type || '').toLowerCase()) {
+    switch (request.initial_job_type?.toLowerCase()) {
       case 'agg':
       case 'aggregation':
       case 'aggregate':
@@ -160,8 +172,9 @@ export class SophtronApi implements ProviderApiClient {
       return {
         id: ret.UserInstitutionID,
         cur_job_id: ret.JobID,
-        reference_id: ret.JobID,
         institution_code: entityId, // TODO
+        status: ConnectionStatus.CREATED,
+        provider: 'sophtron'
       };
     }
     return undefined;
@@ -186,8 +199,8 @@ export class SophtronApi implements ProviderApiClient {
     return {
       id: ret.UserInstitutionID,
       cur_job_id: ret.JobID,
-      reference_id: ret.JobID,
       institution_code: request.id, // TODO
+      provider: 'sophtron'
     };
   }
 
@@ -196,11 +209,12 @@ export class SophtronApi implements ProviderApiClient {
     return {
       id: uins.UserInstitutionID,
       institution_code: uins.InstitutionID,
+      provider: 'sophtron'
     };
   }
 
-  async GetConnectionStatus(refrenceId: string): Promise<Connection> {
-    const job = await this.apiClient.getJob(refrenceId);
+  async GetConnectionStatus(userInstitutionID: string, jobId: string): Promise<Connection> {
+    const job = await this.apiClient.getJob(jobId);
     const challenge: Challenge = {
       id: '',
       type: ChallengeType.QUESTION,
@@ -268,36 +282,36 @@ export class SophtronApi implements ProviderApiClient {
     return {
       id: job.UserInstitutionID,
       cur_job_id: job.JobID,
-      reference_id: job.JobID,
       status,
       challenges: challenge?.id ? [challenge] : undefined,
+      provider: 'sophtron'
     };
   }
 
-  async AnswerChallenge(request: UpdateConnectionRequest): Promise<boolean> {
+  async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {
     const c = request.challenges![0]!;
     switch (c.type) {
       case ChallengeType.TOKEN:
-        await this.apiClient.jobTokenInput(request.id, null, null, true);
+        await this.apiClient.jobTokenInput(jobId, null, null, true);
         break;
       case ChallengeType.IMAGE:
       case ChallengeType.IMAGE_OPTIONS:
-        await this.apiClient.jobCaptchaInput(request.id, c.response);
+        await this.apiClient.jobCaptchaInput(jobId, c.response);
         break;
       case ChallengeType.QUESTION:
         if (c.question === 'ota' || c.id === 'TokenSentFlag') {
           await this.apiClient.jobTokenInput(
-            request.id,
+            jobId,
             null,
             c.response,
             null
           );
         } else {
-          await this.apiClient.jobSecurityAnswer(request.id, [c.response]);
+          await this.apiClient.jobSecurityAnswer(jobId, [c.response]);
         }
         break;
       case ChallengeType.OPTIONS:
-        await this.apiClient.jobTokenInput(request.id, c.response, null, null);
+        await this.apiClient.jobTokenInput(jobId, c.response, null, null);
         break;
       default:
         logger.error('Wrong challenge answer received', c)
@@ -311,8 +325,8 @@ export class SophtronApi implements ProviderApiClient {
     type: VcType,
     userId?: string
   ): Promise<object> {
-    // const key = (await this.apiClient.getUserIntegrationKey()).IntegrationKey;
-    const key = this.token;
+    const key = (await this.apiClient.getUserIntegrationKey()).IntegrationKey;
+    //const key = this.token || await this.apiClient.getUserIntegrationKey().IntegrationKey;
     let path = '';
     let body = null as any;
     switch (type) {

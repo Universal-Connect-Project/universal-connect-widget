@@ -91,7 +91,9 @@ module.exports = new Proxy(bridge, {
         }
       }
     }
-    console.log(`Unstubbed method called ${prop}`)
+    if(prop !== '$$typeof'){
+      console.log(`Unstubbed method retrieved ${prop}`)
+    }
     return function() {
       console.log(`Unstubbed method called ${prop}`)
       return Promise.resolve('')

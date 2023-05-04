@@ -9,7 +9,7 @@ const useConnect = require('./connect/connectApiExpress');
 process.on('unhandledRejection', (error) => {
   logger.error(`unhandledRejection: ${error.message}`, error);
 });
-
+process.removeAllListeners('warning'); // remove the noise caused by capacitor-community/http fetch plugin
 const app = express();
 
 app.use(bodyParser.json());
@@ -30,10 +30,13 @@ useConnect(app)
 
 const pageQueries = new RegExp([
   'current_institution_code',
+  'job_type',
+  'user_id',
   'client_guid',
   'current_member_guid',
   'current_provider',
   'oauth_referral_source',
+  'update_credentials',
   'server'
 ].map(r => `\\$${r}`).join('|'), 'g');
 
@@ -46,7 +49,7 @@ if(config.ResourcePrefix !== 'local'){
       if(req.query.current_member_guid && !req.query.current_provider){
         delete req.query.current_member_guid;
       }
-      let queries = {
+      let queries = { //TODO: injection preventing?
         current_member_guid: req.query.connection_id,
         current_institution_code: req.query.bankid,
         ...req.query,

@@ -44,22 +44,24 @@
           is_mobile_webview: false,
           target_origin_referrer: null,
           ui_message_protocol: 'post_message',
-          ui_message_version: 1,
+          ui_message_version: 4,
           ui_message_webview_url_scheme: 'mx',
           color_scheme: 'light',
           connect: {
-            mode: 'agg',
+            mode: 'agg', // 'verify'
+            job_type: '$job_type' || 'agg', // 'verify'
             current_institution_code: '$current_institution_code', // 'mxbank',
             current_institution_guid: null,
             current_member_guid: '$current_member_guid',
             current_provider: '$current_provider',
+            user_id: '$user_id',
             current_microdeposit_guid: null,
             disable_background_agg: null,
             disable_institution_search: false,
-            include_identity: null,
-            include_transactions: null,
-            oauth_referral_source: '$oauth_referral_source',
-            update_credentials: false,
+            include_identity: null, // true
+            include_transactions: null, // true
+            oauth_referral_source: '$oauth_referral_source' || 'BROWSER',
+            update_credentials: '$update_credentials' === 'true',
             wait_for_full_aggregation: false,
           },
         },
@@ -123,6 +125,9 @@
           }
         }
       };
+      if(window.app.clientConfig.connect.mode.startsWith('$')){
+        window.app.clientConfig.connect.mode = 'agg'
+      }
       if(window.app.clientConfig.connect.current_institution_code.startsWith('$')){
         window.app.clientConfig.connect.current_institution_code = ''
       }

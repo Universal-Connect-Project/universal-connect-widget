@@ -16,7 +16,7 @@ import { sendPostMessage, setWebviewURL } from '../../utils/PostMessage'
 
 import { ActionTypes } from '../actions/PostMessage'
 
-export const postMessages = (actions$, state$, { scheduler }) =>
+export const postMessages = (actions$, state$, { scheduler }) => 
   actions$.pipe(
     ofType(ActionTypes.SEND_POST_MESSAGE),
     /**
@@ -40,6 +40,7 @@ export const postMessages = (actions$, state$, { scheduler }) =>
       )
     }),
     tap(({ payload }) => {
+
       const config = _get(state$, 'value.initializedClientConfig', {})
       const session_guid = _get(state$, 'value.analytics.currentSession.guid', '')
       const user_guid = _get(state$, 'value.userProfile.user_guid', '')

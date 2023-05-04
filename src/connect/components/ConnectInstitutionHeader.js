@@ -24,13 +24,19 @@ export const ConnectInstitutionHeader = props => {
 
   return (
     <div style={styles.container}>
+      <SVGImage image={HeaderDevice} size={64} styles={styles.device} />
       <div style={styles.backdropImage}>
         <SVGImage image={backdropImage} />
       </div>
-      <SVGImage image={HeaderDevice} styles={styles.device} />
       <div style={styles.institutionLogo}>
         {props.institution ? (
-          <InstitutionLogo alt="" institution={props.institution} size={64} />
+          <InstitutionLogo alt="" institution={props.institution} size={64} 
+            style={{
+              position: 'relative',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }} 
+          />
         ) : (
           <SVGImage image={HeaderDefaultInstitution} />
         )}
@@ -73,6 +79,7 @@ function getStyles() {
 
 const SVGImagePropTypes = {
   image: PropTypes.string.isRequired,
+  size: PropTypes.number,
   styles: PropTypes.object,
 }
 
@@ -81,9 +88,10 @@ const SVGImage = props => {
     zIndex: 20,
     ...props.styles,
   }
+  const {size} = props;
   // return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
   return (<div style={styles}>
-    <img alt='svg' src={ props.image } />
+    <img alt='svg' height={size} src={props.image} width={size} />
   </div>)
 }
 
