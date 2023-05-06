@@ -240,7 +240,7 @@ export class SophtronApi implements ProviderApiClient {
           challenge.id = 'SecurityQuestion';
           challenge.type = ChallengeType.QUESTION;
           challenge.data = JSON.parse(job.SecurityQuestion).map(
-            (q: string, i: number) => ({ key: `${i}`, value: q })
+            (q: string, i: number) => ({ key: q, value: q })
           );
         } else if (job.TokenMethod) {
           challenge.id = 'TokenMethod';
@@ -248,7 +248,7 @@ export class SophtronApi implements ProviderApiClient {
           challenge.question =
             'Please select a channal to receive your secure code';
           challenge.data = JSON.parse(job.TokenMethod).map(
-            (q: string, i: number) => ({ key: `${i}`, value: q })
+            (q: string, i: number) => ({ key: q, value: q })
           );
         } else if (job.TokenSentFlag === true) {
           challenge.id = 'TokenSentFlag';
@@ -256,7 +256,7 @@ export class SophtronApi implements ProviderApiClient {
           challenge.question = 'ota';
           challenge.data = [
             {
-              key: '0',
+              key: 'ota',
               value: `Please Enter the ${job.TokenInputName || 'OTA code'}`,
             },
           ];

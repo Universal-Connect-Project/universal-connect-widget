@@ -42,6 +42,11 @@ export const DisclosureInstitutionHeader = () => {
             institution={institution}
             onError={() => setDefaultImage(true)}
             size={64}
+            style={{
+              position: 'relative',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }} 
           />
         ) : (
           <SVGImage image={providerLogo} styles={styles.Logo} />
@@ -97,6 +102,7 @@ function getStyles() {
 
 const SVGImagePropTypes = {
   image: PropTypes.string.isRequired,
+  size: PropTypes.number,
   styles: PropTypes.object,
 }
 
@@ -105,7 +111,12 @@ const SVGImage = props => {
     zIndex: 20,
     ...props.styles,
   }
-  return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
+  const {size} = props;
+  // return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
+  return (<div style={styles}>
+    <img alt='svg' height={size} src={props.image} width={size} />
+  </div>)
 }
+
 
 SVGImage.propTypes = SVGImagePropTypes

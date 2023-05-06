@@ -156,6 +156,8 @@ export const createRequestFunction = function (axiosArgs: RequestArgs, globalAxi
         // console.log(options)
         // console.log(axiosRequestArgs)
         const ret = await Http[axiosRequestArgs.method.toLowerCase().replace('delete', 'del')](options);
+        // console.log(options)
+        // console.log(JSON.stringify(ret.data))
         if(ret.status >= 400){
           logger.error(`Error calling mx api `, ret)
         }

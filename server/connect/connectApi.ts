@@ -86,7 +86,7 @@ function mapConnection(connection: Connection): Member{
               ret.type = 2;
               ret.options = (c.data as any[]).map(d => ({
                 guid: d.key,
-                label: d.value,
+                label: d.key,
                 value: d.value,
                 credential_guid: c.id
               }));
