@@ -2,18 +2,6 @@ const fs = require('fs')
 const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
 
 module.exports = function(app){
-  app.post(ApiEndpoints.ANALYTICS_SESSION, async (req, res) => {
-    res.send(require('./stubs/analytics_sessions.js'))
-  })
-  app.put('/analytics_sessions/*', async (req, res) => {
-    res.sendStatus(200)
-  })
-  app.post('/analytics_events', async (req, res) => {
-    res.sendStatus(200)
-  })
-  app.post('/analytics_pageviews', async (req, res) => {
-    res.sendStatus(200)
-  })
   app.post('/feature_visits', async (req, res) => {
     res.sendStatus(200)
   })

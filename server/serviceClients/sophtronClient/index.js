@@ -202,6 +202,12 @@ module.exports = class SophtronClient{
     );
   }
 
+  analytics(type, data){
+    const authHeader = buildAuthCode('post', type);
+    const ret = http.post(`${config.SophtronAnalyticsServiceEndpoint}${config.ServiceName}/${type}`, data, {Authorization: authHeader})
+    return ret
+  }
+
   async post(path, data) {
     const authHeader = buildAuthCode('post', path);
     const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {Authorization: authHeader});
