@@ -9,6 +9,14 @@ const sophtronClient = new SophtronClient();
 
 module.exports = function(app){
   instrumentation(app)
+  app.post('/analytics*', async (req, res) => {
+    if(config.SophtronAnalyticsServiceEndpoint){
+      const ret = await sophtronClient.analytics(req.path.replaceAll('/', ''), req.body)
+      res.send(ret)
+    }else{
+      res.send(require('./stubs/analytics_sessions.js'))
+    }
+  })
   app.use(contextHandler);
   app.use((req, res, next) => {
     req.connectService = new ConnectApi(req)
@@ -130,13 +138,5 @@ module.exports = function(app){
     return;
     // let ret = await req.connectService.updateMember(req.body);
     // res.send(ret)
-  })
-  app.post('/analytics*', async (req, res) => {
-    if(config.SophtronAnalyticsServiceEndpoint){
-      const ret = await sophtronClient.analytics(req.path.replaceAll('/', ''), req.body)
-      res.send(ret)
-    }else{
-      res.send(require('./stubs/analytics_sessions.js'))
-    }
   })
 }

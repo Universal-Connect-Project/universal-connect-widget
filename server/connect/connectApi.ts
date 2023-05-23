@@ -41,7 +41,8 @@ function mapInstitution(ins: Institution){
     instructional_data: {},
     credentials: [] as any[],
     supports_oauth: ins.name.indexOf('Oauth') >= 0,
-    providers: ins.providers
+    providers: ins.providers,
+    provider: ins.provider
     // credentials: credentials?.map((c: any) => ({
     //   guid: c.id,
     //   ...c
@@ -136,6 +137,7 @@ export class ConnectApi{
     return id;
   }
   async addMember(memberData: Member): Promise<MemberResponse> {
+    // console.log(this.context)
     let client = getApiClient(this.context);
     this.context.current_job_id = null;
     let connection = await client.CreateConnection({
@@ -313,9 +315,10 @@ export class ConnectApi{
         this.context.user_id = 'Universal_widget_demo_user';
         return true
       }
+      logger.info(`Missing demo userId`)
+      return false;
     }
-    logger.info(`Missing demo userId`)
-    return false;
+    return true
   }
 
   async handleOauthResponse(status: string, connectionId: string, reason: string, provider: string){
@@ -325,7 +328,7 @@ export class ConnectApi{
       case 'error':
         let client = getApiClient({provider});
         logger.info(`deleting connection on oauth error: ${connectionId}: ${reason}`);
-        client.DeleteConnection(connectionId, 'user_id') //?
+        client.DeleteConnection(connectionId, 'user_id') // this is not going to work as there is not user_id passed on
         break;
     }
   }

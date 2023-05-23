@@ -72,20 +72,23 @@ export class SophtronApi implements ProviderApiClient {
     } else {
       ins = await this.apiClient.getInstitutionById(id);
     }
-    return [
+    let ret = [
       {
         id: 'username',
         label: ins?.InstitutionDetail?.LoginFormUserName || 'User name',
         field_type: 'LOGIN',
         field_name: 'LOGIN'
-      },
-      {
-        id: 'password',
-        label: ins?.InstitutionDetail?.LoginFormPassword || 'Password',
-        field_type: 'PASSWORD',
-        field_name: 'PASSWORD'
-      },
+      }
     ];
+    if(ins?.InstitutionDetail?.LoginFormPassword !== 'None'){
+      ret.push({
+          id: 'password',
+          label: ins?.InstitutionDetail?.LoginFormPassword || 'Password',
+          field_type: 'PASSWORD',
+          field_name: 'PASSWORD'
+        })
+    }
+    return ret;
   }
 
   async ListConnectionCredentials(connectionId: string, userId: string): Promise<Credential[]> {
@@ -106,9 +109,11 @@ export class SophtronApi implements ProviderApiClient {
     const username = request.credentials.find(
       (item) => item.id === 'username'
     )!.value;
-    const password = request.credentials.find(
+    const passwordField = request.credentials.find(
       (item) => item.id === 'password'
-    )!.value;
+    )
+    // if password field wasn't available, it should be a 'none' type
+    const password = passwordField? passwordField.value : 'None';
     let entityId = request.institution_id;
     if (!uuid.test(entityId)) {
       const name = entityId;

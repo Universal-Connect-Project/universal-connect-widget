@@ -243,6 +243,8 @@ export const Credentials = ({
       sendAnalyticsEvent({
         category: EventCategories.CONNECT,
         label: EventLabels.ENTER_CREDENTIALS,
+        provider: institution.provider,
+        institution: institution.name,
         action: EventLabels.ENTER_CREDENTIALS + ' - ' + EventActions.END + ' (Submitted)',
       }),
     )

@@ -45,6 +45,7 @@ import { __ } from '../../../utils/Intl'
 import FireflyAPI from '../../../utils/FireflyAPI'
 import { EventCategories, PageviewInfo } from '../../const/Analytics'
 import { ReadableAccountTypes } from '../../const/Accounts'
+import {ConnectionStatusMap} from '../../../constants/Member'
 import { sendAnalyticsEvent } from '../../../redux/actions/Analytics'
 
 export const Connecting = props => {
@@ -96,6 +97,14 @@ export const Connecting = props => {
         member_guid: pollingState.currentResponse.guid,
         connection_status: pollingState.currentResponse.connection_status,
       })
+      dispatch(
+        sendAnalyticsEvent({
+          category: `${EventCategories.CONNECT}`,
+          label: 'Status Change',
+          action: `Status  - ` + ConnectionStatusMap[pollingState.currentResponse.connection_status].key,
+          value: 1,
+        }),
+      )
     }
 
     setMessage(pollingState.userMessage)
