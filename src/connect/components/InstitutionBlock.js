@@ -13,15 +13,15 @@ export const InstitutionBlock = ({ institution, style }) => {
   const styles = getStyles(tokens)
 
   return (
-    <div style={{ ...styles.institutionBlock, ...style }}>
+    <div style={{ ...styles.institutionBlock, ...style, 'justify-content':'center' }}>
       <InstitutionLogo alt="" institution={institution} size={64} />
-      <div style={styles.institutionInfo}>
+      {institution.logo_url ? null : <div style={styles.institutionInfo}>
         <div style={styles.institutionName}>
           {guid.startsWith('INS-MANUAL') ? __('Manual Institution') : name}
         </div>
 
         <div style={styles.institutionUrl}>{url}</div>
-      </div>
+      </div> } 
     </div>
   )
 }

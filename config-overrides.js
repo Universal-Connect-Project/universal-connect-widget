@@ -65,7 +65,7 @@ module.exports = override(
       },
       runtimeChunk: false,
     }
-    config.plugins[0].userOptions.minify.minifyJS = false
+    // config.plugins[0].userOptions.minify.minifyJS = false
     // console.log(JSON.stringify(config))
     delete config.module.rules[1].oneOf[4].include
     // config.module.rules[1].oneOf.unshift(

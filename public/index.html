@@ -31,6 +31,11 @@
     <div id="root"></div>
     <script type="text/javascript">
       var exports = {};
+      const params = {
+        job_type: '$job_type',
+        oauth_referral_source: '$oauth_referral_source',
+        update_credentials: '$update_credentials',
+      }
       window.app = {
         options: {
           type: 'connect_widget',
@@ -49,7 +54,7 @@
           color_scheme: 'light',
           connect: {
             mode: 'agg', // 'verify'
-            job_type: '$job_type' || 'agg', // 'verify'
+            job_type: params.job_type || 'agg', // 'verify'
             current_institution_code: '$current_institution_code', // 'mxbank',
             current_institution_guid: null,
             current_member_guid: '$current_member_guid',
@@ -60,8 +65,8 @@
             disable_institution_search: false,
             include_identity: null, // true
             include_transactions: null, // true
-            oauth_referral_source: '$oauth_referral_source' || 'BROWSER',
-            update_credentials: '$update_credentials' === 'true',
+            oauth_referral_source: params.oauth_referral_source || 'BROWSER',
+            update_credentials: params.update_credentials === 'true',
             wait_for_full_aggregation: false,
           },
         },

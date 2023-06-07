@@ -4,12 +4,12 @@ Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
 const config = {
-  // SophtronSearchEndpoint: 'http://localhost:8081/api/',
+  // SophtronSearchEndpoint: 'http://localhost:8082/api/',
   SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
-  SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
-  // SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
+  // SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
+  SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
   HostUrl: 'http://localhost:8080',
   ServiceName: 'universal_widget',
   Demo: true,

@@ -32,12 +32,13 @@ function getApiClient(context?: Context | undefined): ProviderApiClient {
   }
 }
 
-function mapInstitution(ins: Institution){
+function mapInstitution(ins: Institution, searchResult: any){
+  // console.log(searchResult)
   return ({
     guid: ins.id,
     name: ins.name,
-    url: ins.url?.trim(),
-    logo_url: ins.logo_url?.trim(),
+    url: searchResult?.url || ins.url?.trim(),
+    logo_url: searchResult?.logo_url || ins.logo_url?.trim(),
     instructional_data: {},
     credentials: [] as any[],
     supports_oauth: ins.name.indexOf('Oauth') >= 0,
@@ -115,26 +116,31 @@ export class ConnectApi{
   constructor(req: any){
     this.context = req.context
   }
-  async resolveInstitution(id: string): Promise<string>{
+  async resolveInstitution(id: string): Promise<any>{
     // if(id === 'mxbank' || id === 'mx_bank_oauth'){
     //   this.context.provider = 'mx-int';
     //   this.context.institution_id = id
     //   return id;
     // }
+    let ret = {
+      id,
+    } as any
     if (!this.context.provider || (this.context.institution_uid && this.context.institution_uid != id && this.context.institution_id != id)) {
       let resolved = await searchApi.resolve(id);
       if(resolved){
         logger.debug(`resolved institution ${id} to provider ${resolved.provider} ${resolved.target_id}`);
         this.context.provider = resolved.provider;
         this.context.institution_uid = id;
-        id = resolved.target_id;
+        ret.id = resolved.target_id;
+        ret.url = resolved.url;
+        ret.logo_url = resolved.logo_url;
       }
     }
     if (!this.context.provider) {
       this.context.provider = config.DefaultProvider;
     }
-    this.context.institution_id = id
-    return id;
+    this.context.institution_id = ret.id
+    return ret;
   }
   async addMember(memberData: Member): Promise<MemberResponse> {
     // console.log(this.context)
@@ -283,12 +289,12 @@ export class ConnectApi{
     return []
   }
   async loadInstitutionByGuid(guid: string): Promise<any> {
-    let id = await this.resolveInstitution(guid)
+    let resolved = await this.resolveInstitution(guid)
     // console.log(this.context);
     // console.log(id);
     let client = getApiClient(this.context);
-      let inst = await client.GetInstitutionById(id)
-      return {institution: mapInstitution(inst)};
+      let inst = await client.GetInstitutionById(resolved.id)
+      return {institution: mapInstitution(inst, resolved)};
     //let crs = await client.ListInstitutionCredentials(id)
   }
   // loadInstitutionByCode(code: string): Promise<Institution> {

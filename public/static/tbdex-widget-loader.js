@@ -2,13 +2,12 @@ const sophtron = (function () {
   const urls = {
     prod: 'https://universalwidget.sophtron.com',
     preview: 'https://universalwidget.sophtron-prod.com',
-    // legacy: 'https://sophtron.com/integration',
-    // mock: 'http://localhost:8081',
+    pre: 'https://universalwidget.sophtron-prod.com',
     local: 'http://localhost:8080',
   };
 
   const defaultConf = {
-    env: 'local',
+    env: 'pre',
     jobType: 'agg',
     user_id: null,
     connection_id: null,
@@ -233,7 +232,7 @@ const sophtron = (function () {
     state.widgetFrame.style.top = '0';
     state.widgetFrame.style.bottom = '0';
     state.widgetFrame.style.magin = 'auto';
-    state.widgetFrame.style['max-width'] = '380px';
+    state.widgetFrame.style['max-width'] = '400px';
     state.widgetFrame.style['min-height'] = '600px';
     state.widgetFrame.style.position = 'fixed';
     state.widgetFrame.style.backgroundColor = 'white';

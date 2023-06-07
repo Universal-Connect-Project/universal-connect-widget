@@ -5,17 +5,21 @@ import StyleConstants from '../constants/Style'
 const browser = Bowser.getParser(window.navigator.userAgent)
 const browserName = browser.getBrowserName().toLowerCase()
 
+export const getTrueWindowWidth = () => {
+  return Math.min(window.innerWidth, window.outerWidth)
+}
+
 export const getWindowHeight = () => {
   if (isMobile()) {
     // Chrome mobile dev mode doesn't set the orientation
     const heightOrientations = [0, 180, undefined] // eslint-disable-line no-undefined
 
     return heightOrientations.indexOf(window.orientation) !== -1
-      ? window.innerHeight
+      ? Math.min(window.innerHeight, window.outerHeight)
       : window.screen.availWidth
   }
 
-  return window.innerHeight
+  return Math.min(window.innerHeight, window.outerHeight)
 }
 
 export const isMobile = () => {
@@ -23,7 +27,7 @@ export const isMobile = () => {
     return true
   }
 
-  if (window.innerWidth <= StyleConstants.BreakPoints.medium) {
+  if (Math.min(window.innerWidth, window.outerWidth) <= StyleConstants.BreakPoints.medium) {
     return true
   }
 
@@ -36,8 +40,8 @@ export const isTablet = () => {
   }
 
   if (
-    window.innerWidth <= StyleConstants.BreakPoints.large &&
-    window.innerWidth > StyleConstants.BreakPoints.medium
+    Math.min(window.innerWidth, window.outerWidth) <= StyleConstants.BreakPoints.large &&
+    Math.min(window.innerWidth, window.outerWidth) > StyleConstants.BreakPoints.medium
   ) {
     return true
   }
@@ -101,10 +105,5 @@ export const getScrollBarWidth = () => {
 
 export const getWindowWidth = () => {
   const scrollBar = getScrollBarWidth()
-
-  return window.innerWidth - scrollBar
-}
-
-export const getTrueWindowWidth = () => {
-  return window.innerWidth
+  return getTrueWindowWidth() - scrollBar
 }

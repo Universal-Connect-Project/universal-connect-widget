@@ -1,16 +1,7 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
-const CryptoJS = require("crypto-js");
 const http = require('../http')
-function buildAuthCode(httpMethod, url){
-  var authPath = url.substring(url.lastIndexOf('/')).toLowerCase();
-  var text = httpMethod.toUpperCase() + '\n' + authPath;
-  let hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, CryptoJS.enc.Base64.parse(config.SophtronApiUserSecret));
-  hmac.update(text);
-  var b64Sig = CryptoJS.enc.Base64.stringify(hmac.finalize());
-  var authString = 'FIApiAUTH:' + config.SophtronApiUserId + ':' + b64Sig + ':' + authPath;
-  return authString;
-}
+const {buildSophtronAuthCode} = require('../utils')
 
 module.exports = class SophtronClient{
   constructor(integrationKey){
@@ -203,13 +194,13 @@ module.exports = class SophtronClient{
   }
 
   analytics(type, data){
-    const authHeader = buildAuthCode('post', type);
-    const ret = http.post(`${config.SophtronAnalyticsServiceEndpoint}${config.ServiceName}/${type}`, data, {Authorization: authHeader})
+    const authHeader = buildSophtronAuthCode('post', type);
+    const ret = http.post(`${config.SophtronAnalyticsServiceEndpoint}${config.ServiceName}/${type}`, data, {Authorization: authHeader, ContextUserId: config.SophtronApiUserId})
     return ret
   }
 
   async post(path, data) {
-    const authHeader = buildAuthCode('post', path);
+    const authHeader = buildSophtronAuthCode('post', path);
     const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {Authorization: authHeader});
     return ret;
   }

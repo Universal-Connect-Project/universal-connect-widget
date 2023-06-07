@@ -105,11 +105,12 @@ export class MxApi implements ProviderApiClient {
     const existings = await this.apiClient.listMembers(userId);
     const existing = existings.data.members.find(m => m.institution_code === entityId)
     if(existing){
-      logger.info(`Found existing member for institution ${entityId}, reusing`)
-      return this.UpdateConnectionInternal({
-        id: existing.guid,
-        ...request,
-      }, userId)
+      logger.info(`Found existing member for institution ${entityId}, deleting`)
+      await this.apiClient.deleteMember(existing.guid, userId)
+      // return this.UpdateConnectionInternal({
+      //   id: existing.guid,
+      //   ...request,
+      // }, userId)
     }
     // let res = await this.apiClient.listInstitutionCredentials(entityId);
     // console.log(request)
@@ -160,15 +161,15 @@ export class MxApi implements ProviderApiClient {
   ): Promise<Connection> {
     const ret = await this.apiClient.updateMember(request.id!, userId, {
       member: {
-        credentials: request.credentials.map(
+        credentials: request.credentials?.map(
           (c) =>
             <CredentialRequest>{
               guid: c.id,
               value: c.value,
             }
-        ),
+        ) || [],
       },
-    });
+    }) ;
     return fromMxMember(ret.data, this.provider);
   }
 
