@@ -139,8 +139,12 @@ export default PostMessage
  * New version of post message sending in the app. must have
  * `ui_message_version` of 4
  */
-export function sendPostMessage(event, data, scheme = 'mx') {
-  const message = { metadata: data, mx: true, type: `${scheme}/${event}` }
+export function sendPostMessage(event, data, scheme = 'vcs') {
+  const message = { 
+    metadata: data, 
+    // mx: true,
+    type: `${scheme}/${event}` 
+  }
   const postUrl = getReferrer().replace(/([^:]+:\/\/[^/]+).*/, '$1')
 
   try {

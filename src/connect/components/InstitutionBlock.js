@@ -13,7 +13,7 @@ export const InstitutionBlock = ({ institution, style }) => {
   const styles = getStyles(tokens)
 
   return (
-    <div style={{ ...styles.institutionBlock, ...style, 'justify-content':'center' }}>
+    <div style={{ ...styles.institutionBlock, ...style, justifyContent:'center' }}>
       <InstitutionLogo alt="" institution={institution} size={64} />
       {institution.logo_url ? null : <div style={styles.institutionInfo}>
         <div style={styles.institutionName}>
