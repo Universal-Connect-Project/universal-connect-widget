@@ -71,8 +71,9 @@ export interface Institution {
   id: string | null;
   name: string;
   url: string;
-  provider?: string | null;
   logo_url: string | null;
+  provider?: string | null;
+  oauth?: boolean | false;
   code?: string | null;
   instructional_text?: string | null;
   small_logo_url?: string | null;

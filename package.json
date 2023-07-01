@@ -70,6 +70,7 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
+    "server": "ts-node server/server.js",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "build-android": "mobile=true react-app-rewired build && npx cap sync android",

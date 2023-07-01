@@ -123,6 +123,19 @@ module.exports = class SophtronClient{
     });
   }
 
+  CreateUserInstitutionWithAllPlusProfile(username, password, institutionId){
+    var url = '/UserInstitution/CreateUserInstitutionWithAllPlusProfile';
+    var data = {
+        UserName: username,
+        Password: password,
+        InstitutionID: institutionId,
+        UserID: config.SophtronApiUserId,
+    };
+    return this.post(url, data, function(phrase){
+      data.UserID = phrase.split(':')[1];
+    });
+  }
+
   createUserInstitutionWithFullHistory(username, password, institutionId) {
     const url = '/UserInstitution/CreateUserInstitutionWithFullHistory';
     const data = {

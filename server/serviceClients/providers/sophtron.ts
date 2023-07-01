@@ -142,7 +142,20 @@ export class SophtronApi implements ProviderApiClient {
           entityId
         );
         break;
+      case 'all':
+      case 'everything':
+      case 'aggregate_all':
+      case 'aggregate_everything':
+      case 'agg_all':
+      case 'agg_everything':
+        ret = await this.apiClient.CreateUserInstitutionWithAllPlusProfile(
+          username,
+          password,
+          entityId
+        );
+        break;
       case 'fullhistory':
+      case 'aggregate_extendedhistory':
         ret = await this.apiClient.createUserInstitutionWithFullHistory(
           username,
           password,
@@ -152,6 +165,7 @@ export class SophtronApi implements ProviderApiClient {
       case 'auth':
       case 'bankauth':
       case 'verify':
+      case 'verification':
       case 'vc_account':
       case 'vc_accounts':
         ret = await this.apiClient.createUserInstitutionWithFullAccountNumbers(

@@ -4,13 +4,13 @@ Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
 const config = {
-  // SophtronSearchEndpoint: 'http://localhost:8082/api/',
-  SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
+  SophtronSearchEndpoint: 'http://localhost:8082/api/',
+  // SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   // SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
   SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
-  HostUrl: 'http://localhost:8080',
+  HostUrl: 'https://test.sophtron-prod.com',
   ServiceName: 'universal_widget',
   Demo: true,
   DefaultProvider: 'sophtron',
@@ -28,10 +28,16 @@ const config = {
   ResourceVersion: '', // 'development'
   SophtronApiUserId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
   SophtronApiUserSecret: '',
+
   MxClientId:'861c3518-79df-4ed2-99cc-a21637694ea6',
   MxClientIdProd: 'cb102a7c-14a2-4b4a-8241-076d5eedd115',
   MxApiSecret: '', //mx-int credential for testing
   MxApiSecretProd: '',
+
+  AkoyaClientId:'ju7yarrlko7drjihrzilmg72g',
+  AkoyaApiSecret: '', //akoya-sandbox credential for testing
+  AkoyaClientIdProd: '',
+  AkoyaApiSecretProd: '',
 };
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {

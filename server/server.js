@@ -11,7 +11,6 @@ process.on('unhandledRejection', (error) => {
 });
 process.removeAllListeners('warning'); // remove the noise caused by capacitor-community/http fetch plugin
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

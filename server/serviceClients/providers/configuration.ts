@@ -22,6 +22,24 @@ export const mxProd = {
   },
 };
 
+export const akoyaSandBox = {
+  clientId: config.AkoyaClientId,
+  secret: config.AkoyaApiSecret,
+  basePath: 'sandbox-idp.ddp.akoya.com',
+  productPath: 'sandbox-products.ddp.akoya.com',
+  redirectUrl: config.AkoyaRedirectUrl,
+  provider: 'akoya_sandbox'
+}
+
+export const akoyaProd = {
+  clientId: config.AkoyaClientIdProd,
+  secret: config.AkoyaApiSecretProd,
+  basePath: 'idp.ddp.akoya.com',
+  productPath: 'products.ddp.akoya.com',
+  redirectUrl: config.AkoyaRedirectUrlProd,
+  provider: 'akoya'
+}
+
 export const sophtron = {
   clientId: config.SophtronApiUserId,
   secret: config.SophtronApiUserSecret,

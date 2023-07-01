@@ -125,13 +125,19 @@ module.exports = function(app){
     res.sendStatus(400);
   })
   // oauth/redirect_from?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.&state=1526452cd3dbfa71e9b13bf12f95c40d
-  app.get('/oauth/:provider/redirect_from',  async (req, res) => {
+  app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
+    //For mx, successful oauth request will get the member updated hence will not need this to receive responses
+    //however, when error happens and received by this, mx only returned memberId but not user_id hence errors can't be resonsiled to member through this for now
+
+    //For banks and akoya, this endpoint is used to receive all oauth responses 
     // const { error, error_description, state } = req.query;
     const { member_guid, status,error_reason } = req.query;
     const { provider } = req.params
+    req.connectService = new ConnectApi({context:{provider}})
+    req.connectService.handleOauthResponse(provider, req.params, req.query)
     // console.log(req.params);
     // console.log(req.query)
-    res.sendStatus(200);
+    res.send('ok');
   })
   app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
     res.send({"member":{"job_guid":"JOB-179e7c31-53d6-4cfb-b95d-6b2686d1b817","status":8}}) // RECONNECTED?

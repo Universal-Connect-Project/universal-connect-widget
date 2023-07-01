@@ -11,11 +11,13 @@ import {
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import { MxApi, SophtronApi } from '../serviceClients/providers';
+import { MxApi, SophtronApi, AkoyaApi } from '../serviceClients/providers';
 const SearchClient = require('../serviceClients/searchClient');
 
 const mxClient = new MxApi(false);
 const mxIntClient = new MxApi(true);
+const akoyaClient = new AkoyaApi(false);
+const akoyaSandboxClient = new AkoyaApi(true);
 const sophtronClient = new SophtronApi();
 const searchApi = new SearchClient();
 
@@ -27,6 +29,10 @@ function getApiClient(context?: Context | undefined): ProviderApiClient {
       return mxIntClient;
     case 'sophtron':
       return sophtronClient;
+    case 'akoya':
+      return akoyaClient;
+    case 'akoya_sandbox':
+      return akoyaSandboxClient;
     default:
       return config.DefaultProvider === 'sophtron' ? sophtronClient : mxClient;
   }
@@ -34,14 +40,16 @@ function getApiClient(context?: Context | undefined): ProviderApiClient {
 
 function mapInstitution(ins: Institution, searchResult: any){
   // console.log(searchResult)
+  // console.log(ins)
+  const name = ins.name || searchResult.name;
   return ({
     guid: ins.id,
-    name: ins.name,
+    name,
     url: searchResult?.url || ins.url?.trim(),
     logo_url: searchResult?.logo_url || ins.logo_url?.trim(),
     instructional_data: {},
     credentials: [] as any[],
-    supports_oauth: ins.name.indexOf('Oauth') >= 0,
+    supports_oauth: ins.oauth || name?.indexOf('Oauth') >= 0,
     providers: ins.providers,
     provider: ins.provider
     // credentials: credentials?.map((c: any) => ({
@@ -133,6 +141,7 @@ export class ConnectApi{
         this.context.institution_uid = id;
         ret.id = resolved.target_id;
         ret.url = resolved.url;
+        ret.name = resolved.name;
         ret.logo_url = resolved.logo_url;
       }
     }
@@ -327,16 +336,24 @@ export class ConnectApi{
     return true
   }
 
-  async handleOauthResponse(status: string, connectionId: string, reason: string, provider: string){
-    switch(status){
-      case 'success':
-        break;
-      case 'error':
+  async handleOauthResponse(provider: string, rawParams: any, rawQueries: any){
+    switch(provider){
+      case 'akoya':
+      case 'akoya_sandbox':
         let client = getApiClient({provider});
-        logger.info(`deleting connection on oauth error: ${connectionId}: ${reason}`);
-        client.DeleteConnection(connectionId, 'user_id') // this is not going to work as there is not user_id passed on
+        client.UpdateConnection({...rawQueries, ...rawParams})
         break;
     }
+    return;
+    // switch(status){
+    //   case 'success':
+    //     break;
+    //   case 'error':
+    //     let client = getApiClient({provider});
+    //     logger.info(`deleting connection on oauth error: ${connectionId}: ${reason}`);
+    //     client.DeleteConnection(connectionId, 'user_id') // this is not going to work as there is not user_id passed on
+    //     break;
+    // }
   }
 }
 

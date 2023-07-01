@@ -12,5 +12,5 @@ function buildSophtronAuthCode(httpMethod, url){
 }
 
 module.exports = {
-  buildSophtronAuthCode
+  buildSophtronAuthCode,
 }

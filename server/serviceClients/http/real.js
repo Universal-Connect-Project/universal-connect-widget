@@ -64,7 +64,7 @@ async function get(url, headers, returnFullResObject) {
     logger.error(`error from ${url}`, error);
     throw error;
   });
-  logger.debug(`Received get response from ${url}`);
+  logger.debug(`Received get response from ${url}`, res);
   return returnFullResObject ? res : res.data;
 }
 
@@ -72,7 +72,7 @@ async function post(url, data, headers, returnFullResObject) {
   logger.debug(`post request: ${url}`);
   const options = {
     url,
-    headers: {...headers, 'content-type': 'application/json'},
+    headers: { 'content-type': 'application/json', ...headers},
     webFetchExtra: { mode: 'no-cors' },
     responseType: 'text',
     data: data || {},
