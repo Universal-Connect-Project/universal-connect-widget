@@ -4,6 +4,7 @@ export interface Context {
   connection_id?: string;
   current_job_id?: string;
   user_id?: string;
+  resolved_user_id?: string;
   provider?: string;
   job_type?: string;
   token?: string;
@@ -146,6 +147,7 @@ export enum EventEnum {
 }
 
 export interface ProviderApiClient {
+  ResolveUserId(id: string): Promise<string>;
   GetInstitutionById(id: string): Promise<Institution>;
   ListInstitutionCredentials(institutionId: string): Promise<Array<Credential>>;
   ListConnectionCredentials(connectionId: string, userId: string): Promise<Array<Credential>>;

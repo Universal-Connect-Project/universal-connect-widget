@@ -11,6 +11,7 @@ const config = {
   // SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
   SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
   HostUrl: 'https://test.sophtron-prod.com',
+  WebhookHostUrl: 'https://webhook.sophtron-prod.com',
   ServiceName: 'universal_widget',
   Demo: true,
   DefaultProvider: 'sophtron',
@@ -38,6 +39,13 @@ const config = {
   AkoyaApiSecret: '', //akoya-sandbox credential for testing
   AkoyaClientIdProd: '',
   AkoyaApiSecretProd: '',
+
+  FinicityPartnerId: '2445584232521',
+  FinicityAppKey: 'b4f46ed59b7795ed3e80e6dda9d268de',
+  FinicitySecret: '',
+  FinicityPartnerIdProd: '2445584233421',
+  FinicityAppKeyProd: 'cd9566e16d10a8bd4062dea9c9b72bc8',
+  FinicitySecretProd: '',
 };
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {

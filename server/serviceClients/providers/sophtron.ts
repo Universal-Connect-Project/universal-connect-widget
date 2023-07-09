@@ -386,4 +386,22 @@ export class SophtronApi implements ProviderApiClient {
     }
     return null;
   }
+
+  async ResolveUserId(user_id: string){
+    return user_id;
+    // todo support userId
+    // logger.debug('Resolving UserId: ' + user_id);
+    // const sophtronUser = await this.apiClient.getCustomer(user_id);
+    // if(sophtronUser){
+    //   logger.trace(`Found existing sophtron customer ${sophtronUser.id}`)
+    //   return sophtronUser.id
+    // }
+    // logger.trace(`Creating sophtron user ${user_id}`)
+    // let ret = await this.apiClient.createCustomer(user_id)
+    // if(ret){
+    //   return ret.id
+    // }
+    // logger.trace(`Failed creating sophtron user, using user_id: ${user_id}`)
+    // return user_id;
+  }
 }

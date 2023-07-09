@@ -82,13 +82,11 @@ export class MxApi implements ProviderApiClient {
   }
 
   async ListConnections(userId: string): Promise<Connection[]> {
-    userId = await this.resolveUserId(userId)
     const res = await this.apiClient.listMembers(userId);
     return res.data.members.map( (m) => fromMxInstitution(m, this.provider))
   }
 
   async ListConnectionCredentials(memberId: string, userId: string): Promise<Credential[]> {
-    userId = await this.resolveUserId(userId)
     const res = await this.apiClient.listMemberCredentials(memberId, userId);
     return mapCredentials(res.data);
   }
@@ -100,7 +98,7 @@ export class MxApi implements ProviderApiClient {
     // console.log(request);
     // console.log(userId)
     // console.log(this.mxConfig)
-    userId = await this.resolveUserId(userId);
+    
     const entityId = request.institution_id;
     const existings = await this.apiClient.listMembers(userId);
     const existing = existings.data.members.find(m => m.institution_code === entityId)
@@ -141,7 +139,6 @@ export class MxApi implements ProviderApiClient {
   }
 
   async DeleteConnection(id: string, userId: string): Promise<void> {
-    userId = await this.resolveUserId(userId);
     await this.apiClient.deleteManagedMember(id, userId);
   }
 
@@ -150,7 +147,6 @@ export class MxApi implements ProviderApiClient {
     userId: string
   ): Promise<Connection> {
     // console.log("UpdateConnection")
-    userId = await this.resolveUserId(userId);
     const ret = await this.UpdateConnectionInternal(request, userId);
     return ret;
   }
@@ -177,7 +173,6 @@ export class MxApi implements ProviderApiClient {
     connectionId: string,
     userId: string
   ): Promise<Connection> {
-    userId = await this.resolveUserId(userId);
     const res = await this.apiClient.readMember(connectionId, userId);
     const member = res.data.member!;
     return {
@@ -192,7 +187,6 @@ export class MxApi implements ProviderApiClient {
     jobId: string,
     userId: string
   ): Promise<Connection> {
-    userId = await this.resolveUserId(userId);
     const res = await this.apiClient.readMemberStatus(memberId, userId);
     const member = res.data.member!;
     // console.log(member);
@@ -252,7 +246,6 @@ export class MxApi implements ProviderApiClient {
     jobId: string,
     userId: string
   ): Promise<boolean> {
-    userId = await this.resolveUserId(userId);
     const res = await this.apiClient.resumeAggregation(request.id!, userId, {
       member: {
         challenges: request.challenges!.map((item, idx) => ({
@@ -270,11 +263,11 @@ export class MxApi implements ProviderApiClient {
     vc_type: VcType,
     userId?: string
   ): Promise<object> {
-    userId = await this.resolveUserId(userId);
+    
     throw new Error('Method not implemented.');
   }
 
-  async resolveUserId(user_id: string){
+  async ResolveUserId(user_id: string){
     logger.debug('Resolving UserId: ' + user_id);
     let res = await this.apiClient.listUsers(1, 10, user_id);
     const mxUser = res.data?.users?.find(u => u.id === user_id)
@@ -292,5 +285,4 @@ export class MxApi implements ProviderApiClient {
     logger.trace(`Failed creating mx user, using user_id: ${user_id}`)
     return user_id;
   }
-
 }

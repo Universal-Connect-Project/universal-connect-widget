@@ -6,6 +6,7 @@ const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
 const instrumentation = require('./instrumentations.js');
 const config = require('../config');
 const sophtronClient = new SophtronClient();
+const logger = require('../infra/logger');
 
 module.exports = function(app){
   instrumentation(app)
@@ -18,8 +19,11 @@ module.exports = function(app){
     }
   })
   app.use(contextHandler);
-  app.use((req, res, next) => {
-    req.connectService = new ConnectApi(req)
+  app.use(async (req, res, next) => {
+    req.connectService = new ConnectApi(req);
+    if(!req.context.resolved_user_id){
+      req.context.resolved_user_id = await req.connectService.ResolveUserId(req.context.user_id);
+    }
     next()
   })
   // stubs(app)
@@ -124,6 +128,27 @@ module.exports = function(app){
     }
     res.sendStatus(400);
   })
+  app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
+    res.send({"member":{"job_guid":"JOB-179e7c31-53d6-4cfb-b95d-6b2686d1b817","status":8}}) // RECONNECTED?
+    return;
+    // let ret = await req.connectService.updateMember(req.body);
+    // res.send(ret)
+  })
+
+  app.all('/webhook/:provider/*', async function (req, res) {
+    // logger.info(`echo`, {
+    //   method: req.method,
+    //   headers: req.headers,
+    //   path: req.path,
+    //   queries: req.queries,
+    //   body: req.body
+    // })
+
+    const { provider } = req.params
+    req.connectService = new ConnectApi({context:{provider}})
+    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query, req.body)
+    res.send(ret);
+  })
   // oauth/redirect_from?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.&state=1526452cd3dbfa71e9b13bf12f95c40d
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
     //For mx, successful oauth request will get the member updated hence will not need this to receive responses
@@ -134,15 +159,9 @@ module.exports = function(app){
     const { member_guid, status,error_reason } = req.query;
     const { provider } = req.params
     req.connectService = new ConnectApi({context:{provider}})
-    req.connectService.handleOauthResponse(provider, req.params, req.query)
+    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
     // console.log(req.params);
     // console.log(req.query)
-    res.send('ok');
-  })
-  app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
-    res.send({"member":{"job_guid":"JOB-179e7c31-53d6-4cfb-b95d-6b2686d1b817","status":8}}) // RECONNECTED?
-    return;
-    // let ret = await req.connectService.updateMember(req.body);
-    // res.send(ret)
+    res.send(ret);
   })
 }

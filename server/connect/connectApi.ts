@@ -11,13 +11,16 @@ import {
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import { MxApi, SophtronApi, AkoyaApi } from '../serviceClients/providers';
+import { MxApi, SophtronApi, AkoyaApi, FinicityApi, DefaultApi } from '../serviceClients/providers';
 const SearchClient = require('../serviceClients/searchClient');
 
+const defaultClient = new DefaultApi();
 const mxClient = new MxApi(false);
 const mxIntClient = new MxApi(true);
 const akoyaClient = new AkoyaApi(false);
 const akoyaSandboxClient = new AkoyaApi(true);
+const finicityClient = new FinicityApi(false);
+const finicitySandboxClient = new FinicityApi(true);
 const sophtronClient = new SophtronApi();
 const searchApi = new SearchClient();
 
@@ -33,8 +36,12 @@ function getApiClient(context?: Context | undefined): ProviderApiClient {
       return akoyaClient;
     case 'akoya_sandbox':
       return akoyaSandboxClient;
+    case 'finicity':
+      return finicityClient;
+    case 'finicity_sandbox':
+      return finicitySandboxClient;
     default:
-      return config.DefaultProvider === 'sophtron' ? sophtronClient : mxClient;
+      return defaultClient;
   }
 }
 
@@ -125,11 +132,6 @@ export class ConnectApi{
     this.context = req.context
   }
   async resolveInstitution(id: string): Promise<any>{
-    // if(id === 'mxbank' || id === 'mx_bank_oauth'){
-    //   this.context.provider = 'mx-int';
-    //   this.context.institution_id = id
-    //   return id;
-    // }
     let ret = {
       id,
     } as any
@@ -164,7 +166,7 @@ export class ConnectApi{
         id: c.guid,
         value: c.value
       }))
-    }, this.context.user_id);
+    }, this.getUserId());
     this.context.current_job_id = connection.cur_job_id;
     return {member: mapConnection(connection)}
   }
@@ -202,7 +204,7 @@ export class ConnectApi{
           }
           return ret;
         })
-      }, this.context.current_job_id, this.context.user_id)
+      }, this.context.current_job_id, this.getUserId())
       return {member};
     }else{
       let connection = await client.UpdateConnection({
@@ -211,23 +213,23 @@ export class ConnectApi{
           id: c.guid,
           value: c.value
         }))
-      }, this.context.user_id)
+      }, this.getUserId())
       this.context.current_job_id = connection.cur_job_id;
       return {member};
     }
   }
   async loadMembers(): Promise<Member[]> {
     // let client = getApiClient(this.context);
-    // const ret = await client.ListConnections(this.context.user_id);
+    // const ret = await client.ListConnections(this.getUserId());
     // return ret.map(mapConnection)
     return []
   }
   async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
     let client = getApiClient(this.context);
     // console.log(this.context)
-    let mfa = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.context.user_id);
+    let mfa = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.getUserId());
     if(!mfa?.institution_code){
-      let connection = await client.GetConnectionById(memberGuid, this.context.user_id);
+      let connection = await client.GetConnectionById(memberGuid, this.getUserId());
       return {member: mapConnection({...mfa, ...connection})};
     }
     return {member: mapConnection({...mfa})};
@@ -238,7 +240,7 @@ export class ConnectApi{
   }
   async getOauthState(memberGuid: string){
     let client = getApiClient(this.context);
-    let connection = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.context.user_id)
+    let connection = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.getUserId())
     let ret = {
       inbound_member_guid: memberGuid,
       outbound_member_guid: memberGuid,
@@ -260,12 +262,12 @@ export class ConnectApi{
   }
   async deleteMember(member: Member): Promise<void> {
     let client = getApiClient(this.context);
-    await client.DeleteConnection(member.guid, this.context.user_id)
+    await client.DeleteConnection(member.guid, this.getUserId())
   }
   async getMemberCredentials(memberGuid: string): Promise<any> {
     this.context.current_job_id = null;
     let client = getApiClient(this.context);
-    const crs = await client.ListConnectionCredentials(memberGuid, this.context.user_id);
+    const crs = await client.ListConnectionCredentials(memberGuid, this.getUserId());
     return {credentials: crs.map(c => ({
       ...c,
       guid: c.id,
@@ -336,15 +338,26 @@ export class ConnectApi{
     return true
   }
 
-  async handleOauthResponse(provider: string, rawParams: any, rawQueries: any){
+  async handleOauthResponse(provider: string, rawParams: any, rawQueries: any, body: any){
     switch(provider){
       case 'akoya':
       case 'akoya_sandbox':
-        let client = getApiClient({provider});
-        client.UpdateConnection({...rawQueries, ...rawParams})
+        let akoyaClient = getApiClient({provider});
+        akoyaClient.UpdateConnection({...rawQueries, ...rawParams})
         break;
+      case 'finicity':
+      case 'finicity_sandbox':
+        let finicityClient = getApiClient({provider});
+        finicityClient.UpdateConnection({...rawQueries, ...rawParams, ...body})
+        break;
+      default: 
+        return {
+          provider,
+          rawParams,
+          rawQueries
+        }
     }
-    return;
+    return 'ok';
     // switch(status){
     //   case 'success':
     //     break;
@@ -354,6 +367,13 @@ export class ConnectApi{
     //     client.DeleteConnection(connectionId, 'user_id') // this is not going to work as there is not user_id passed on
     //     break;
     // }
+  }
+  ResolveUserId(id: string){
+    let client = getApiClient(this.context);
+    return client.ResolveUserId(id);
+  }
+  getUserId(): string{
+    return this.context.resolved_user_id || this.getUserId();
   }
 }
 

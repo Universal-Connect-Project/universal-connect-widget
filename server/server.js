@@ -17,11 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/ping', function (req, res) {
   res.send('ok');
 });
-app.post('/echo',function (req, res) {
-  logger.info(`echo`, req.headers)
-  logger.info(`echo`, req.body)
-  res.send('ok');
-})
 if (config.env !== 'prod') {
   example(app);
 }

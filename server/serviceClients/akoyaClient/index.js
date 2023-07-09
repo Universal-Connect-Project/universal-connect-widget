@@ -1,8 +1,5 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
-const db = require('../storageClient');
-const CryptoJS = require("crypto-js");
-const {  v4: uuidv4, } = require('uuid');
 const http = require('../http');
 import {
   ConnectionStatus,
@@ -37,42 +34,6 @@ export default class AkoyaClient{
   }
   getOauthUrl(institution_id, client_redirect_url, state){
     return `https://${this.apiConfig.basePath}/auth?connector=${institution_id}&client_id=${this.apiConfig.clientId}&redirect_uri=${client_redirect_url}&state=${state}&response_type=code&scope=openid email profile offline_access`
-  }
-
-  async createConnection(institution_id){
-    const request_id = uuidv4();
-    const obj = {
-      id: request_id,
-      is_oauth: true,
-      credentials: [],
-      institution_code: institution_id,
-      oauth_window_uri: this.getOauthUrl(institution_id, this.client_redirect_url, request_id),
-      provider: this.apiConfig.provider,
-      status: ConnectionStatus.PENDING
-    }
-    await db.set(request_id, obj);
-    return obj;
-  }
-  async updateConnection(oauthResponse){
-    const {state: connection_id, code } = oauthResponse;
-    logger.info(`Received akoya oauth redirect response ${connection_id}`)
-    let connection = await db.get(connection_id)
-    if(!connection){
-      return {}
-    }
-    if(code){
-      connection.status = ConnectionStatus.CONNECTED
-      connection.guid = connection_id
-      connection.id = code
-    }
-    await db.set(connection_id, connection)
-    return connection;
-  }
-  deleteConnection(id){
-    db.set(id, null);
-  }
-  getConnection(id){
-    return db.get(id);
   }
 
   getIdToken(authCode){

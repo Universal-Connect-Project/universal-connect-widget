@@ -22,12 +22,11 @@ export const mxProd = {
   },
 };
 
-export const akoyaSandBox = {
+export const akoyaSandbox = {
   clientId: config.AkoyaClientId,
   secret: config.AkoyaApiSecret,
   basePath: 'sandbox-idp.ddp.akoya.com',
   productPath: 'sandbox-products.ddp.akoya.com',
-  redirectUrl: config.AkoyaRedirectUrl,
   provider: 'akoya_sandbox'
 }
 
@@ -36,8 +35,23 @@ export const akoyaProd = {
   secret: config.AkoyaApiSecretProd,
   basePath: 'idp.ddp.akoya.com',
   productPath: 'products.ddp.akoya.com',
-  redirectUrl: config.AkoyaRedirectUrlProd,
   provider: 'akoya'
+}
+
+export const finicitySandbox = {
+  basePath: 'https://api.finicity.com',
+  partnerId: config.FinicityPartnerId,
+  appKey: config.FinicityAppKey,
+  secret: config.FinicitySecret,
+  provider: 'finicity_sandbox'
+}
+
+export const finicityProd = {
+  basePath: 'https://api.finicity.com',
+  partnerId: config.FinicityPartnerIdProd,
+  appKey: config.FinicityAppKeyProd,
+  secret: config.FinicitySecretProd,
+  provider: 'finicity'
 }
 
 export const sophtron = {
