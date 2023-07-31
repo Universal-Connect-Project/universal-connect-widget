@@ -45,7 +45,7 @@ const sophtron = (function () {
   }
 
   function onMessage(message) {
-    if(message.type.startsWith('mx')){
+    if(message.type.startsWith('vcs')){
       message = {
         event: message.type,
         type: 'message',
@@ -74,7 +74,7 @@ const sophtron = (function () {
               });
             }
             break;
-          case 'mx/connect/enterCredentials':
+          case 'vcs/connect/enterCredentials':
           case 'LOGIN':
             if (state.config.onLogin) {
               state.config.onLogin({
@@ -91,7 +91,7 @@ const sophtron = (function () {
               });
             }
             break;
-          case 'mx/connect/selectedInstitution':
+          case 'vcs/connect/selectedInstitution':
           case 'SELECT_INSTITUTION':
             if (state.config.onSelectBank) {
               state.config.onSelectBank({
@@ -100,7 +100,7 @@ const sophtron = (function () {
               });
             }
             break;
-          case 'mx/connect/memberConnected':
+          case 'vcs/connect/memberConnected':
           case 'SUCCEEDED':
           case 'FAILED':
             if (state.config.onFinish) {
@@ -115,12 +115,12 @@ const sophtron = (function () {
             break;
           case 'INIT':
           case 'INSTITUTION_LIST':
-          case 'mx/connect/stepChange':
-          case 'mx/connect/institutionSearch':
-          case 'mx/connect/loaded':
-          case 'mx/connect/memberStatusUpdate':
-          case 'mx/connect/submitMFA':
-          case 'mx/connect/stepChange':
+          case 'vcs/connect/stepChange':
+          case 'vcs/connect/institutionSearch':
+          case 'vcs/connect/loaded':
+          case 'vcs/connect/memberStatusUpdate':
+          case 'vcs/connect/submitMFA':
+          case 'vcs/connect/stepChange':
             if(state.config.onEvent){
               state.config.onEvent(message)
             }

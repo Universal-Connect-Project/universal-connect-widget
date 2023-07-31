@@ -1,4 +1,4 @@
-import * as config from '../../config';
+import * as config from '../config';
 
 export const mxInt = {
   username: config.MxClientId,

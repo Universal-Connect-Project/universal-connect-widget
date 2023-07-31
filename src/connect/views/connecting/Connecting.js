@@ -123,7 +123,7 @@ export const Connecting = props => {
       )
       // give the animation a bit more time for the user to see the complete
       // state
-
+      //  console.log(currentMember)
       // send member connected post message before analytic event, this allows clients to show their own "connected" window before the connect complete step.
       if (uiMessageVersion === 4) {
         sendPostMessage('connect/memberConnected', {

@@ -51,6 +51,7 @@
                         <img class="cert" src="/static/cert.png"> 
                         <img class="chase" v-bind:src="bankingVc.obj.credentialSubject.fiAttributes?.[1].value">
                     </div>
+                    <p style="font-weight: bold; margin-top: 2%;margin-bottom: 1%!important">{{ bankingVcLatestAccount.nickname }}</p>
                     <p style="font-weight: bold; margin-top: 2%;margin-bottom: 1%!important">Account Number:{{ bankingVcLatestAccount.accountNumber}}</p>
                     <p style="margin-bottom: 1%!important">Routing Number: {{ bankingVcLatestAccount.routingTransitNumber}}</p>
                     <p>Balance: ${{ bankingVcLatestAccount.availableBalnace }}</p>
@@ -125,7 +126,7 @@
                   return 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.bankingVcJson);
                 },
                 bankingVcLatestAccount(){
-                    return this.bankingVc.obj.credentialSubject.accounts.sort(function(a,b){
+                    return this.bankingVc.obj.credentialSubject.accounts.map(a => Object.values(a)[0]).sort(function(a,b){
                         return b.availableBalnace - a.availableBalnace;
                     })[0] || {};
                 },

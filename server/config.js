@@ -7,7 +7,8 @@ const config = {
   SophtronSearchEndpoint: 'http://localhost:8082/api/',
   // SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
-  SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  //SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
   // SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
   SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
   HostUrl: 'https://test.sophtron-prod.com',
@@ -20,6 +21,7 @@ const config = {
   Port: '8080',
   Env: 'pre', // mocked
   Version: '',
+  UseAxios: true,
   CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2',
   CryptoIv: '453687d854d55101f001b5999b68bc3d',
   CryptoAlgorithm: 'aes-256-cbc',

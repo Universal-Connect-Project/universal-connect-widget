@@ -67,7 +67,9 @@
     "reselect": "^2.5.4",
     "rxjs": "^6.6.2",
     "stream-browserify": "^3.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "parse-address": "^1.1.2",
+    "parse-full-name": "^1.2.6"
   },
   "scripts": {
     "server": "ts-node server/server.js",

@@ -7,23 +7,23 @@ import type {
   ProviderApiClient,
   UpdateConnectionRequest,
   VcType,
-} from '../../../shared/contract';
+} from '../../shared/contract';
 import {
   Challenge,
   ChallengeType,
   ConnectionStatus,
-} from '../../../shared/contract';
-import * as logger from '../../infra/logger';
-import type { InstitutionResponse, CredentialResponse } from '../mxClient';
+} from '../../shared/contract';
+import * as logger from '../infra/logger';
+import type { InstitutionResponse, CredentialResponse } from '../serviceClients/mxClient';
 import {
   Configuration,
   CredentialRequest,
   CredentialsResponseBody,
   MxPlatformApiFactory,
   MemberResponseBody,
-} from '../mxClient';
+} from '../serviceClients/mxClient';
 import { mxProd, mxInt } from './configuration';
-import * as config from '../../config'
+import * as config from '../config'
 
 function fromMxInstitution(ins: InstitutionResponse, provider: string): Institution {
   return {
@@ -178,7 +178,8 @@ export class MxApi implements ProviderApiClient {
     return {
       id: member.guid!,
       institution_code: member.institution_code,
-      provider: this.provider
+      provider: this.provider,
+      user_id: userId
     };
   }
 
@@ -194,6 +195,7 @@ export class MxApi implements ProviderApiClient {
       provider: this.provider,
       id: member.guid!,
       cur_job_id: member.guid!,
+      user_id: userId,
       status:
         ConnectionStatus[
           member.connection_status! as keyof typeof ConnectionStatus

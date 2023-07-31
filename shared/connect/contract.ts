@@ -1,4 +1,4 @@
-import { Institution } from '../contract'
+import { Institution, VcType } from '../contract'
 
 export interface MFACredential{
   field_name: string
@@ -183,6 +183,8 @@ export interface IConnectAPI {
   loadInstitutionByCode(code: string): Promise<Institution>
   loadPopularInstitutions(query: string): Promise<Institution[]>
   loadDiscoveredInstitutions(): Promise<Institution[]>
+
+  getVC(connection_id: string, type: VcType, user_id: string): any
 
   // createAccount(account)
   // loadAccounts()

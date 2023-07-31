@@ -35,6 +35,8 @@
         job_type: '$job_type',
         oauth_referral_source: '$oauth_referral_source',
         update_credentials: '$update_credentials',
+        is_mobile_webview: '$is_mobile_webview',
+        scheme: '$scheme',
       }
       window.app = {
         options: {
@@ -46,7 +48,7 @@
           }, 
         },
         clientConfig: {
-          is_mobile_webview: false,
+          is_mobile_webview: params.is_mobile_webview === 'true',
           target_origin_referrer: null,
           ui_message_protocol: 'post_message',
           ui_message_version: 4,
@@ -68,6 +70,7 @@
             oauth_referral_source: params.oauth_referral_source || 'BROWSER',
             update_credentials: params.update_credentials === 'true',
             wait_for_full_aggregation: false,
+            scheme: params.scheme || 'vcs'
           },
         },
         config: {

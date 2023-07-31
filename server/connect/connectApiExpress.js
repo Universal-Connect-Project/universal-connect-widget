@@ -146,6 +146,7 @@ module.exports = function(app){
 
     const { provider } = req.params
     req.connectService = new ConnectApi({context:{provider}})
+    logger.info(`received web hook at: ${req.path}`, req.query)
     const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query, req.body)
     res.send(ret);
   })
@@ -162,6 +163,8 @@ module.exports = function(app){
     const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
     // console.log(req.params);
     // console.log(req.query)
-    res.send(ret);
+    res.type('.html');
+    res.redirect('mx://ping?metadata=%7B%22session_guid%22%3A%22c73038c2-df7d-44a3-ab25-132179b1ba51%22%2C%22user_guid%22%3A%22241266ed-803a-4841-8a8a-0f37551e8f56%22%7D')
+    //res.send(ret);
   })
 }

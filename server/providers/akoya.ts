@@ -13,14 +13,14 @@ import {
 } from '@/../../shared/contract';
 import { akoyaProd, akoyaSandbox } from './configuration';
 
-const db = require('../storageClient');
+const db = require('../serviceClients/storageClient');
 const CryptoJS = require("crypto-js");
 const {  v4: uuidv4, } = require('uuid');
 
-import * as config from '../../config';
-import * as logger from '../../infra/logger';
+import * as config from '../config';
+import * as logger from '../infra/logger';
 
-import AkoyaClient from '../akoyaClient';
+import AkoyaClient from '../serviceClients/akoyaClient';
 
 export class AkoyaApi implements ProviderApiClient {
   sandbox: boolean;
@@ -88,9 +88,11 @@ export class AkoyaApi implements ProviderApiClient {
     }
     if(code){
       connection.status = ConnectionStatus.CONNECTED
-      connection.guid = connection_id
-      connection.id = code
+      connection.guid = connection.institution_code
+      connection.id = connection.institution_code
+      connection.user_id = code
     }
+    // console.log(connection)
     await db.set(connection_id, connection)
     return connection;
   }
@@ -100,7 +102,7 @@ export class AkoyaApi implements ProviderApiClient {
   }
 
   async GetConnectionStatus(connectionId: string, jobId: string): Promise<Connection> {
-    return this.apiClient.getConnection(connectionId);
+    return db.get(connectionId);
   }
 
   async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {
@@ -110,13 +112,27 @@ export class AkoyaApi implements ProviderApiClient {
   async ResolveUserId(user_id: string){
     return user_id;
   }
-  
+
   async GetVc(
     connection_id: string,
     type: VcType,
     userId?: string
   ): Promise<object> {
-    return null;
+    let token = await this.apiClient.getIdToken(userId)
+    switch(type){
+      case VcType.IDENTITY:
+        // delete customer.accounts;
+        let customer = await this.apiClient.getCustomerInfo(connection_id, token.id_token);
+        return {credentialSubject: {customer}};
+      case VcType.ACCOUNTS:
+        let accounts = await this.apiClient.getAccountInfo(connection_id, [], token.id_token);
+        return {credentialSubject: {accounts}};
+      case VcType.TRANSACTIONS:
+        let allAccounts = await this.apiClient.getAccountInfo(connection_id, [], token.id_token);
+        let accountId = (Object.values(allAccounts[0])[0] as any).accountId;
+        const transactions = await this.apiClient.getTransactions(connection_id, accountId, token.id_token);
+        return {credentialSubject: {transactions}};
+    }
   }
 }
 

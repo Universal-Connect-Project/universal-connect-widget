@@ -12,11 +12,12 @@ import {
   VcType,
 } from '@/../../shared/contract';
 
-import * as config from '../../config';
-import * as logger from '../../infra/logger';
-import * as http from '../http';
+import * as config from '../config';
+import * as logger from '../infra/logger';
+import * as http from '../serviceClients/http';
 
-const SophtronClient = require('../sophtronClient');
+const SophtronClient = require('../serviceClients/sophtronClient/v2');
+const SophtronClientV1 = require('../serviceClients/sophtronClient');
 
 const uuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -33,23 +34,64 @@ function fromSophtronInstitution(ins: any): Institution | undefined {
   };
 }
 
+function mapJobType(input: string){
+  switch (input) {
+    case 'agg':
+    case 'aggregation':
+    case 'aggregate':
+    case 'add':
+    case 'utils':
+    case 'util':
+    case 'demo':
+    case 'vc_transactions':
+    case 'vc_transaction':
+      return 'aggregate';
+    case 'all':
+    case 'everything':
+    case 'aggregate_all':
+    case 'aggregate_everything':
+    case 'agg_all':
+    case 'agg_everything':
+      return 'aggregate_identity_verification';
+    case 'fullhistory':
+    case 'aggregate_extendedhistory':
+      return 'aggregate_extendedhistory';
+    case 'auth':
+    case 'bankauth':
+    case 'verify':
+    case 'verification':
+    case 'vc_account':
+    case 'vc_accounts':
+      return 'verification';
+    case 'identify':
+    case 'vc_identity':
+      return 'aggregate_identity';
+    default:
+      // TODO create without job?
+      logger.error(`Invalid job type ${input}`);
+      break;
+  }
+}
+
 export class SophtronApi implements ProviderApiClient {
   token: string;
 
   apiClient: any;
+  apiClientV1: any;
 
   httpClient = http;
 
   constructor(token?: string) {
     this.token = token;
     this.apiClient = new SophtronClient(token);
+    this.apiClientV1 = new SophtronClientV1(token);
   }
 
-  async clearConnection(vc: any, id: string) {
+  async clearConnection(vc: any, id: string, userID: string) {
     if (config.Demo && vc.issuer) {
       // a valid vc should have an issuer field. this means we have a successful response,
       // once a VC is sccessfully returned to user, we clear the connection for data safty
-      this.apiClient.deleteUserInstitution(id);
+      this.apiClient.deleteMember(userID, id);
     }
   }
 
@@ -59,19 +101,12 @@ export class SophtronApi implements ProviderApiClient {
     //   const res = await this.apiClient.getInstitutionsByName(name);
     //   return fromSophtronInstitution(res?.[0]);
     // }
-    const ins = await this.apiClient.getInstitutionById(id);
+    const ins = await this.apiClientV1.getInstitutionById(id);
     return fromSophtronInstitution(ins);
   }
 
   async ListInstitutionCredentials(id: string): Promise<Array<Credential>> {
-    let ins;
-    if (!uuid.test(id)) {
-      const name = id;
-      const res = await this.apiClient.getInstitutionsByName(name);
-      ins = res?.[0];
-    } else {
-      ins = await this.apiClient.getInstitutionById(id);
-    }
+    const ins = await this.apiClientV1.getInstitutionById(id);
     let ret = [
       {
         id: 'username',
@@ -92,7 +127,7 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async ListConnectionCredentials(connectionId: string, userId: string): Promise<Credential[]> {
-    const uins = await this.apiClient.getUserInstitutionById(connectionId);
+    const uins = await this.apiClient.getMember(userId, connectionId);
     if(uins){
       return this.ListInstitutionCredentials(uins.InstitutionID);
     }
@@ -104,8 +139,13 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async CreateConnection(
-    request: CreateConnectionRequest
+    request: CreateConnectionRequest,
+    userId: string
   ): Promise<Connection | undefined> {
+    let job_type = mapJobType(request.initial_job_type?.toLowerCase())
+    if(!job_type){
+      return
+    }
     const username = request.credentials.find(
       (item) => item.id === 'username'
     )!.value;
@@ -114,84 +154,12 @@ export class SophtronApi implements ProviderApiClient {
     )
     // if password field wasn't available, it should be a 'none' type
     const password = passwordField? passwordField.value : 'None';
-    let entityId = request.institution_id;
-    if (!uuid.test(entityId)) {
-      const name = entityId;
-      const res = await this.apiClient.getInstitutionsByName(name);
-      if (res?.[0]) {
-        entityId = res[0].InstitutionID;
-        logger.info(`Loaded institution id ${entityId} by name ${name}`);
-      } else {
-        return undefined;
-      }
-    }
-    let ret: { JobID: string; UserInstitutionID: string } | null = null;
-    switch (request.initial_job_type?.toLowerCase()) {
-      case 'agg':
-      case 'aggregation':
-      case 'aggregate':
-      case 'add':
-      case 'utils':
-      case 'util':
-      case 'demo':
-      case 'vc_transactions':
-      case 'vc_transaction':
-        ret = await this.apiClient.createUserInstitutionWithRefresh(
-          username,
-          password,
-          entityId
-        );
-        break;
-      case 'all':
-      case 'everything':
-      case 'aggregate_all':
-      case 'aggregate_everything':
-      case 'agg_all':
-      case 'agg_everything':
-        ret = await this.apiClient.CreateUserInstitutionWithAllPlusProfile(
-          username,
-          password,
-          entityId
-        );
-        break;
-      case 'fullhistory':
-      case 'aggregate_extendedhistory':
-        ret = await this.apiClient.createUserInstitutionWithFullHistory(
-          username,
-          password,
-          entityId
-        );
-        break;
-      case 'auth':
-      case 'bankauth':
-      case 'verify':
-      case 'verification':
-      case 'vc_account':
-      case 'vc_accounts':
-        ret = await this.apiClient.createUserInstitutionWithFullAccountNumbers(
-          username,
-          password,
-          entityId
-        );
-        break;
-      case 'identify':
-      case 'vc_identity':
-        ret = await this.apiClient.createUserInstitutionWithProfileInfo(
-          username,
-          password,
-          entityId
-        );
-        break;
-      default:
-        // TODO create without job?
-        logger.error(`Invalid job type ${request.initial_job_type}`);
-        break;
-    }
+    const ret = await this.apiClient.createMember(userId, job_type, username, password, request.institution_id);
     if (ret) {
       return {
-        id: ret.UserInstitutionID,
+        id: ret.MemberID,
         cur_job_id: ret.JobID,
-        institution_code: entityId, // TODO
+        institution_code: request.institution_id, // TODO
         status: ConnectionStatus.CREATED,
         provider: 'sophtron'
       };
@@ -199,40 +167,46 @@ export class SophtronApi implements ProviderApiClient {
     return undefined;
   }
 
-  async DeleteConnection(id: string): Promise<void> {
-    return this.apiClient.deleteUserInstitution(id);
+  async DeleteConnection(id: string, userId: string): Promise<void> {
+    return this.apiClient.deleteMember(userId, id);
   }
 
   async UpdateConnection(
-    request: UpdateConnectionRequest
+    request: UpdateConnectionRequest,
+    userId: string
   ): Promise<Connection> {
+    let job_type = mapJobType('agg') //TODO
+    if(!job_type){
+      return
+    }
     const username = request.credentials!.find(
       (item) => item.id === 'username'
     )!.value;
     const password = request.credentials!.find(
       (item) => item.id === 'password'
     )!.value;
-    await this.apiClient.updateUserInstitution(username, password, request.id);
+    await this.apiClient.updateMember(userId, request.id, job_type, username, password);
     // todo: retrieve institutionId
-    const ret = await this.apiClient.refreshUserInstitution(request.id);
+    const ret = await this.apiClient.refreshMember(request.id);
     return {
-      id: ret.UserInstitutionID,
+      id: ret.MemberID,
       cur_job_id: ret.JobID,
       institution_code: request.id, // TODO
       provider: 'sophtron'
     };
   }
 
-  async GetConnectionById(connectionId: string): Promise<Connection> {
-    const uins = await this.apiClient.getUserInstitutionById(connectionId);
+  async GetConnectionById(connectionId: string, userId: string): Promise<Connection> {
+    const m = await this.apiClient.getMember(userId, connectionId);
     return {
-      id: uins.UserInstitutionID,
-      institution_code: uins.InstitutionID,
-      provider: 'sophtron'
+      id: m.MemberID,
+      institution_code: m.InstitutionID,
+      provider: 'sophtron',
+      user_id: userId,
     };
   }
 
-  async GetConnectionStatus(userInstitutionID: string, jobId: string): Promise<Connection> {
+  async GetConnectionStatus(memberId: string, jobId: string, userId: string): Promise<Connection> {
     const job = await this.apiClient.getJob(jobId);
     const challenge: Challenge = {
       id: '',
@@ -300,6 +274,7 @@ export class SophtronApi implements ProviderApiClient {
     }
     return {
       id: job.UserInstitutionID,
+      user_id: userId,
       cur_job_id: job.JobID,
       status,
       challenges: challenge?.id ? [challenge] : undefined,
@@ -311,26 +286,26 @@ export class SophtronApi implements ProviderApiClient {
     const c = request.challenges![0]!;
     switch (c.type) {
       case ChallengeType.TOKEN:
-        await this.apiClient.jobTokenInput(jobId, null, null, true);
+        await this.apiClientV1.jobTokenInput(jobId, null, null, true);
         break;
       case ChallengeType.IMAGE:
       case ChallengeType.IMAGE_OPTIONS:
-        await this.apiClient.jobCaptchaInput(jobId, c.response);
+        await this.apiClientV1.jobCaptchaInput(jobId, c.response);
         break;
       case ChallengeType.QUESTION:
         if (c.question === 'ota' || c.id === 'TokenSentFlag') {
-          await this.apiClient.jobTokenInput(
+          await this.apiClientV1.jobTokenInput(
             jobId,
             null,
             c.response,
             null
           );
         } else {
-          await this.apiClient.jobSecurityAnswer(jobId, [c.response]);
+          await this.apiClientV1.jobSecurityAnswer(jobId, [c.response]);
         }
         break;
       case ChallengeType.OPTIONS:
-        await this.apiClient.jobTokenInput(jobId, c.response, null, null);
+        await this.apiClientV1.jobTokenInput(jobId, c.response, null, null);
         break;
       default:
         logger.error('Wrong challenge answer received', c)
@@ -344,25 +319,18 @@ export class SophtronApi implements ProviderApiClient {
     type: VcType,
     userId?: string
   ): Promise<object> {
-    const key = (await this.apiClient.getUserIntegrationKey()).IntegrationKey;
+    const key = (await this.apiClientV1.getUserIntegrationKey()).IntegrationKey;
     //const key = this.token || await this.apiClient.getUserIntegrationKey().IntegrationKey;
     let path = '';
-    let body = null as any;
     switch (type) {
       case VcType.IDENTITY:
-        path = 'identity';
-        body = {
-          masks: {
-            identity: ['name'],
-          },
-        };
+        path = `customers/${userId}/members/${connection_id}/identity?filters=name,addresses`;
         break;
       case VcType.ACCOUNTS:
-        path = 'accounts';
+        path = `customers/${userId}/members/${connection_id}/accounts`;
         break;
       case VcType.TRANSACTIONS:
-        path = 'transactions';
-        break;
+        throw new Error('Not Implemented')
       default:
         break;
     }
@@ -372,14 +340,13 @@ export class SophtronApi implements ProviderApiClient {
         headers.DidAuth = userId;
       }
       const ret = await http
-        .post(
-          `${config.SophtronVCServiceEndpoint}vc/${path}/${connection_id}`,
-          body,
+        .get(
+          `${config.SophtronVCServiceEndpoint}vc/${path}`,
           headers
         )
         .then((vc: any) => {
           // for data security purpose when doing demo, remove the connection once vc is returned to client.
-          this.clearConnection(vc, connection_id);
+          this.clearConnection(vc, connection_id, userId);
           return vc;
         });
       return ret;
@@ -388,20 +355,18 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async ResolveUserId(user_id: string){
+    logger.debug('Resolving UserId: ' + user_id);
+    const sophtronUser = await this.apiClient.getCustomerByUniqueName(user_id);
+    if(sophtronUser){
+      logger.trace(`Found existing sophtron customer ${sophtronUser.CustomerID}`)
+      return sophtronUser.CustomerID
+    }
+    logger.trace(`Creating sophtron user ${user_id}`)
+    let ret = await this.apiClient.createCustomer(user_id)
+    if(ret){
+      return ret.CustomerID
+    }
+    logger.trace(`Failed creating sophtron user, using user_id: ${user_id}`)
     return user_id;
-    // todo support userId
-    // logger.debug('Resolving UserId: ' + user_id);
-    // const sophtronUser = await this.apiClient.getCustomer(user_id);
-    // if(sophtronUser){
-    //   logger.trace(`Found existing sophtron customer ${sophtronUser.id}`)
-    //   return sophtronUser.id
-    // }
-    // logger.trace(`Creating sophtron user ${user_id}`)
-    // let ret = await this.apiClient.createCustomer(user_id)
-    // if(ret){
-    //   return ret.id
-    // }
-    // logger.trace(`Failed creating sophtron user, using user_id: ${user_id}`)
-    // return user_id;
   }
 }

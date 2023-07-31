@@ -12,10 +12,13 @@ import Store from '../redux/Store'
  */
 const PostMessage = {
   setWebviewUrl(url) {
+    //console.log('setWebviewUrl')
     window.location = encodeURI(url)
   },
 
   send(event, payload, url) {
+    //console.log('send')
+
     const config = Store.getState().initializedClientConfig
 
     // Don't do anything if this is ui_message_version 4, use the epic instead
@@ -43,14 +46,14 @@ const PostMessage = {
     const shouldSetMXWebview =
       isMobileWebview &&
       (_includes(mxWebviewEventTypes, event) || _includes(mxWebviewEventTypes, payloadType))
-
+    const s =  _get(config, 'connect.scheme', 'vcs') || 'mx';
     if (shouldSetMXWebview) {
       let webviewUrl = ''
 
       if (payloadType) {
-        webviewUrl = `mx://${payload.type + event[0].toUpperCase() + event.substr(1)}`
+        webviewUrl = `${s}://${payload.type + event[0].toUpperCase() + event.substr(1)}`
       } else {
-        webviewUrl = `mx://${event}`
+        webviewUrl = `${s}://${event}`
       }
       if (payload) {
         webviewUrl +=
@@ -96,8 +99,8 @@ const PostMessage = {
   },
 
   postMessage(payload, url) {
-    console.log('posting message, url: ' + url)
-    console.log(payload)
+    // console.log('posting message, url: ' + url)
+    // console.log(payload)
     try {
       if (window.parent) {
         window.parent.postMessage(payload, url)
@@ -139,12 +142,15 @@ export default PostMessage
  * New version of post message sending in the app. must have
  * `ui_message_version` of 4
  */
-export function sendPostMessage(event, data, scheme = 'vcs') {
+export function sendPostMessage(event, data, scheme = 'mx') {
+  const config = Store.getState().initializedClientConfig
+  const s =  _get(config, 'connect.scheme', 'vcs') || scheme
   const message = { 
     metadata: data, 
     // mx: true,
-    type: `${scheme}/${event}` 
+    type: `${s}/${event}` 
   }
+  // console.log(message)
   const postUrl = getReferrer().replace(/([^:]+:\/\/[^/]+).*/, '$1')
 
   try {
@@ -158,7 +164,7 @@ export function sendPostMessage(event, data, scheme = 'vcs') {
       return;
     }
     if (window.opener) {
-      console.log('window.opener')
+      // console.log('window.opener')
       window.opener.postMessage(message, postUrl)
       return;
     }
@@ -172,7 +178,8 @@ export function sendPostMessage(event, data, scheme = 'vcs') {
  * Set the webview url instead of sending a post message to webviews.
  */
 export function setWebviewURL(event, data, scheme = 'mx') {
-  let webviewUrl = `${scheme}://${event}`
+    console.log('setWebviewUrl')
+    let webviewUrl = `${scheme}://${event}`
 
   if (data) {
     webviewUrl += '?metadata=' + encodeURIComponent(JSON.stringify(data))

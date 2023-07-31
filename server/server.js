@@ -17,21 +17,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/ping', function (req, res) {
   res.send('ok');
 });
-if (config.env !== 'prod') {
+
+useConnect(app)
+
+if (config.Demo) {
   example(app);
 }
-useConnect(app)
 
 const pageQueries = new RegExp([
   'current_institution_code',
   'job_type',
+  'scheme',
   'user_id',
   'client_guid',
   'current_member_guid',
   'current_provider',
   'oauth_referral_source',
   'update_credentials',
-  'server'
+  'server',
+  'is_mobile_webview',
 ].map(r => `\\$${r}`).join('|'), 'g');
 
 if(config.ResourcePrefix !== 'local'){
@@ -43,12 +47,12 @@ if(config.ResourcePrefix !== 'local'){
       if(req.query.current_member_guid && !req.query.current_provider){
         delete req.query.current_member_guid;
       }
-      let queries = { //TODO: injection preventing?
+      let queries = {
         current_member_guid: req.query.connection_id,
         current_institution_code: req.query.bankid,
         ...req.query,
       }
-      res.send(html.replaceAll(pageQueries, q => queries[q.substring(1)] || ''));
+      res.send(html.replaceAll(pageQueries, q => encodeURIComponent(queries[q.substring(1)] || '')));
     })
   })
   app.get('*', function (req, res) {

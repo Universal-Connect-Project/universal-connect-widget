@@ -1,9 +1,9 @@
 const { VcType } = require('../shared/contract.ts');
+const {ConnectApi} = require('./connect/connectApi')
 
 const http = require('./serviceClients/http');
 const config = require('./config');
 const logger = require('./infra/logger');
-const service = require('./serviceClients/services.ts');
 
 const asyncHandler = (fn) => (req, res, next) => {
   return Promise.resolve(fn(req, res, next)).catch((err) => {
@@ -16,50 +16,36 @@ module.exports = async function (app) {
   app.get(
     '/example/did/vc/identity/:provider/:id/:userId?',
     asyncHandler(async (req, res) => {
-      const { userId, id } = req.params;
-      if (req.params.provider === 'sophtron') {
-        if (id) {
-          const data = await service.getVC(
-            id,
-            VcType.IDENTITY,
-            userId
-              ? {
-                user_id: userId,
-              }
-              : null
-          );
-          res.setHeader('content-type', 'application/json');
-          res.send(data);
-        } else {
-          res.status(404).send('invalid id');
-        }
+      const { userId, id, provider } = req.params;
+      const service = new ConnectApi({context: {provider}});
+      if (id) {
+        const data = await service.getVC(
+          id,
+          VcType.IDENTITY,
+          userId
+        );
+        res.setHeader('content-type', 'application/json');
+        res.send(data);
       } else {
-        res.sendStatus(501);
+        res.status(404).send('invalid id');
       }
     })
   );
   app.get(
     '/example/did/vc/banking/:provider/:id/:userId?',
     asyncHandler(async (req, res) => {
-      const { userId, id } = req.params;
-      if (req.params.provider === 'sophtron') {
-        if (id) {
-          const data = await service.getVC(
-            id,
-            VcType.ACCOUNTS,
-            userId
-              ? {
-                user_id: userId,
-              }
-              : null
-          );
-          res.setHeader('content-type', 'application/json');
-          res.send(data);
-        } else {
-          res.status(404).send('invalid id');
-        }
+      const { userId, id, provider } = req.params;
+      const service = new ConnectApi({context: {provider}});
+      if (id) {
+        const data = await service.getVC(
+          id,
+          VcType.ACCOUNTS,
+          userId
+        );
+        res.setHeader('content-type', 'application/json');
+        res.send(data);
       } else {
-        res.sendStatus(501);
+        res.status(404).send('invalid id');
       }
     })
   );

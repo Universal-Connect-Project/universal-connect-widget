@@ -12,7 +12,7 @@ import {
   VcType,
 } from '@/../../shared/contract';
 
-import * as logger from '../../infra/logger';
+import * as logger from '../infra/logger';
 
 
 export class DefaultApi implements ProviderApiClient {

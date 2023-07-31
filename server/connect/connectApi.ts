@@ -11,7 +11,7 @@ import {
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import { MxApi, SophtronApi, AkoyaApi, FinicityApi, DefaultApi } from '../serviceClients/providers';
+import { MxApi, SophtronApi, AkoyaApi, FinicityApi, DefaultApi } from '../providers';
 const SearchClient = require('../serviceClients/searchClient');
 
 const defaultClient = new DefaultApi();
@@ -51,6 +51,7 @@ function mapInstitution(ins: Institution, searchResult: any){
   const name = ins.name || searchResult.name;
   return ({
     guid: ins.id,
+    code: ins.id,
     name,
     url: searchResult?.url || ins.url?.trim(),
     logo_url: searchResult?.logo_url || ins.logo_url?.trim(),
@@ -77,6 +78,7 @@ function mapConnection(connection: Connection): Member{
     oauth_window_uri: connection.oauth_window_uri,
     provider: connection.provider,
     is_being_aggregated: connection.is_being_aggregated,
+    user_guid: connection.user_id,
     mfa: {
       credentials: connection.challenges?.map(c => {
           let ret = {
@@ -215,7 +217,8 @@ export class ConnectApi{
         }))
       }, this.getUserId())
       this.context.current_job_id = connection.cur_job_id;
-      return {member};
+
+      return {member: mapConnection(connection)};
     }
   }
   async loadMembers(): Promise<Member[]> {
@@ -326,7 +329,7 @@ export class ConnectApi{
     }
     this.context.job_type = input.instrumentation.job_type;
     this.context.user_id = input.instrumentation.user_id;
-    if (!this.context.user_id) {
+    if (!this.context.user_id || this.context.user_id === 'undefined'|| this.context.user_id === 'test') {
       if(config.Demo){
         logger.info(`Using demo userId`)
         this.context.user_id = 'Universal_widget_demo_user';
@@ -373,7 +376,12 @@ export class ConnectApi{
     return client.ResolveUserId(id);
   }
   getUserId(): string{
-    return this.context.resolved_user_id || this.getUserId();
+    return this.context.resolved_user_id;
+  }
+
+  getVC(connection_id: string, type: VcType, user_id: string): any{
+    let client = getApiClient(this.context);
+    return client.GetVc(connection_id, type, user_id)
   }
 }
 

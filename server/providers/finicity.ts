@@ -13,14 +13,14 @@ import {
 } from '@/../../shared/contract';
 import { finicityProd, finicitySandbox } from './configuration';
 
-const db = require('../storageClient');
-const CryptoJS = require("crypto-js");
+const { finicity: mapper } = require('../adapters')
+const db = require('../serviceClients/storageClient');
 const {  v4: uuidv4, } = require('uuid');
 
-import * as config from '../../config';
-import * as logger from '../../infra/logger';
+import * as config from '../config';
+import * as logger from '../infra/logger';
 
-import FinicityClient from '../finicityClient';
+import FinicityClient from '../serviceClients/finicityClient';
 
 export class FinicityApi implements ProviderApiClient {
   sandbox: boolean;
@@ -63,6 +63,7 @@ export class FinicityApi implements ProviderApiClient {
     const obj = {
       id: request_id,
       is_oauth: true,
+      user_id,
       credentials: [] as any[],
       institution_code: request.institution_id,
       oauth_window_uri: await this.apiClient.generateConnectLiteUrl(request.institution_id, user_id, request_id),
@@ -78,7 +79,8 @@ export class FinicityApi implements ProviderApiClient {
   }
 
   async UpdateConnection(
-    request: UpdateConnectionRequest
+    request: UpdateConnectionRequest,
+    user_id: string,
   ): Promise<Connection> {
     //in finicity this is used to receive webhook response and not matching the Connection class schema
     let actualObj = request as any;
@@ -86,7 +88,7 @@ export class FinicityApi implements ProviderApiClient {
     let institutionLoginId = false;
     switch(eventType){
       case 'added':
-        institutionLoginId = actualObj.payload.accounts?.[0];
+        institutionLoginId = actualObj.payload.accounts?.[0]?.institutionLoginId;
         break;
     }
     logger.info(`Received finicity webhook response ${connection_id}`)
@@ -97,7 +99,7 @@ export class FinicityApi implements ProviderApiClient {
     if(institutionLoginId){
       connection.status = ConnectionStatus.CONNECTED
       connection.guid = connection_id
-      connection.id = institutionLoginId
+      connection.id = `${institutionLoginId}`
     }
     await db.set(connection_id, connection)
     return connection;
@@ -107,7 +109,7 @@ export class FinicityApi implements ProviderApiClient {
     return db.get(connectionId);
   }
 
-  async GetConnectionStatus(connectionId: string, jobId: string): Promise<Connection> {
+  GetConnectionStatus(connectionId: string, jobId: string): Promise<Connection> {
     return db.get(connectionId);
   }
 
@@ -136,19 +138,32 @@ export class FinicityApi implements ProviderApiClient {
     type: VcType,
     userId?: string
   ): Promise<object> {
-    return null;
+    let accounts = await this.apiClient.getCustomerAccountsByInstitutionLoginId(userId, connection_id);
+    let accountId = accounts?.[0].id;
+    switch(type){
+      case VcType.IDENTITY:
+        let customer = await this.apiClient.getAccountOwnerDetail(userId, accountId);
+        let identity = mapper.mapIdentity(userId, customer)
+        return {credentialSubject: { customer: identity}};
+      case VcType.ACCOUNTS:
+        return {credentialSubject: { accounts: accounts.map(mapper.mapAccount)}};
+      case VcType.TRANSACTIONS:
+        let startDate = new Date(new Date().setDate(new Date().getDate() - 30))
+        const transactions = await this.apiClient.getTransactions(userId, accountId, startDate, new Date());
+        return {credentialSubject: {transactions: transactions.map((t:any) => mapper.mapTransaction(t, accountId))}};
+    }
   }
 }
 
 // console.log(finicitySandbox)
 // console.log(finicityProd)
-let client = new FinicityClient(finicitySandbox);
+//let client = new FinicityClient(finicitySandbox);
 // client.getAuthToken().then((res: any) => {
 //   console.log(res)
 // })
 
-// client.getCustomer('customerusername12').then(res => {
-//   console.log(res)
+// client.getCustomerAccountsByInstitutionLoginId(6031158639, 6026613630).then(res => {
+//   console.log(JSON.stringify(res))
 // })
 
 // client.generateConnectLiteUrl('6030781868', 102176).then(res => {

@@ -10,7 +10,7 @@ import {
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import { MxApi, SophtronApi } from './providers';
+import { MxApi, SophtronApi } from '../providers';
 
 const SearchClient = require('./searchClient');
 const searchApi = new SearchClient();

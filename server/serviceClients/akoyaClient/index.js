@@ -1,11 +1,8 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
 const http = require('../http');
-import {
-  ConnectionStatus,
-} from '@/../../shared/contract';
-
 const version = 'v2';
+const CryptoJS = require("crypto-js");
 
 function makeAkoyaAuthHeaders(apiConfig){
   let words = CryptoJS.enc.Utf8.parse(`${apiConfig.clientId}:${apiConfig.secret}`);
@@ -45,8 +42,9 @@ export default class AkoyaClient{
     return this.post('token', {grant_type: 'refresh_token', refresh_token: existingRefreshToken, client_id: this.apiConfig.clientId, client_secret: this.apiConfig.secret})
   }
 
-  getAccountInfo(institution_id, token){
+  getAccountInfo(institution_id, accountIds, token){
     return this.get(`accounts-info/${version}/${institution_id}`, token)
+      .then(res => res.accounts)
   }
   getBalances(institution_id, token){
     return this.get(`balances/${version}/${institution_id}`, token)
@@ -60,7 +58,7 @@ export default class AkoyaClient{
   getTransactions(institution_id, accountId, token){
     return this.get(`transactions/${version}/${institution_id}/${accountId}?offset=0&limit=50`, token)
   }
-  getCustomers(institution_id, token){
+  getCustomerInfo(institution_id, token){
     return this.get(`customers/${version}/${institution_id}/current`, token)
   }
 

@@ -1,7 +1,8 @@
 const crypto = require('crypto');
 const axios = require('axios');
 const logger = require('../../infra/logger');
-const {Http} = require('@capacitor-community/http');
+const capacitor = require('./capacitor')
+const config = require('../../config')
 
 function stream(url, data, target) {
   // logger.debug(`stream request: ${url}`);
@@ -37,60 +38,47 @@ function stream(url, data, target) {
     });
 }
 
-async function wget(url) {
+function handleResponse(promise, url, method, returnFullResObject){
+  return promise.then((res) => {
+    logger.debug(`Received ${method} response from ${url}`);
+    return returnFullResObject ? res : res.data;
+  })
+  .catch((error) => {
+    logger.error(`error ${method} from ${url}`, error);
+    throw error;
+  });
+}
+
+function wget(url) {
   logger.debug(`wget request: ${url}`);
-  const options = {
-    url,
-    webFetchExtra: { mode: 'no-cors' },
-    responseType: 'text',
-  }
-  const res = await Http.get(options).catch((error) => {
-    logger.error(`error from ${url}`, error);
-    throw error;
-  });
-  logger.debug(`Received wget response from ${url}`);
-  return res.data;
+  return handleResponse(axios.get(url), url, 'wget')
 }
 
-async function get(url, headers, returnFullResObject) {
+function get(url, headers, returnFullResObject) {
   logger.debug(`get request: ${url}`);
-  const options = {
-    url,
-    headers,
-    webFetchExtra: { mode: 'no-cors' },
-    responseType: 'text',
-  }
-  const res = await Http.get(options).catch((error) => {
-    logger.error(`error from ${url}`, error);
-    throw error;
-  });
-  logger.debug(`Received get response from ${url}`, res);
-  return returnFullResObject ? res : res.data;
+  return handleResponse(axios.get(url, { headers }), url, 'wget', returnFullResObject)
 }
 
-async function post(url, data, headers, returnFullResObject) {
+function del(url, headers, returnFullResObject) {
+  logger.debug(`del request: ${url}`);
+  return handleResponse(axios.delete(url, { headers }), url, 'del', returnFullResObject)
+}
+
+function put(url, headers, returnFullResObject) {
+  logger.debug(`put request: ${url}`);
+  return handleResponse(axios.delete(url, { headers }), url, 'put', returnFullResObject)
+}
+
+function post(url, data, headers, returnFullResObject) {
   logger.debug(`post request: ${url}`);
-  const options = {
-    url,
-    headers: { 'content-type': 'application/json', ...headers},
-    webFetchExtra: { mode: 'no-cors' },
-    responseType: 'text',
-    data: data || {},
-  }
-  // console.log(data)
-  //logger.debug('posting: ' + options.url);
-  const res = await Http.post(options).catch((error) => {
-    logger.error(`error from ${url}`, error);
-    throw error;
-  });
-  // console.log(res)
-  logger.debug(`Received post response from ${url}`);
-  return returnFullResObject ? res : res.data;
+  return handleResponse(axios.post(url, data, { headers }), url, 'post', returnFullResObject)
 }
 
 module.exports = {
-  get,
-  wget,
-  post,
+  get: config.UseAxios ? get: capacitor.get,
+  wget: config.UseAxios ? wget: capacitor.wget,
+  post: config.UseAxios ? post: capacitor.post,
+  put: config.UseAxios ? put: capacitor.put,
+  del: config.UseAxios ? del: capacitor.del,
   stream
 };
