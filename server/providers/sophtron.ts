@@ -222,11 +222,21 @@ export class SophtronApi implements ProviderApiClient {
     switch (jobStatus) {
       case 'success':
         // case 'Completed':
-        // case 'AccountsReady':
         status = ConnectionStatus.CONNECTED;
         break;
       case 'failed':
         status = ConnectionStatus.FAILED;
+        break;
+      case 'AccountsReady':
+        let accounts = await this.apiClientV1.getUserInstitutionAccounts(memberId);
+        challenge.id = 'single_account_select';
+        challenge.external_id = 'single_account_select';
+        challenge.type = ChallengeType.OPTIONS;
+        challenge.question =
+          'Please select a account to proceed';
+        challenge.data = accounts.map(
+          (a:any) => ({ key: a.AccountNumber, value: a.AccountID })
+        );
         break;
       default:
         if (job.SecurityQuestion) {
@@ -305,7 +315,11 @@ export class SophtronApi implements ProviderApiClient {
         }
         break;
       case ChallengeType.OPTIONS:
-        await this.apiClientV1.jobTokenInput(jobId, c.response, null, null);
+        if(c.id === 'single_account_select'){
+          await this.apiClientV1.getFullAccountNumberWithinJob(c.response, jobId);
+        }else{
+          await this.apiClientV1.jobTokenInput(jobId, c.response, null, null);
+        }
         break;
       default:
         logger.error('Wrong challenge answer received', c)

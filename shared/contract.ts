@@ -62,6 +62,7 @@ export enum VcType {
 
 export interface Challenge {
   id: string;
+  external_id?: string;
   question?: string | null;
   data?: string | Array<KeyValuePair>;
   type: ChallengeType;

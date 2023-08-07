@@ -123,7 +123,7 @@ module.exports = class SophtronClient{
     });
   }
 
-  CreateUserInstitutionWithAllPlusProfile(username, password, institutionId){
+  createUserInstitutionWithAllPlusProfile(username, password, institutionId){
     var url = '/UserInstitution/CreateUserInstitutionWithAllPlusProfile';
     var data = {
         UserName: username,
@@ -198,6 +198,11 @@ module.exports = class SophtronClient{
       data.UserInstitutionID = userInstitutionID;
       return data;
     });
+  }
+
+  getFullAccountNumberWithinJob(accountId, jobId){
+    const url = '/UserInstitutionAccount/GetFullAccountNumberWithinJob';
+    return this.post(url, { AccountID: accountId, JobID: jobId });
   }
 
   ping = () => {
