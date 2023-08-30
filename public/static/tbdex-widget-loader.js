@@ -10,6 +10,7 @@ const sophtron = (function () {
     env: 'pre',
     jobType: 'agg',
     user_id: null,
+    auth: null,
     connection_id: null,
     bank_id: null,
     provider: null,
@@ -183,7 +184,7 @@ const sophtron = (function () {
       console.log(Object.keys(urls));
       throw Error(`Invalid env ${conf.env}`);
     }
-    let ret = `${url}/?job_type=${conf.jobType}`;
+    let ret = `${url}/?job_type=${conf.jobType}&auth=${conf.auth}`;
     if(conf.connection_id){
       ret += `&connection_id=${conf.connection_id}`
     }else if(conf.bank_id){

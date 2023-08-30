@@ -11,22 +11,19 @@ import {
   UpdateConnectionRequest,
   VcType,
 } from '@/../../shared/contract';
-import { akoyaProd, akoyaSandbox } from './configuration';
 
 const db = require('../serviceClients/storageClient');
-const CryptoJS = require("crypto-js");
 const {  v4: uuidv4, } = require('uuid');
 
-import * as config from '../config';
 import * as logger from '../infra/logger';
-
 import AkoyaClient from '../serviceClients/akoyaClient';
 
 export class AkoyaApi implements ProviderApiClient {
   sandbox: boolean;
   apiClient: any;
 
-  constructor(sandbox: boolean) {
+  constructor(config: any, sandbox: boolean) {
+    const { akoyaProd, akoyaSandbox } = config;
     this.sandbox = sandbox;
     this.apiClient = new AkoyaClient(sandbox ? akoyaSandbox : akoyaProd);
   }
@@ -80,7 +77,7 @@ export class AkoyaApi implements ProviderApiClient {
   ): Promise<Connection> {
     //in akoya this is used to receive oauth response and not matching the Connection class schema
     let actualObj = request as any;
-    const {state: connection_id, code } = actualObj;
+    const { state: connection_id, code } = actualObj;
     logger.info(`Received akoya oauth redirect response ${connection_id}`)
     let connection = await db.get(connection_id)
     if(!connection){
@@ -101,7 +98,7 @@ export class AkoyaApi implements ProviderApiClient {
     return db.get(connectionId);
   }
 
-  async GetConnectionStatus(connectionId: string, jobId: string): Promise<Connection> {
+  async GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
     return db.get(connectionId);
   }
 
@@ -155,4 +152,3 @@ export class AkoyaApi implements ProviderApiClient {
 // client.refreshToken(tokens.refresh_token).then(res => {
 //   console.log(res)
 // })
-

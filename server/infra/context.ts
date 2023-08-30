@@ -1,8 +1,7 @@
-import * as crypto from 'crypto';
 import type { NextFunction, Request, Response } from 'express';
-
 import * as config from '../config';
 import * as logger from './logger';
+import { encrypt, decrypt } from '../utils';
 
 declare global {
   namespace Express {
@@ -15,36 +14,9 @@ declare global {
   }
 }
 
-const algorithm = config.CryptoAlgorithm;
-const key = Buffer.from(config.CryptoKey, 'hex'); // crypto.randomBytes(32) todo redis
-const iv = Buffer.from(config.CryptoIv, 'hex'); // crypto.randomBytes(16)
-
-function encrypt(text: string) {
-  if (!text) {
-    return '';
-  }
-  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return encrypted.toString('hex');
-  // return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-}
-
-function decrypt(text: string) {
-  if (!text) {
-    return '';
-  }
-  // console.log(text)
-  const encryptedText = Buffer.from(text, 'hex');
-  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
-}
-
 function get(req: Request) {
   if (req.headers.meta?.length > 0) {
-    const decrypted = decrypt(<string>req.headers.meta);
+    const decrypted = decrypt(<string>req.headers.meta, config.CryptoKey, config.CryptoIv);
     req.context = JSON.parse(decrypted);
   } else {
     req.context = {};
@@ -53,7 +25,7 @@ function get(req: Request) {
 }
 
 function set(res: Response) {
-  res.set('meta', encrypt(JSON.stringify(res.context)));
+  res.set('meta', encrypt(JSON.stringify(res.context), config.CryptoKey, config.CryptoIv));
 }
 
 export function contextHandler(

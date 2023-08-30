@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const axios = require('axios');
-const logger = require('../../infra/logger');
+const logger = require('../logger');
 const capacitor = require('./capacitor')
 const config = require('../../config')
 

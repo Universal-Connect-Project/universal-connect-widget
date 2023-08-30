@@ -4,13 +4,10 @@ Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
 const config = {
-  SophtronSearchEndpoint: 'http://localhost:8082/api/',
-  // SophtronSearchEndpoint: 'https://search.sophtron-prod.com/api/',
-  SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
-  //SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
-  SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
-  // SophtronAnalyticsServiceEndpoint: 'http://localhost:8081/api/',
-  SophtronAnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
+  SearchEndpoint: 'http://localhost:8082/api/',
+  // SearchEndpoint: 'https://search.sophtron-prod.com/api/',
+  // AnalyticsServiceEndpoint: 'http://localhost:8081/api/',
+  AnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
   HostUrl: 'https://test.sophtron-prod.com',
   WebhookHostUrl: 'https://webhook.sophtron-prod.com',
   ServiceName: 'universal_widget',
@@ -22,13 +19,18 @@ const config = {
   Env: 'pre', // mocked
   Version: '',
   UseAxios: true,
-  CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2',
-  CryptoIv: '453687d854d55101f001b5999b68bc3d',
+  CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2', //crypto.randomBytes(32)
+  CryptoIv: '453687d854d55101f001b5999b68bc3d', //crypto.randomBytes(16)
   CryptoAlgorithm: 'aes-256-cbc',
   ResourcePrefix: 'http://localhost:3000',
   // ResourcePrefix: 'http://192.168.111.217:3000',
   // ResourcePrefix: 'local', //
   ResourceVersion: '', // 'development'
+  
+  SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
+  SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
+  //SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
   SophtronApiUserId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
   SophtronApiUserSecret: '',
 

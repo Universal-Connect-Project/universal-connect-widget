@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <script>      
       function getUrlVars() {
           var vars = {};
           var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
@@ -165,21 +165,25 @@
             methods: {
                 initWidget(onFinish, jobType){
                   let params = getUrlVars(window.location);
-                    sophtron.init({ 
-                            env: params.env || 'prod',
-                            user_id: params.user_id,
-                            jobType,
-                            onEvent: onEvent,
-                            onShow: onEvent,
-                            onInit: onEvent,
-                            onClose: onEvent,
-                            onSelectBank: onEvent,
-                            onLogin: onEvent,
-                            onLoginSuccess: onEvent,
-                            onMfa: onEvent,
-                            onFinish: onFinish,
-                            onError: onEvent,
+                    axios.get('/example/getAuthCode').then(res =>{
+                      sophtron.init({ 
+                          env: params.env || 'prod',
+                          user_id: params.user_id,
+                          jobType,
+                          auth: res.data,
+                          onEvent: onEvent,
+                          onShow: onEvent,
+                          onInit: onEvent,
+                          onClose: onEvent,
+                          onSelectBank: onEvent,
+                          onLogin: onEvent,
+                          onLoginSuccess: onEvent,
+                          onMfa: onEvent,
+                          onFinish: onFinish,
+                          onError: onEvent,
                         }, true );
+                    })
+
                 },
                 bankingToggleDetails(e){
                     e.preventDefault();

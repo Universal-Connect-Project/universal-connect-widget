@@ -20,9 +20,12 @@ module.exports = function(app){
   })
   app.use(contextHandler);
   app.use(async (req, res, next) => {
+    if (req.path === '/' || req.path.startsWith('/example') || req.path.startsWith('/static')) return next();
     req.connectService = new ConnectApi(req);
-    if(!req.context.resolved_user_id){
-      req.context.resolved_user_id = await req.connectService.ResolveUserId(req.context.user_id);
+    if(await req.connectService.init()){
+      if(!req.context.resolved_user_id){
+        req.context.resolved_user_id = await req.connectService.ResolveUserId(req.context.user_id);
+      }
     }
     next()
   })
@@ -106,14 +109,17 @@ module.exports = function(app){
       }
     })
   })
+
   app.get('/oauth_states', async (req, res) => {
     let ret = await req.connectService.getOauthStates(req.query.outbound_member_guid)
     res.send(ret)
   })
+
   app.get('/oauth_states/:guid', async (req, res) => {
     let ret = await req.connectService.getOauthState(req.params.guid)
     res.send(ret)
   })
+
   app.get(ApiEndpoints.MEMBERS, async (req, res) => {
     let ret = await req.connectService.loadMembers()
     res.send({
@@ -128,6 +134,7 @@ module.exports = function(app){
     }
     res.sendStatus(400);
   })
+
   app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
     res.send({"member":{"job_guid":"JOB-179e7c31-53d6-4cfb-b95d-6b2686d1b817","status":8}}) // RECONNECTED?
     return;
@@ -164,7 +171,7 @@ module.exports = function(app){
     // console.log(req.params);
     // console.log(req.query)
     res.type('.html');
-    res.redirect('mx://ping?metadata=%7B%22session_guid%22%3A%22c73038c2-df7d-44a3-ab25-132179b1ba51%22%2C%22user_guid%22%3A%22241266ed-803a-4841-8a8a-0f37551e8f56%22%7D')
-    //res.send(ret);
+    // res.redirect('mx://ping?metadata=%7B%22session_guid%22%3A%22c73038c2-df7d-44a3-ab25-132179b1ba51%22%2C%22user_guid%22%3A%22241266ed-803a-4841-8a8a-0f37551e8f56%22%7D')
+    res.send(ret);
   })
 }

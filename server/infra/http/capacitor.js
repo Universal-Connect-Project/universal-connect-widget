@@ -1,4 +1,4 @@
-const logger = require('../../infra/logger');
+const logger = require('../logger');
 const {Http} = require('@capacitor-community/http');
 
 async function wget(url) {

@@ -1,6 +1,6 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
-const http = require('../http');
+const http = require('../../infra/http');
 const version = 'v2';
 const CryptoJS = require("crypto-js");
 

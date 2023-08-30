@@ -14,7 +14,7 @@ import {
 
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import * as http from '../serviceClients/http';
+import * as http from '../infra/http';
 
 const SophtronClient = require('../serviceClients/sophtronClient/v2');
 const SophtronClientV1 = require('../serviceClients/sophtronClient');
@@ -81,10 +81,11 @@ export class SophtronApi implements ProviderApiClient {
 
   httpClient = http;
 
-  constructor(token?: string) {
-    this.token = token;
-    this.apiClient = new SophtronClient(token);
-    this.apiClientV1 = new SophtronClientV1(token);
+  constructor(config: any) {
+    let {sophtron} = config;
+    this.token = sophtron;
+    this.apiClient = new SophtronClient(sophtron);
+    this.apiClientV1 = new SophtronClientV1(sophtron);
   }
 
   async clearConnection(vc: any, id: string, userID: string) {
@@ -206,8 +207,8 @@ export class SophtronApi implements ProviderApiClient {
     };
   }
 
-  async GetConnectionStatus(memberId: string, jobId: string, userId: string): Promise<Connection> {
-    const job = await this.apiClient.getJob(jobId);
+  async GetConnectionStatus(memberId: string, jobId: string, single_account_select: boolean, userId: string): Promise<Connection> {
+    const job = await this.apiClientV1.getJob(jobId);
     const challenge: Challenge = {
       id: '',
       type: ChallengeType.QUESTION,
@@ -228,15 +229,19 @@ export class SophtronApi implements ProviderApiClient {
         status = ConnectionStatus.FAILED;
         break;
       case 'AccountsReady':
-        let accounts = await this.apiClientV1.getUserInstitutionAccounts(memberId);
-        challenge.id = 'single_account_select';
-        challenge.external_id = 'single_account_select';
-        challenge.type = ChallengeType.OPTIONS;
-        challenge.question =
-          'Please select a account to proceed';
-        challenge.data = accounts.map(
-          (a:any) => ({ key: a.AccountNumber, value: a.AccountID })
-        );
+        if(single_account_select){
+          let accounts = await this.apiClientV1.getUserInstitutionAccounts(memberId);
+          challenge.id = 'single_account_select';
+          challenge.external_id = 'single_account_select';
+          challenge.type = ChallengeType.OPTIONS;
+          challenge.question =
+            'Please select an account to proceed:';
+          challenge.data = accounts.map(
+            (a:any) => ({ key: `${a.AccountName} ${a.AccountNumber}`, value: a.AccountID })
+          );
+        }else{
+          status = ConnectionStatus.CREATED;
+        }
         break;
       default:
         if (job.SecurityQuestion) {

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const config = require('./config');
-const http = require('./serviceClients/http');
+const http = require('./infra/http');
 const logger = require('./infra/logger');
 const example = require('./loaderExample');
 const useConnect = require('./connect/connectApiExpress');
@@ -18,21 +18,23 @@ app.get('/ping', function (req, res) {
   res.send('ok');
 });
 
-useConnect(app)
-
 if (config.Demo) {
   example(app);
 }
+
+useConnect(app)
 
 const pageQueries = new RegExp([
   'current_institution_code',
   'job_type',
   'scheme',
+  'auth',
   'user_id',
   'client_guid',
   'current_member_guid',
   'current_provider',
   'oauth_referral_source',
+  'single_account_select',
   'update_credentials',
   'server',
   'is_mobile_webview',

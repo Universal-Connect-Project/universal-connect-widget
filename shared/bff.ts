@@ -4,7 +4,6 @@ export interface InitialRequest {
   user_id: string;
   institution_id?: string;
   connection_id?: string;
-  token?: string;
 }
 
 export interface WidgetError {

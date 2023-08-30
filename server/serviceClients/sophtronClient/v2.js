@@ -1,11 +1,12 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
-const http = require('../http')
-const {buildSophtronAuthCode} = require('../utils')
+const http = require('../../infra/http')
+const {buildSophtronAuthCode} = require('../../utils')
 
 module.exports = class SophtronClient{
-  constructor(integrationKey){
-    this.integrationKey = integrationKey
+  apiConfig;
+  constructor(apiConfig){
+    this.apiConfig = apiConfig
   }
 
   getCustomer(customerId){
@@ -52,28 +53,24 @@ module.exports = class SophtronClient{
     return this.del(`/v2/customers/${customerId}/members/${memberId}`)
   }
 
-  getJob(id) {
-    return this.post('/Job/GetJobByID', { JobID: id });
-  }
-
   async post(path, data) {
-    const authHeader = buildSophtronAuthCode('post', path);
-    const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {Authorization: authHeader});
+    const authHeader = buildSophtronAuthCode('post', path, this.apiConfig.clientId, this.apiConfig.secret);
+    const ret = await http.post(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
     return ret;
   }
   async get(path) {
-    const authHeader = buildSophtronAuthCode('get', path);
-    const ret = await http.get(config.SophtronApiServiceEndpoint + path, {Authorization: authHeader});
+    const authHeader = buildSophtronAuthCode('get', path, this.apiConfig.clientId, this.apiConfig.secret);
+    const ret = await http.get(this.apiConfig.endpoint + path, {Authorization: authHeader});
     return ret;
   }
   async put(path, data) {
-    const authHeader = buildSophtronAuthCode('put', path);
-    const ret = await http.put(config.SophtronApiServiceEndpoint + path, data, {Authorization: authHeader});
+    const authHeader = buildSophtronAuthCode('put', path, this.apiConfig.clientId, this.apiConfig.secret);
+    const ret = await http.put(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
     return ret;
   }
   async del(path) {
-    const authHeader = buildSophtronAuthCode('delete', path);
-    const ret = await http.del(config.SophtronApiServiceEndpoint + path, {Authorization: authHeader});
+    const authHeader = buildSophtronAuthCode('delete', path, this.apiConfig.clientId, this.apiConfig.secret);
+    const ret = await http.del(this.apiConfig.endpoint + path, {Authorization: authHeader});
     return ret;
   }
 };

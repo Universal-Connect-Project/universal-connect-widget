@@ -1,9 +1,15 @@
 const { VcType } = require('../shared/contract.ts');
 const {ConnectApi} = require('./connect/connectApi')
 
-const http = require('./serviceClients/http');
+const http = require('./infra/http/index.js');
 const config = require('./config');
 const logger = require('./infra/logger');
+const AuthClient = require('./serviceClients/authClient');
+const {Config} = require('./providers')
+const {encrypt} = require('./utils');
+const crypto = require('crypto');
+
+const authApi = new AuthClient();
 
 const asyncHandler = (fn) => (req, res, next) => {
   return Promise.resolve(fn(req, res, next)).catch((err) => {
@@ -13,11 +19,21 @@ const asyncHandler = (fn) => (req, res, next) => {
   });
 };
 module.exports = async function (app) {
+  app.get('/example/getAuthCode', asyncHandler(async (req, res) => {
+    const key = crypto.randomBytes(32).toString('hex');
+    const iv = crypto.randomBytes(16).toString('hex');
+    const payload = encrypt(JSON.stringify(Config), key, iv);
+    const token = await authApi.secretExchange(payload);
+    const str = `sophtron;${token.Token};${key};${iv}`
+    const b64 = Buffer.from(str).toString('base64')
+    res.send(b64)
+  })),
   app.get(
     '/example/did/vc/identity/:provider/:id/:userId?',
     asyncHandler(async (req, res) => {
       const { userId, id, provider } = req.params;
       const service = new ConnectApi({context: {provider}});
+      await service.init();
       if (id) {
         const data = await service.getVC(
           id,
@@ -36,6 +52,7 @@ module.exports = async function (app) {
     asyncHandler(async (req, res) => {
       const { userId, id, provider } = req.params;
       const service = new ConnectApi({context: {provider}});
+      await service.init();
       if (id) {
         const data = await service.getVC(
           id,

@@ -37,6 +37,7 @@
         update_credentials: '$update_credentials',
         is_mobile_webview: '$is_mobile_webview',
         scheme: '$scheme',
+        single_account_select: '$single_account_select',
       }
       window.app = {
         options: {
@@ -55,6 +56,7 @@
           ui_message_webview_url_scheme: 'mx',
           color_scheme: 'light',
           connect: {
+            auth: '$auth',
             mode: 'agg', // 'verify'
             job_type: params.job_type || 'agg', // 'verify'
             current_institution_code: '$current_institution_code', // 'mxbank',
@@ -70,6 +72,7 @@
             oauth_referral_source: params.oauth_referral_source || 'BROWSER',
             update_credentials: params.update_credentials === 'true',
             wait_for_full_aggregation: false,
+            single_account_select: params.single_account_select !== 'false',
             scheme: params.scheme || 'vcs'
           },
         },

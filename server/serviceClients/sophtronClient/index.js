@@ -1,18 +1,15 @@
-const config = require('../../config');
 const logger = require('../../infra/logger');
-const http = require('../http')
-const {buildSophtronAuthCode} = require('../utils')
+const http = require('../../infra/http')
+const {buildSophtronAuthCode} = require('../../utils')
 
 module.exports = class SophtronClient{
-  constructor(integrationKey){
-    this.integrationKey = integrationKey
+  apiConfig;
+  constructor(apiConfig){
+    this.apiConfig = apiConfig
   }
 
   async getUserIntegrationKey() {
-    if(this.integrationKey){
-      return this.integrationKey;
-    }
-    const data = {Id: config.SophtronApiUserId}
+    const data = {Id: this.apiConfig.clientId}
     const ret = await this.post('/User/GetUserIntegrationKey', data);
     return ret;
   }
@@ -103,7 +100,7 @@ module.exports = class SophtronClient{
       UserName: username,
       Password: password,
       InstitutionID: institutionId,
-      UserID: config.SophtronApiUserId,
+      UserID: this.apiConfig.clientId,
     };
     return this.post(url, data, function(phrase){
       data.UserID = phrase.split(':')[1];
@@ -116,7 +113,7 @@ module.exports = class SophtronClient{
       UserName: username,
       Password: password,
       InstitutionID: institutionId,
-      UserID: config.SophtronApiUserId,
+      UserID: this.apiConfig.clientId,
     };
     return this.post(url, data, function(phrase){
       data.UserID = phrase.split(':')[1];
@@ -129,7 +126,7 @@ module.exports = class SophtronClient{
         UserName: username,
         Password: password,
         InstitutionID: institutionId,
-        UserID: config.SophtronApiUserId,
+        UserID: this.apiConfig.clientId,
     };
     return this.post(url, data, function(phrase){
       data.UserID = phrase.split(':')[1];
@@ -142,7 +139,7 @@ module.exports = class SophtronClient{
       UserName: username,
       Password: password,
       InstitutionID: institutionId,
-      UserID: config.SophtronApiUserId,
+      UserID: this.apiConfig.clientId,
     };
     return this.post(url, data, function(phrase){
       data.UserID = phrase.split(':')[1];
@@ -159,7 +156,7 @@ module.exports = class SophtronClient{
       UserName: username,
       Password: password,
       InstitutionID: institutionId,
-      UserID: config.SophtronApiUserId,
+      UserID: this.apiConfig.clientId,
     };
     return this.post(url, data, function(phrase){
       data.UserID = phrase.split(':')[1];
@@ -207,19 +204,13 @@ module.exports = class SophtronClient{
 
   ping = () => {
     return http.get(
-      `${config.SophtronApiServiceEndpoint}/UserInstitution/Ping`
+      `${this.apiConfig.endpoint}/UserInstitution/Ping`
     );
   }
 
-  analytics(type, data){
-    const authHeader = buildSophtronAuthCode('post', type);
-    const ret = http.post(`${config.SophtronAnalyticsServiceEndpoint}${config.ServiceName}/${type}`, data, {Authorization: authHeader, ContextUserId: config.SophtronApiUserId})
-    return ret
-  }
-
   async post(path, data) {
-    const authHeader = buildSophtronAuthCode('post', path);
-    const ret = await http.post(config.SophtronApiServiceEndpoint + path, data, {Authorization: authHeader});
+    const authHeader = buildSophtronAuthCode('post', path, this.apiConfig.clientId, this.apiConfig.secret);
+    const ret = await http.post(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
     return ret;
   }
 };

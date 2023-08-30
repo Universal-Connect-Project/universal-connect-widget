@@ -11,39 +11,11 @@ import {
 } from '../../shared/contract';
 import * as config from '../config';
 import * as logger from '../infra/logger';
-import { MxApi, SophtronApi, AkoyaApi, FinicityApi, DefaultApi } from '../providers';
+import { MxApi, SophtronApi, AkoyaApi, FinicityApi, DefaultApi, Config } from '../providers';
 const SearchClient = require('../serviceClients/searchClient');
+const AuthClient = require('../serviceClients/authClient');
+const {decodeAuthToken, decrypt} = require('../utils');
 
-const defaultClient = new DefaultApi();
-const mxClient = new MxApi(false);
-const mxIntClient = new MxApi(true);
-const akoyaClient = new AkoyaApi(false);
-const akoyaSandboxClient = new AkoyaApi(true);
-const finicityClient = new FinicityApi(false);
-const finicitySandboxClient = new FinicityApi(true);
-const sophtronClient = new SophtronApi();
-const searchApi = new SearchClient();
-
-function getApiClient(context?: Context | undefined): ProviderApiClient {
-  switch (context?.provider) {
-    case 'mx':
-      return mxClient;
-    case 'mx_int':
-      return mxIntClient;
-    case 'sophtron':
-      return sophtronClient;
-    case 'akoya':
-      return akoyaClient;
-    case 'akoya_sandbox':
-      return akoyaSandboxClient;
-    case 'finicity':
-      return finicityClient;
-    case 'finicity_sandbox':
-      return finicitySandboxClient;
-    default:
-      return defaultClient;
-  }
-}
 
 function mapInstitution(ins: Institution, searchResult: any){
   // console.log(searchResult)
@@ -126,13 +98,59 @@ function mapConnection(connection: Connection): Member{
     }
   } as any
 }
-
+const searchApi = new SearchClient();
+const authApi = new AuthClient();
 export class ConnectApi{
   // req: any
   context: Context
+  serviceClient: ProviderApiClient
   constructor(req: any){
-    this.context = req.context
+    this.context = req.context;
+    // console.log(this.context)
   }
+
+  async init(){
+    if(this.context.auth){
+      try{
+        let encrypted = await authApi.getSecretExchange(this.context.auth.token)
+        let configStr = decrypt(encrypted, this.context.auth.key, this.context.auth.iv);
+        let conf = JSON.parse(configStr)
+        this.serviceClient = this.getApiClient(conf);
+        return true;
+      }catch(err){
+        logger.warning('invalid auth token');
+      }
+    }
+    else if(config.Demo){
+      logger.info('Loading default credentials for demo')
+      this.serviceClient = this.getApiClient(Config);
+      return true;
+    }
+    return false;
+  }
+
+  getApiClient(config: any): ProviderApiClient {
+    //console.log(config)
+    switch (this.context?.provider) {
+      case 'mx':
+        return new MxApi(config, false);
+      case 'mx_int':
+        return new MxApi(config, true);
+      case 'sophtron':
+        return new SophtronApi(config);
+      case 'akoya':
+        return new AkoyaApi(config, false);
+      case 'akoya_sandbox':
+        return new AkoyaApi(config, true);
+      case 'finicity':
+        return new FinicityApi(config, false);
+      case 'finicity_sandbox':
+        return new FinicityApi(config, true);
+      default:
+        return new DefaultApi();
+    }
+  }
+
   async resolveInstitution(id: string): Promise<any>{
     let ret = {
       id,
@@ -152,14 +170,15 @@ export class ConnectApi{
     if (!this.context.provider) {
       this.context.provider = config.DefaultProvider;
     }
+    await this.init()
     this.context.institution_id = ret.id
+    this.context.resolved_user_id = null;
     return ret;
   }
   async addMember(memberData: Member): Promise<MemberResponse> {
     // console.log(this.context)
-    let client = getApiClient(this.context);
     this.context.current_job_id = null;
-    let connection = await client.CreateConnection({
+    let connection = await this.serviceClient.CreateConnection({
       institution_id: memberData.institution_guid,
       is_oauth: memberData.is_oauth,
       skip_aggregation: memberData.skip_aggregation && memberData.is_oauth,
@@ -173,10 +192,9 @@ export class ConnectApi{
     return {member: mapConnection(connection)}
   }
   async updateMember(member: Member): Promise<MemberResponse> {
-    let client = getApiClient(this.context);
     // console.log(member);
     if(this.context.current_job_id && member.credentials?.length > 0){
-      await client.AnswerChallenge({
+      await this.serviceClient.AnswerChallenge({
         id: member.guid,
         challenges: member.credentials.map(c => {
           let ret = {
@@ -209,7 +227,7 @@ export class ConnectApi{
       }, this.context.current_job_id, this.getUserId())
       return {member};
     }else{
-      let connection = await client.UpdateConnection({
+      let connection = await this.serviceClient.UpdateConnection({
         id: member.guid,
         credentials: member.credentials.map(c => ({
           id: c.guid,
@@ -228,11 +246,10 @@ export class ConnectApi{
     return []
   }
   async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
-    let client = getApiClient(this.context);
     // console.log(this.context)
-    let mfa = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.getUserId());
+    let mfa = await this.serviceClient.GetConnectionStatus(memberGuid, this.context.current_job_id, this.context.single_account_select, this.getUserId());
     if(!mfa?.institution_code){
-      let connection = await client.GetConnectionById(memberGuid, this.getUserId());
+      let connection = await this.serviceClient.GetConnectionById(memberGuid, this.getUserId());
       return {member: mapConnection({...mfa, ...connection})};
     }
     return {member: mapConnection({...mfa})};
@@ -242,8 +259,7 @@ export class ConnectApi{
     return ret?.member?.oauth_window_uri;
   }
   async getOauthState(memberGuid: string){
-    let client = getApiClient(this.context);
-    let connection = await client.GetConnectionStatus(memberGuid, this.context.current_job_id, this.getUserId())
+    let connection = await this.serviceClient.GetConnectionStatus(memberGuid, this.context.current_job_id, this.context.single_account_select, this.getUserId())
     let ret = {
       inbound_member_guid: memberGuid,
       outbound_member_guid: memberGuid,
@@ -264,13 +280,11 @@ export class ConnectApi{
     }
   }
   async deleteMember(member: Member): Promise<void> {
-    let client = getApiClient(this.context);
-    await client.DeleteConnection(member.guid, this.getUserId())
+    await this.serviceClient.DeleteConnection(member.guid, this.getUserId())
   }
   async getMemberCredentials(memberGuid: string): Promise<any> {
     this.context.current_job_id = null;
-    let client = getApiClient(this.context);
-    const crs = await client.ListConnectionCredentials(memberGuid, this.getUserId());
+    const crs = await this.serviceClient.ListConnectionCredentials(memberGuid, this.getUserId());
     return {credentials: crs.map(c => ({
       ...c,
       guid: c.id,
@@ -280,8 +294,7 @@ export class ConnectApi{
   async getInstitutionCredentials(guid: string): Promise<any> {
     this.context.current_job_id = null;
     // let id = await this.resolveInstitution(guid)
-    let client = getApiClient(this.context);
-    let crs = await client.ListInstitutionCredentials(guid)
+    let crs = await this.serviceClient.ListInstitutionCredentials(guid)
     return {credentials: crs.map(c => ({
       ...c,
       guid: c.id,
@@ -306,8 +319,7 @@ export class ConnectApi{
     let resolved = await this.resolveInstitution(guid)
     // console.log(this.context);
     // console.log(id);
-    let client = getApiClient(this.context);
-      let inst = await client.GetInstitutionById(resolved.id)
+      let inst = await this.serviceClient.GetInstitutionById(resolved.id)
       return {institution: mapInstitution(inst, resolved)};
     //let crs = await client.ListInstitutionCredentials(id)
   }
@@ -320,16 +332,22 @@ export class ConnectApi{
     let ret = await searchApi.institutions();
     return ret.institutions.map(mapInstitution)
   }
+
   async loadDiscoveredInstitutions(): Promise<Institution[]> {
     return []
   }
+
   async instrumentation(input: any){
     if(input.instrumentation.current_member_guid && input.instrumentation.current_provider){
       this.context.provider = input.instrumentation.current_provider;
     }
+    if(input.instrumentation.auth){
+      this.context.auth = decodeAuthToken(input.instrumentation.auth);
+    }
     this.context.job_type = input.instrumentation.job_type;
     this.context.user_id = input.instrumentation.user_id;
-    if (!this.context.user_id || this.context.user_id === 'undefined'|| this.context.user_id === 'test') {
+    this.context.single_account_select = input.instrumentation.single_account_select;
+    if (!this.context.user_id || this.context.user_id === 'undefined' || this.context.user_id === 'test') {
       if(config.Demo){
         logger.info(`Using demo userId`)
         this.context.user_id = 'Universal_widget_demo_user';
@@ -345,12 +363,12 @@ export class ConnectApi{
     switch(provider){
       case 'akoya':
       case 'akoya_sandbox':
-        let akoyaClient = getApiClient({provider});
+        let akoyaClient = this.getApiClient({provider});
         akoyaClient.UpdateConnection({...rawQueries, ...rawParams})
         break;
       case 'finicity':
       case 'finicity_sandbox':
-        let finicityClient = getApiClient({provider});
+        let finicityClient = this.getApiClient({provider});
         finicityClient.UpdateConnection({...rawQueries, ...rawParams, ...body})
         break;
       default: 
@@ -371,17 +389,17 @@ export class ConnectApi{
     //     break;
     // }
   }
+
   ResolveUserId(id: string){
-    let client = getApiClient(this.context);
-    return client.ResolveUserId(id);
+    return this.serviceClient.ResolveUserId(id);
   }
+
   getUserId(): string{
     return this.context.resolved_user_id;
   }
 
   getVC(connection_id: string, type: VcType, user_id: string): any{
-    let client = getApiClient(this.context);
-    return client.GetVc(connection_id, type, user_id)
+    return this.serviceClient.GetVc(connection_id, type, user_id)
   }
 }
 

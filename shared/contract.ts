@@ -1,3 +1,10 @@
+export interface AuthRequest {
+  provider: string;
+  token: string;
+  iv: string;
+  key: string
+}
+
 export interface Context {
   institution_id?: string;
   institution_uid?: string;
@@ -7,7 +14,8 @@ export interface Context {
   resolved_user_id?: string;
   provider?: string;
   job_type?: string;
-  token?: string;
+  single_account_select?: boolean;
+  auth?: AuthRequest;
 }
 
 export interface KeyValuePair {
@@ -174,6 +182,7 @@ export interface ProviderApiClient {
   GetConnectionStatus(
     connectionId: string,
     jobId: string,
+    single_account_select?: boolean,
     userId?: string
   ): Promise<Connection | undefined>;
   GetVc(

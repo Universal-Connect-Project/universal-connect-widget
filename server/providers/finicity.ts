@@ -11,22 +11,20 @@ import {
   UpdateConnectionRequest,
   VcType,
 } from '@/../../shared/contract';
-import { finicityProd, finicitySandbox } from './configuration';
 
 const { finicity: mapper } = require('../adapters')
 const db = require('../serviceClients/storageClient');
-const {  v4: uuidv4, } = require('uuid');
+const { v4: uuidv4, } = require('uuid');
 
-import * as config from '../config';
 import * as logger from '../infra/logger';
-
 import FinicityClient from '../serviceClients/finicityClient';
 
 export class FinicityApi implements ProviderApiClient {
   sandbox: boolean;
   apiClient: any;
 
-  constructor(sandbox: boolean) {
+  constructor(config:any, sandbox: boolean) {
+    const { finicityProd, finicitySandbox } = config;
     this.sandbox = sandbox;
     this.apiClient = new FinicityClient(sandbox ? finicitySandbox : finicityProd);
   }
@@ -109,7 +107,7 @@ export class FinicityApi implements ProviderApiClient {
     return db.get(connectionId);
   }
 
-  GetConnectionStatus(connectionId: string, jobId: string): Promise<Connection> {
+  GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
     return db.get(connectionId);
   }
 

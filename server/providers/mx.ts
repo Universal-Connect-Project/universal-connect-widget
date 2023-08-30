@@ -22,7 +22,6 @@ import {
   MxPlatformApiFactory,
   MemberResponseBody,
 } from '../serviceClients/mxClient';
-import { mxProd, mxInt } from './configuration';
 import * as config from '../config'
 
 function fromMxInstitution(ins: InstitutionResponse, provider: string): Institution {
@@ -61,7 +60,8 @@ export class MxApi implements ProviderApiClient {
   apiClient: ReturnType<typeof MxPlatformApiFactory> ;
   mxConfig: any;
   provider: string;
-  constructor(int: boolean){
+  constructor(config: any, int: boolean){
+    const {mxInt, mxProd} = config;
     this.provider = int ? 'mx_int': this.provider;
     this.mxConfig = int ? mxInt: mxProd;
     this.apiClient = MxPlatformApiFactory(new Configuration(this.mxConfig));
@@ -186,6 +186,7 @@ export class MxApi implements ProviderApiClient {
   async GetConnectionStatus(
     memberId: string,
     jobId: string,
+    single_account_select: boolean,
     userId: string
   ): Promise<Connection> {
     const res = await this.apiClient.readMemberStatus(memberId, userId);
