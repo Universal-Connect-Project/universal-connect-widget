@@ -2,7 +2,7 @@
 
 #### **Did you find a bug?**
 
-* **Do not open up a GitHub issue if the bug is a security vulnerability**, and instead  ???
+* **Do not open up a GitHub issue if the bug is a security vulnerability**, and instead send an email to vulns@mx.com.
 
 * **Ensure the bug was not already reported** by searching existing issues on GitHub
 
