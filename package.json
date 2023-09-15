@@ -59,7 +59,6 @@
     "react-intl": "^2.3.0",
     "react-intl-loader": "^1.0.2",
     "react-redux": "^7.1.0",
-    "react-scripts": "^5.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-observable": "^1.0.0",
@@ -77,8 +76,7 @@
     "build": "react-app-rewired build",
     "build-android": "mobile=true react-app-rewired build && npx cap sync android",
     "build-ios": "mobile=true react-app-rewired build && npx cap sync ios",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "test": "react-app-rewired test"
   },
   "eslintConfig": {
     "extends": [
