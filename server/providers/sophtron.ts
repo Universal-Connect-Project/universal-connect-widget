@@ -17,6 +17,7 @@ import * as logger from '../infra/logger';
 import * as http from '../infra/http';
 
 const SophtronClient = require('../serviceClients/sophtronClient/v2');
+const SophtronVcClient = require('../serviceClients/sophtronClient/vc');
 const SophtronClientV1 = require('../serviceClients/sophtronClient');
 
 const uuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -74,18 +75,17 @@ function mapJobType(input: string){
 }
 
 export class SophtronApi implements ProviderApiClient {
-  token: string;
-
   apiClient: any;
   apiClientV1: any;
+  vcClient: any;
 
   httpClient = http;
 
   constructor(config: any) {
     let {sophtron} = config;
-    this.token = sophtron;
     this.apiClient = new SophtronClient(sophtron);
     this.apiClientV1 = new SophtronClientV1(sophtron);
+    this.vcClient = new SophtronVcClient(sophtron);
   }
 
   async clearConnection(vc: any, id: string, userID: string) {
@@ -338,8 +338,6 @@ export class SophtronApi implements ProviderApiClient {
     type: VcType,
     userId?: string
   ): Promise<object> {
-    const key = (await this.apiClientV1.getUserIntegrationKey()).IntegrationKey;
-    //const key = this.token || await this.apiClient.getUserIntegrationKey().IntegrationKey;
     let path = '';
     switch (type) {
       case VcType.IDENTITY:
@@ -354,21 +352,11 @@ export class SophtronApi implements ProviderApiClient {
         break;
     }
     if (path) {
-      const headers = { IntegrationKey: key } as any;
-      if (userId) {
-        headers.DidAuth = userId;
-      }
-      const ret = await http
-        .get(
-          `${config.SophtronVCServiceEndpoint}vc/${path}`,
-          headers
-        )
-        .then((vc: any) => {
-          // for data security purpose when doing demo, remove the connection once vc is returned to client.
-          this.clearConnection(vc, connection_id, userId);
-          return vc;
-        });
-      return ret;
+      return this.vcClient.getVC(path).then((vc: any) => {
+        // for data security purpose when doing demo, remove the connection once vc is returned to client.
+        this.clearConnection(vc, connection_id, userId);
+        return vc;
+      });
     }
     return null;
   }

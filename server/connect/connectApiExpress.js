@@ -1,23 +1,14 @@
 
-const {ConnectApi} = require('./connectApi')
-const SophtronClient = require('../serviceClients/sophtronClient');
+const {ConnectApi} = require('./connectApi');
+const {instrumentation} = require('../providers');
 const { contextHandler } = require('../infra/context.ts');
 const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
-const instrumentation = require('./instrumentations.js');
+const stubs = require('./instrumentations.js');
 const config = require('../config');
-const sophtronClient = new SophtronClient();
 const logger = require('../infra/logger');
 
 module.exports = function(app){
-  instrumentation(app)
-  app.post('/analytics*', async (req, res) => {
-    if(config.SophtronAnalyticsServiceEndpoint){
-      const ret = await sophtronClient.analytics(req.path.replaceAll('/', ''), req.body)
-      res.send(ret)
-    }else{
-      res.send(require('./stubs/analytics_sessions.js'))
-    }
-  })
+  stubs(app)
   app.use(contextHandler);
   app.use(async (req, res, next) => {
     if (req.path === '/' || req.path.startsWith('/example') || req.path.startsWith('/static')) return next();
@@ -29,7 +20,15 @@ module.exports = function(app){
     }
     next()
   })
-  // stubs(app)
+
+  app.post('/analytics*', async (req, res) => {
+    if(config.AnalyticsServiceEndpoint){
+      const ret = await req.connectService.analytics(req.path, req.body)
+      res.send(ret)
+    }else{
+      res.send(require('./stubs/analytics_sessions.js'))
+    }
+  })
 
   app.post(ApiEndpoints.MEMBERS, async (req, res) => {
     // res.send(require('./stubs/member.js'))
@@ -128,7 +127,7 @@ module.exports = function(app){
   })
 
   app.post(ApiEndpoints.INSTRUMENTATION, async (req, res) => {
-    if(await req.connectService.instrumentation(req.body)){
+    if(await instrumentation(req.context, req.body.instrumentation)){
       res.sendStatus(200);
       return
     }
@@ -157,6 +156,7 @@ module.exports = function(app){
     const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query, req.body)
     res.send(ret);
   })
+
   // oauth/redirect_from?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.&state=1526452cd3dbfa71e9b13bf12f95c40d
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
     //For mx, successful oauth request will get the member updated hence will not need this to receive responses
@@ -168,10 +168,38 @@ module.exports = function(app){
     const { provider } = req.params
     req.connectService = new ConnectApi({context:{provider}})
     const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
+    const metadata = {member_guid, error_reason};
+    const app_url = `mx://${encodeURIComponent('oauthComplete/success')}?metadata=${encodeURIComponent(metadata)}`
     // console.log(req.params);
     // console.log(req.query)
-    res.type('.html');
-    // res.redirect('mx://ping?metadata=%7B%22session_guid%22%3A%22c73038c2-df7d-44a3-ab25-132179b1ba51%22%2C%22user_guid%22%3A%22241266ed-803a-4841-8a8a-0f37551e8f56%22%7D')
-    res.send(ret);
+    //res.type('.html');
+    res.redirect(app_url);
+    return;
+    
+    const queries = {
+      app_url,
+      redirect: 'true',
+      error_reason,
+      member_guid
+    };
+
+    const oauthParams =  new RegExp(Object.keys(queries).map(r => `\\$${r}`).join('|'), 'g');
+    function mapOauthParams(queries, res, html){
+      res.send(html.replaceAll(oauthParams, q => encodeURIComponent(queries[q.substring(1)] || '')));
+    }
+
+    if(config.ResourcePrefix !== 'local'){
+        const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
+        http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
+    }else{
+      const fs = require('fs');
+      app.get('/', (req, res) => {
+        fs.readFile(
+          path.join(__dirname, '../', 'build', 'oauth/success.html'), 
+          'utf8', 
+          (err, html) => mapOauthParams(queries, res, html)
+        );
+      });
+    }
   })
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Universal-Connect-Widget OAuth"/>
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>OAuth</title>
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css" />
+    <script type="text/javascript" src="/oauth/oauth.js" ></script>
+  </head>
+  <body>
+    <div id="container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M16 0C24.8 0 32 7.2 32 16C32 24.8 24.8 32 16 32C7.2 32 0 24.8 0 16C0 7.2 7.2 0 16 0ZM16 22C14.8954 22 14 22.8954 14 24C14 25.1046 14.8954 26 16 26C17.1046 26 18 25.1046 18 24C18 22.8954 17.1046 22 16 22ZM16.04 6C15.2447 6 14.6 6.72754 14.6 7.625V17.375C14.6 18.2725 15.2447 19 16.04 19C16.8353 19 17.48 18.2725 17.48 17.375V7.625C17.48 6.72754 16.8353 6 16.04 6Z" fill="#49505A"/>
+      </svg>
+      <h2 class="title">Something went wrong</h2>
+      <p class="subtitle">We've notified support and we're looking into the issue. Please close this. </p>
+      <button id="oauth-close-window">Go back to app</button>
+    </div>
+    <script type="text/javascript">
+      
+      var app_url = '$app_url'
+      var post_message = 'oauthComplete/success'
+      var member_guid = '$member_guid'
+      var redirect = '$redirect'
+      var error_reason = '$error_reason'
+      handle_oauth(redirect, app_url, post_message, member_guid, error_reason);
+      
+    </script>
+  </body>
+</html>

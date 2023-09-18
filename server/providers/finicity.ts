@@ -11,20 +11,19 @@ import {
   UpdateConnectionRequest,
   VcType,
 } from '@/../../shared/contract';
-
-const { finicity: mapper } = require('../adapters')
-const db = require('../serviceClients/storageClient');
-const { v4: uuidv4, } = require('uuid');
-
 import * as logger from '../infra/logger';
 import FinicityClient from '../serviceClients/finicityClient';
+
+const { finicity: mapper } = require('../adapters')
+const { v4: uuidv4, } = require('uuid');
 
 export class FinicityApi implements ProviderApiClient {
   sandbox: boolean;
   apiClient: any;
-
+  db: any;
   constructor(config:any, sandbox: boolean) {
-    const { finicityProd, finicitySandbox } = config;
+    const { finicityProd, finicitySandbox, storageClient } = config;
+    this.db = storageClient;
     this.sandbox = sandbox;
     this.apiClient = new FinicityClient(sandbox ? finicitySandbox : finicityProd);
   }
@@ -68,12 +67,12 @@ export class FinicityApi implements ProviderApiClient {
       provider: this.apiClient.apiConfig.provider,
       status: ConnectionStatus.PENDING
     }
-    await db.set(request_id, obj);
+    await this.db.set(request_id, obj);
     return obj;
   }
 
   DeleteConnection(id: string): Promise<void> {
-    return db.set(id, null);
+    return this.db.set(id, null);
   }
 
   async UpdateConnection(
@@ -90,7 +89,7 @@ export class FinicityApi implements ProviderApiClient {
         break;
     }
     logger.info(`Received finicity webhook response ${connection_id}`)
-    let connection = await db.get(connection_id)
+    let connection = await this.db.get(connection_id)
     if(!connection){
       return null;
     }
@@ -99,16 +98,16 @@ export class FinicityApi implements ProviderApiClient {
       connection.guid = connection_id
       connection.id = `${institutionLoginId}`
     }
-    await db.set(connection_id, connection)
+    await this.db.set(connection_id, connection)
     return connection;
   }
 
   GetConnectionById(connectionId: string): Promise<Connection> {
-    return db.get(connectionId);
+    return this.db.get(connectionId);
   }
 
   GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
-    return db.get(connectionId);
+    return this.db.get(connectionId);
   }
 
   async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {

@@ -116,7 +116,7 @@ export class MxApi implements ProviderApiClient {
       referral_source: 'APP', //request.is_oauth ? 'APP' : '',
       client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from` : null,
       member: {
-        skip_aggregation: request.skip_aggregation || request.initial_job_type !== 'agg',
+        skip_aggregation: request.skip_aggregation || request.initial_job_type === 'verify' || request.initial_job_type === 'identify',
         is_oauth: request.is_oauth,
         credentials: request.credentials?.map(
           (c) => <CredentialRequest>{
@@ -191,12 +191,12 @@ export class MxApi implements ProviderApiClient {
   ): Promise<Connection> {
     const res = await this.apiClient.readMemberStatus(memberId, userId);
     const member = res.data.member!;
-    // console.log(member);
     return {
       provider: this.provider,
       id: member.guid!,
       cur_job_id: member.guid!,
       user_id: userId,
+      //status: member.connection_status,
       status:
         ConnectionStatus[
           member.connection_status! as keyof typeof ConnectionStatus
@@ -249,6 +249,7 @@ export class MxApi implements ProviderApiClient {
     jobId: string,
     userId: string
   ): Promise<boolean> {
+    console.log(request)
     const res = await this.apiClient.resumeAggregation(request.id!, userId, {
       member: {
         challenges: request.challenges!.map((item, idx) => ({

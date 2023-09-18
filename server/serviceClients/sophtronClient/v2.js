@@ -1,12 +1,11 @@
 const config = require('../../config');
 const logger = require('../../infra/logger');
-const http = require('../../infra/http')
-const {buildSophtronAuthCode} = require('../../utils')
+const http = require('../../infra/http');
+const SophtronBaseClient = require('./base');
 
-module.exports = class SophtronClient{
-  apiConfig;
+module.exports = class SophtronV2Client extends SophtronBaseClient{
   constructor(apiConfig){
-    this.apiConfig = apiConfig
+    super(apiConfig);
   }
 
   getCustomer(customerId){
@@ -51,26 +50,5 @@ module.exports = class SophtronClient{
 
   deleteMember(customerId, memberId){
     return this.del(`/v2/customers/${customerId}/members/${memberId}`)
-  }
-
-  async post(path, data) {
-    const authHeader = buildSophtronAuthCode('post', path, this.apiConfig.clientId, this.apiConfig.secret);
-    const ret = await http.post(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
-    return ret;
-  }
-  async get(path) {
-    const authHeader = buildSophtronAuthCode('get', path, this.apiConfig.clientId, this.apiConfig.secret);
-    const ret = await http.get(this.apiConfig.endpoint + path, {Authorization: authHeader});
-    return ret;
-  }
-  async put(path, data) {
-    const authHeader = buildSophtronAuthCode('put', path, this.apiConfig.clientId, this.apiConfig.secret);
-    const ret = await http.put(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
-    return ret;
-  }
-  async del(path) {
-    const authHeader = buildSophtronAuthCode('delete', path, this.apiConfig.clientId, this.apiConfig.secret);
-    const ret = await http.del(this.apiConfig.endpoint + path, {Authorization: authHeader});
-    return ret;
   }
 };

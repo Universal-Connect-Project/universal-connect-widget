@@ -1,11 +1,10 @@
 const logger = require('../../infra/logger');
 const http = require('../../infra/http')
-const {buildSophtronAuthCode} = require('../../utils')
+const SophtronBaseClient = require('./base');
 
-module.exports = class SophtronClient{
-  apiConfig;
+module.exports = class SophtronClient extends SophtronBaseClient{
   constructor(apiConfig){
-    this.apiConfig = apiConfig
+    super(apiConfig);
   }
 
   async getUserIntegrationKey() {
@@ -102,9 +101,7 @@ module.exports = class SophtronClient{
       InstitutionID: institutionId,
       UserID: this.apiConfig.clientId,
     };
-    return this.post(url, data, function(phrase){
-      data.UserID = phrase.split(':')[1];
-    });
+    return this.post(url, data);
   }
 
   createUserInstitutionWithProfileInfo(username, password, institutionId) {
@@ -115,9 +112,7 @@ module.exports = class SophtronClient{
       InstitutionID: institutionId,
       UserID: this.apiConfig.clientId,
     };
-    return this.post(url, data, function(phrase){
-      data.UserID = phrase.split(':')[1];
-    });
+    return this.post(url, data);
   }
 
   createUserInstitutionWithAllPlusProfile(username, password, institutionId){
@@ -128,9 +123,7 @@ module.exports = class SophtronClient{
         InstitutionID: institutionId,
         UserID: this.apiConfig.clientId,
     };
-    return this.post(url, data, function(phrase){
-      data.UserID = phrase.split(':')[1];
-    });
+    return this.post(url, data);
   }
 
   createUserInstitutionWithFullHistory(username, password, institutionId) {
@@ -141,9 +134,7 @@ module.exports = class SophtronClient{
       InstitutionID: institutionId,
       UserID: this.apiConfig.clientId,
     };
-    return this.post(url, data, function(phrase){
-      data.UserID = phrase.split(':')[1];
-    });
+    return this.post(url, data);
   }
 
   createUserInstitutionWithFullAccountNumbers(
@@ -158,9 +149,7 @@ module.exports = class SophtronClient{
       InstitutionID: institutionId,
       UserID: this.apiConfig.clientId,
     };
-    return this.post(url, data, function(phrase){
-      data.UserID = phrase.split(':')[1];
-    });
+    return this.post(url, data);
   }
 
   createUserInstitutionWOJob(username, password, institutionId) {
@@ -208,9 +197,4 @@ module.exports = class SophtronClient{
     );
   }
 
-  async post(path, data) {
-    const authHeader = buildSophtronAuthCode('post', path, this.apiConfig.clientId, this.apiConfig.secret);
-    const ret = await http.post(this.apiConfig.endpoint + path, data, {Authorization: authHeader});
-    return ret;
-  }
 };

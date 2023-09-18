@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Universal-Connect-Widget OAuth"/>
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>OAuth</title>
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css" />
+    <script type="text/javascript" src="/oauth/oauth.js" ></script>
+  </head>
+  <body>
+    <div id="container">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_9406_7958)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M16 32C7.2 32 4.44414e-06 24.8 5.21346e-06 16C5.98278e-06 7.2 7.20001 -2.16809e-06 16 -1.39876e-06C24.8 -6.29444e-07 32 7.2 32 16C32 24.8 24.8 32 16 32ZM16 10C17.1046 10 18 9.10457 18 8C18 6.89543 17.1046 6 16 6C14.8954 6 14 6.89543 14 8C14 9.10457 14.8954 10 16 10ZM15.96 26C16.7553 26 17.4 25.2725 17.4 24.375L17.4 14.625C17.4 13.7275 16.7553 13 15.96 13C15.1647 13 14.52 13.7275 14.52 14.625L14.52 24.375C14.52 25.2725 15.1647 26 15.96 26Z" fill="#2D64EF"/>
+        </g>
+        <defs>
+          <clipPath id="clip0_9406_7958">
+            <rect width="32" height="32" fill="white"/>
+          </clipPath>
+        </defs>
+      </svg>
+      <h2 class="title">Almost there</h2>
+      <p class="subtitle">Please close this and return to your app to continue.</p>
+      <button id="oauth-close-window">Go back to app</button>
+    </div>
+    <script type="text/javascript">
+      
+      var app_url = '$app_url'
+      var post_message = 'oauthComplete/success'
+      var member_guid = '$member_guid'
+      var redirect = '$redirect'
+      var error_reason = '$error_reason'
+      handle_oauth(redirect, app_url, post_message, member_guid, error_reason);
+    </script>
+  </body>
+</html>
