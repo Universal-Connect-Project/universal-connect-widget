@@ -22,8 +22,8 @@ const config = {
   Env: 'pre', // mocked
   Version: '',
   UseAxios: true,
-  CryptoKey: 'c42359fd32f1ce97c65d7636e82ec8646309df2b8d5e17282b80b23d213fa2c2', //crypto.randomBytes(32)
-  CryptoIv: '453687d854d55101f001b5999b68bc3d', //crypto.randomBytes(16)
+  CryptoKey: '', //crypto.randomBytes(32).toString('hex');
+  CryptoIv: '', //crypto.randomBytes(16).toString('hex');
   CryptoAlgorithm: 'aes-256-cbc',
   ResourcePrefix: 'http://localhost:3000',
   // ResourcePrefix: 'http://192.168.111.217:3000',
