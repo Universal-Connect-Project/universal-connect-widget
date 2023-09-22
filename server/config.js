@@ -30,7 +30,7 @@ const config = {
   // ResourcePrefix: 'local', //
   ResourceVersion: '', // 'development'
 
-  SophtronClientId: 'ba10bd5b-5387-47ff-a7f2-ae023b78a734',
+  SophtronClientId: '',
   SophtronClientSecret: '',
 
 };
