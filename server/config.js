@@ -5,10 +5,8 @@ Object.keys(envs).forEach((k) => {
 });
 const config = {
   AuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
-  SearchEndpoint: 'http://localhost:8082/api/',
-  StorageEndpoint: 'http://localhost:8082/api/',
-  // SearchEndpoint: 'https://search.sophtron-prod.com/api/',
-  // AnalyticsServiceEndpoint: 'http://localhost:8081/api/',
+  StorageEndpoint: 'https://search.sophtron-prod.com/api/',
+  SearchEndpoint: 'https://search.sophtron-prod.com/api/',
   AnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
   HostUrl: 'https://test.sophtron-prod.com',
   WebhookHostUrl: 'https://webhook.sophtron-prod.com',
@@ -26,8 +24,7 @@ const config = {
   CryptoIv: '', //crypto.randomBytes(16).toString('hex');
   CryptoAlgorithm: 'aes-256-cbc',
   ResourcePrefix: 'http://localhost:3000',
-  // ResourcePrefix: 'http://192.168.111.217:3000',
-  // ResourcePrefix: 'local', //
+  // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
   SophtronClientId: '',
