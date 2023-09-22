@@ -64,7 +64,7 @@ module.exports = class SophtronClient extends SophtronBaseClient{
   }
 
   getJob(id) {
-    return this.post('/Job/GetJobByID', { JobID: id });
+    return this.post('/Job/GetJobInformationByID', { JobID: id });
   }
 
   async jobSecurityAnswer(jobId, answer) {
@@ -86,7 +86,7 @@ module.exports = class SophtronClient extends SophtronBaseClient{
   }
 
   async jobCaptchaInput(jobId, input) {
-    const ret = await this.post('/Job/UpdateJobCaptcha', {
+    const ret = await this.post('/Job/UpdateJobCaptchaInput', {
       JobID: jobId,
       CaptchaInput: input,
     });

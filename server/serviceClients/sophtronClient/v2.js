@@ -51,4 +51,8 @@ module.exports = class SophtronV2Client extends SophtronBaseClient{
   deleteMember(customerId, memberId){
     return this.del(`/v2/customers/${customerId}/members/${memberId}`)
   }
+
+  getJobInfo(jobId){
+    return this.get(`/v2/job/${jobId}`);
+  }
 };

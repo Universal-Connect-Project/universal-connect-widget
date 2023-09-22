@@ -208,7 +208,7 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async GetConnectionStatus(memberId: string, jobId: string, single_account_select: boolean, userId: string): Promise<Connection> {
-    const job = await this.apiClientV1.getJob(jobId);
+    const job = await this.apiClient.getJobInfo(jobId);
     const challenge: Challenge = {
       id: '',
       type: ChallengeType.QUESTION,
@@ -229,13 +229,16 @@ export class SophtronApi implements ProviderApiClient {
         status = ConnectionStatus.FAILED;
         break;
       case 'AccountsReady':
-        if(single_account_select){
+        let jobType = job.JobType.toLowerCase();
+        if(single_account_select 
+            && (!job.AccountID || job.AccountID === '00000000-0000-0000-0000-000000000000')
+            && (jobType === 'authallaccounts' || jobType === 'refreshauthall')
+            ){
           let accounts = await this.apiClientV1.getUserInstitutionAccounts(memberId);
           challenge.id = 'single_account_select';
           challenge.external_id = 'single_account_select';
           challenge.type = ChallengeType.OPTIONS;
-          challenge.question =
-            'Please select an account to proceed:';
+          challenge.question = 'Please select an account to proceed:';
           challenge.data = accounts.map(
             (a:any) => ({ key: `${a.AccountName} ${a.AccountNumber}`, value: a.AccountID })
           );

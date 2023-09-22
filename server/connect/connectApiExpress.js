@@ -6,6 +6,7 @@ const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
 const stubs = require('./instrumentations.js');
 const config = require('../config');
 const logger = require('../infra/logger');
+const http = require('../infra/http');
 
 module.exports = function(app){
   stubs(app)
@@ -168,15 +169,16 @@ module.exports = function(app){
     const { provider } = req.params
     req.connectService = new ConnectApi({context:{provider}})
     const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
-    const metadata = {member_guid, error_reason};
-    const app_url = `mx://${encodeURIComponent('oauthComplete/success')}?metadata=${encodeURIComponent(metadata)}`
+    const metadata = JSON.stringify({member_guid, error_reason});
+    const app_url = `mx://oauth_complete?metadata=${encodeURIComponent(metadata)}`
     // console.log(req.params);
     // console.log(req.query)
     //res.type('.html');
-    res.redirect(app_url);
-    return;
-    
+    // res.redirect(app_url);
+    // return;
+    // https://test.sophtron-prod.com/oauth/mx_int/redirect_from?status=success&member_guid=MBR-51e2f1a6-a84b-4475-957c-1c43712cd9b2
     const queries = {
+      status: 'success',
       app_url,
       redirect: 'true',
       error_reason,
@@ -185,7 +187,7 @@ module.exports = function(app){
 
     const oauthParams =  new RegExp(Object.keys(queries).map(r => `\\$${r}`).join('|'), 'g');
     function mapOauthParams(queries, res, html){
-      res.send(html.replaceAll(oauthParams, q => encodeURIComponent(queries[q.substring(1)] || '')));
+      res.send(html.replaceAll(oauthParams, q => queries[q.substring(1)] || ''));
     }
 
     if(config.ResourcePrefix !== 'local'){
