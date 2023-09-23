@@ -25,7 +25,6 @@
     "@kyper/userfeedback": "^1.2.0",
     "@kyper/utilityrow": "^1.4.0",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "assert-browserify": "^2.0.0",
@@ -51,6 +50,8 @@
     "moment-timezone": "^0.5.40",
     "mx-design-tokens": "^10.5.0",
     "mx-react-components": "^8.4.2",
+    "parse-address": "^1.1.2",
+    "parse-full-name": "^1.2.6",
     "phoenix": "^1.2.1",
     "posthog-js": "^1.57.2",
     "prop-types": "^15.7.2",
@@ -66,9 +67,7 @@
     "reselect": "^2.5.4",
     "rxjs": "^6.6.2",
     "stream-browserify": "^3.0.0",
-    "typescript": "^5.0.4",
-    "parse-address": "^1.1.2",
-    "parse-full-name": "^1.2.6"
+    "typescript": "^5.0.4"
   },
   "scripts": {
     "server": "ts-node server/server.js",

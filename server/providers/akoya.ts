@@ -11,19 +11,17 @@ import {
   UpdateConnectionRequest,
   VcType,
 } from '@/../../shared/contract';
-
-const db = require('../serviceClients/storageClient');
-const {  v4: uuidv4, } = require('uuid');
-
 import * as logger from '../infra/logger';
 import AkoyaClient from '../serviceClients/akoyaClient';
+const {  v4: uuidv4, } = require('uuid');
 
 export class AkoyaApi implements ProviderApiClient {
   sandbox: boolean;
   apiClient: any;
-
+  db: any;
   constructor(config: any, sandbox: boolean) {
-    const { akoyaProd, akoyaSandbox } = config;
+    const { akoyaProd, akoyaSandbox, storageClient } = config;
+    this.db = storageClient;
     this.sandbox = sandbox;
     this.apiClient = new AkoyaClient(sandbox ? akoyaSandbox : akoyaProd);
   }
@@ -64,12 +62,12 @@ export class AkoyaApi implements ProviderApiClient {
       provider: this.apiClient.apiConfig.provider,
       status: ConnectionStatus.PENDING
     }
-    await db.set(request_id, obj);
+    await this.db.set(request_id, obj);
     return obj;
   }
 
   DeleteConnection(id: string): Promise<void> {
-    return db.set(id, null);
+    return this.db.set(id, null);
   }
 
   async UpdateConnection(
@@ -79,7 +77,7 @@ export class AkoyaApi implements ProviderApiClient {
     let actualObj = request as any;
     const { state: connection_id, code } = actualObj;
     logger.info(`Received akoya oauth redirect response ${connection_id}`)
-    let connection = await db.get(connection_id)
+    let connection = await this.db.get(connection_id)
     if(!connection){
       return null;
     }
@@ -90,16 +88,16 @@ export class AkoyaApi implements ProviderApiClient {
       connection.user_id = code
     }
     // console.log(connection)
-    await db.set(connection_id, connection)
+    await this.db.set(connection_id, connection)
     return connection;
   }
 
   GetConnectionById(connectionId: string): Promise<Connection> {
-    return db.get(connectionId);
+    return this.db.get(connectionId);
   }
 
   async GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
-    return db.get(connectionId);
+    return this.db.get(connectionId);
   }
 
   async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {
