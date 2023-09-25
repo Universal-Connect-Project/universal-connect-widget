@@ -1,4 +1,3 @@
-import _get from 'lodash/get'
 import { initGettextAndReturnReactLocaleData, scrubLocale } from '../../utils/LocaleLoader'
 
 export const ActionTypes = {
@@ -17,24 +16,16 @@ export const LocaleSources = {
 const loadMessagesForLocale = (source, localeCode) => dispatch => {
   const locale = scrubLocale(localeCode)
 
-  return initGettextAndReturnReactLocaleData(localeCode)
-    .then(localeData => {
-      //The default here is because of the mixed module system here with the commonjs dynamic require above. It should be removed and replaced with es6 dynamic imports if possible.
-      const syncMessages = _get(localeData, ['LocaleStrings'], {})
-      const asyncMessages = _get(localeData, ['default', 'LocaleStrings'], null)
+  initGettextAndReturnReactLocaleData(localeCode)
 
-      dispatch({
-        type: ActionTypes.LOCALIZATION_LOADED,
-        payload: {
-          locale,
-          messages: asyncMessages ? asyncMessages : syncMessages,
-          source,
-        },
-      })
-    })
-    .catch(() => {
-      logger.warn(`Invalid locale "${locale}" from source "${source}"`)
-    })
+  dispatch({
+    type: ActionTypes.LOCALIZATION_LOADED,
+    payload: {
+      locale,
+      messages: {},
+      source,
+    },
+  })
 }
 
 export default dispatch => ({
