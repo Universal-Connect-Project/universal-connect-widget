@@ -335,35 +335,7 @@ export class SophtronApi implements ProviderApiClient {
     }
     return true;
   }
-
-  async GetVc(
-    connection_id: string,
-    type: VcType,
-    userId?: string
-  ): Promise<object> {
-    let path = '';
-    switch (type) {
-      case VcType.IDENTITY:
-        path = `customers/${userId}/members/${connection_id}/identity?filters=name,addresses`;
-        break;
-      case VcType.ACCOUNTS:
-        path = `customers/${userId}/members/${connection_id}/accounts`;
-        break;
-      case VcType.TRANSACTIONS:
-        throw new Error('Not Implemented')
-      default:
-        break;
-    }
-    if (path) {
-      return this.vcClient.getVC(path).then((vc: any) => {
-        // for data security purpose when doing demo, remove the connection once vc is returned to client.
-        this.clearConnection(vc, connection_id, userId);
-        return vc;
-      });
-    }
-    return null;
-  }
-
+  
   async ResolveUserId(user_id: string){
     logger.debug('Resolving UserId: ' + user_id);
     const sophtronUser = await this.apiClient.getCustomerByUniqueName(user_id);

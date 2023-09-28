@@ -7,6 +7,7 @@ const stubs = require('./instrumentations.js');
 const config = require('../config');
 const logger = require('../infra/logger');
 const http = require('../infra/http');
+const {readFile} = require('../utils/fs');
 
 module.exports = function(app){
   stubs(app)
@@ -152,9 +153,8 @@ module.exports = function(app){
     // })
 
     const { provider } = req.params
-    req.connectService = new ConnectApi({context:{provider}})
     logger.info(`received web hook at: ${req.path}`, req.query)
-    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query, req.body)
+    const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query, req.body)
     res.send(ret);
   })
 
@@ -167,8 +167,7 @@ module.exports = function(app){
     // const { error, error_description, state } = req.query;
     const { member_guid, status,error_reason } = req.query;
     const { provider } = req.params
-    req.connectService = new ConnectApi({context:{provider}})
-    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
+    const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query)
     const metadata = JSON.stringify({member_guid, error_reason});
     const app_url = `mx://oauth_complete?metadata=${encodeURIComponent(metadata)}`
     // console.log(req.params);
@@ -191,17 +190,12 @@ module.exports = function(app){
     }
 
     if(config.ResourcePrefix !== 'local'){
-        const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
-        http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
+      const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
+      http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
     }else{
-      const fs = require('fs');
-      app.get('/', (req, res) => {
-        fs.readFile(
-          path.join(__dirname, '../', 'build', 'oauth/success.html'), 
-          'utf8', 
-          (err, html) => mapOauthParams(queries, res, html)
-        );
-      });
+      const filePath = path.join(__dirname, '../', 'build', 'oauth/success.html');
+      const html = await readFile(filePath);
+      mapOauthParams(queries, res, html);
     }
   })
 }

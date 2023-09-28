@@ -60,6 +60,11 @@ function decodeAuthToken(input){
   }
 }
 
+fileReadCache = {
+  content: '',
+  time: new Date('1900-01-01')
+}
+
 module.exports = {
   encrypt,
   decrypt,

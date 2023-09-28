@@ -23,6 +23,7 @@ import {
   MemberResponseBody,
 } from '../serviceClients/mxClient';
 import * as config from '../config'
+import { StorageClient } from'../serviceClients/storageClient';
 
 function fromMxInstitution(ins: InstitutionResponse, provider: string): Institution {
   return {
@@ -60,8 +61,13 @@ export class MxApi implements ProviderApiClient {
   apiClient: ReturnType<typeof MxPlatformApiFactory> ;
   mxConfig: any;
   provider: string;
+  token: string;
+  db: StorageClient;
+
   constructor(config: any, int: boolean){
-    const {mxInt, mxProd} = config;
+    const {mxInt, mxProd, token} = config;
+    this.token = token;
+    this.db = new StorageClient(token);
     this.provider = int ? 'mx_int': this.provider;
     this.mxConfig = int ? mxInt: mxProd;
     this.apiClient = MxPlatformApiFactory(new Configuration(this.mxConfig));
@@ -114,7 +120,7 @@ export class MxApi implements ProviderApiClient {
     // console.log(request)
     const memberRes = await this.apiClient.createMember(userId, {
       referral_source: 'APP', //request.is_oauth ? 'APP' : '',
-      client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from` : null,
+      client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from?token=${this.token}` : null,
       member: {
         skip_aggregation: request.skip_aggregation || request.initial_job_type === 'verify' || request.initial_job_type === 'identify',
         is_oauth: request.is_oauth,
@@ -191,15 +197,21 @@ export class MxApi implements ProviderApiClient {
   ): Promise<Connection> {
     const res = await this.apiClient.readMemberStatus(memberId, userId);
     const member = res.data.member!;
+    let status = member.connection_status!;
+    const oauthStatus = await this.db.get(member.guid);
+    if(oauthStatus.error){
+      status = ConnectionStatus[ConnectionStatus.REJECTED];
+    }
     return {
       provider: this.provider,
       id: member.guid!,
       cur_job_id: member.guid!,
       user_id: userId,
       //status: member.connection_status,
+      //error_reason: oauthStatus?.error_reason,
       status:
         ConnectionStatus[
-          member.connection_status! as keyof typeof ConnectionStatus
+          status! as keyof typeof ConnectionStatus
         ],
       challenges: (member.challenges || []).map((item, idx) => {
         const c: Challenge = {
@@ -261,16 +273,6 @@ export class MxApi implements ProviderApiClient {
     return !!res;
   }
 
-  /* eslint-disable unused-imports/no-unused-vars */
-  async GetVc(
-    connection_id: string,
-    vc_type: VcType,
-    userId?: string
-  ): Promise<object> {
-    
-    throw new Error('Method not implemented.');
-  }
-
   async ResolveUserId(user_id: string){
     logger.debug('Resolving UserId: ' + user_id);
     let res = await this.apiClient.listUsers(1, 10, user_id);
@@ -288,5 +290,17 @@ export class MxApi implements ProviderApiClient {
     }
     logger.trace(`Failed creating mx user, using user_id: ${user_id}`)
     return user_id;
+  }
+
+  static async HandleOauthResponse(request: any): Promise<any> {
+    const { member_guid, status, error_reason, token } = request;
+    if(status === 'error'){
+      const db = new StorageClient(token);
+      await db.set(member_guid, {
+        error: true,
+        error_reason
+      })
+    }
+    return null;
   }
 }

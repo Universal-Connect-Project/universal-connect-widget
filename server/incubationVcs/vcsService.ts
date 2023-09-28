@@ -82,42 +82,6 @@ export class VcsService extends ProviderApiBase{
       return { error: 'Failed to find job' };
     }
     res.provider = this.context.provider;
-    if (res.status === ConnectionStatus.CONNECTED) {
-      if (
-        this.context.job_type?.startsWith('vc_') &&
-        this.context.user_id?.startsWith('did:')
-      ) {
-        // notify vc service about a connection that belongs to the user_id
-        let vcType = VcType.IDENTITY;
-        switch (this.context.job_type) {
-          case 'vc_accounts':
-          case 'vc_account':
-            vcType = VcType.ACCOUNTS;
-            break;
-          case 'vc_transactions':
-          case 'vc_transaction':
-            vcType = VcType.TRANSACTIONS;
-            break;
-          default:
-            break;
-        }
-        for (let i = 0; i < 3; i++) {
-          try {
-            /* eslint-disable no-await-in-loop */
-            const vc = await this.getVC(res.id!, vcType);
-            res.vc = Buffer.from(JSON.stringify(vc)).toString('base64');
-            /* eslint-disable no-await-in-loop */
-            return res;
-          } catch (err) {
-            logger.error('Failed to retrieve VC', err);
-          }
-          logger.error('Retrying vc retrieval');
-          await new Promise((resolve, _) => {
-            setTimeout(resolve, 500);
-          });
-        }
-      }
-    }
     return res;
   }
 }

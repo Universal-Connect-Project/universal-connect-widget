@@ -13,6 +13,7 @@ import {
 } from '@/../../shared/contract';
 import * as logger from '../infra/logger';
 import FinicityClient from '../serviceClients/finicityClient';
+import { StorageClient } from'../serviceClients/storageClient';
 
 const { finicity: mapper } = require('../adapters')
 const { v4: uuidv4, } = require('uuid');
@@ -20,10 +21,12 @@ const { v4: uuidv4, } = require('uuid');
 export class FinicityApi implements ProviderApiClient {
   sandbox: boolean;
   apiClient: any;
-  db: any;
+  db: StorageClient;
+  token: string;
   constructor(config:any, sandbox: boolean) {
-    const { finicityProd, finicitySandbox, storageClient } = config;
-    this.db = storageClient;
+    const { finicityProd, finicitySandbox, token } = config;
+    this.token = token;
+    this.db = new StorageClient(token);
     this.sandbox = sandbox;
     this.apiClient = new FinicityClient(sandbox ? finicitySandbox : finicityProd);
   }
@@ -56,7 +59,7 @@ export class FinicityApi implements ProviderApiClient {
     request: CreateConnectionRequest,
     user_id: string
   ): Promise<Connection | undefined> {
-    const request_id = uuidv4();
+    const request_id = `${this.token};${uuidv4()}`;
     const obj = {
       id: request_id,
       is_oauth: true,
@@ -79,27 +82,7 @@ export class FinicityApi implements ProviderApiClient {
     request: UpdateConnectionRequest,
     user_id: string,
   ): Promise<Connection> {
-    //in finicity this is used to receive webhook response and not matching the Connection class schema
-    let actualObj = request as any;
-    const {connection_id, eventType} = actualObj;
-    let institutionLoginId = false;
-    switch(eventType){
-      case 'added':
-        institutionLoginId = actualObj.payload.accounts?.[0]?.institutionLoginId;
-        break;
-    }
-    logger.info(`Received finicity webhook response ${connection_id}`)
-    let connection = await this.db.get(connection_id)
-    if(!connection){
-      return null;
-    }
-    if(institutionLoginId){
-      connection.status = ConnectionStatus.CONNECTED
-      connection.guid = connection_id
-      connection.id = `${institutionLoginId}`
-    }
-    await this.db.set(connection_id, connection)
-    return connection;
+    return null;
   }
 
   GetConnectionById(connectionId: string): Promise<Connection> {
@@ -130,40 +113,26 @@ export class FinicityApi implements ProviderApiClient {
     return user_id;
   }
 
-  async GetVc(
-    connection_id: string,
-    type: VcType,
-    userId?: string
-  ): Promise<object> {
-    let accounts = await this.apiClient.getCustomerAccountsByInstitutionLoginId(userId, connection_id);
-    let accountId = accounts?.[0].id;
-    switch(type){
-      case VcType.IDENTITY:
-        let customer = await this.apiClient.getAccountOwnerDetail(userId, accountId);
-        let identity = mapper.mapIdentity(userId, customer)
-        return {credentialSubject: { customer: identity}};
-      case VcType.ACCOUNTS:
-        return {credentialSubject: { accounts: accounts.map(mapper.mapAccount)}};
-      case VcType.TRANSACTIONS:
-        let startDate = new Date(new Date().setDate(new Date().getDate() - 30))
-        const transactions = await this.apiClient.getTransactions(userId, accountId, startDate, new Date());
-        return {credentialSubject: {transactions: transactions.map((t:any) => mapper.mapTransaction(t, accountId))}};
+  static async HandleOauthResponse(request: any): Promise<any> {
+    const {connection_id, eventType} = request;
+    const db = new StorageClient(connection_id.split(';')[0])
+    let institutionLoginId = false;
+    switch(eventType){
+      case 'added':
+        institutionLoginId = request.payload.accounts?.[0]?.institutionLoginId;
+        break;
     }
+    logger.info(`Received finicity webhook response ${connection_id}`)
+    let connection = await db.get(connection_id)
+    if(!connection){
+      return null;
+    }
+    if(institutionLoginId){
+      connection.status = ConnectionStatus.CONNECTED
+      connection.guid = connection_id
+      connection.id = `${institutionLoginId}`
+    }
+    await db.set(connection_id, connection)
+    return connection;
   }
 }
-
-// console.log(finicitySandbox)
-// console.log(finicityProd)
-//let client = new FinicityClient(finicitySandbox);
-// client.getAuthToken().then((res: any) => {
-//   console.log(res)
-// })
-
-// client.getCustomerAccountsByInstitutionLoginId(6031158639, 6026613630).then(res => {
-//   console.log(JSON.stringify(res))
-// })
-
-// client.generateConnectLiteUrl('6030781868', 102176).then(res => {
-// //client.generateConnectUrl('6030781868').then(res => {
-//   console.log(res)
-// })

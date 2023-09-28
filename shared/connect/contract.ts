@@ -184,8 +184,6 @@ export interface IConnectAPI {
   loadPopularInstitutions(query: string): Promise<Institution[]>
   loadDiscoveredInstitutions(): Promise<Institution[]>
 
-  getVC(connection_id: string, type: VcType, user_id: string): any
-
   // createAccount(account)
   // loadAccounts()
 

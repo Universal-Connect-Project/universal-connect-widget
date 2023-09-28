@@ -6,6 +6,8 @@ const http = require('./infra/http');
 const logger = require('./infra/logger');
 const useConnect = require('./connect/connectApiExpress');
 const useVcs = require('./incubationVcs/vcsServiceExpress');
+const {readFile} = require('./utils/fs');
+
 
 process.on('unhandledRejection', (error) => {
   logger.error(`unhandledRejection: ${error.message}`, error);
@@ -67,13 +69,10 @@ if(config.ResourcePrefix !== 'local'){
   });
 }else{
   logger.info(`using local resources from "../build"`)
-  const fs = require('fs');
-  app.get('/', (req, res) => {
-    fs.readFile(
-      path.join(__dirname, '../', 'build', 'index.html'), 
-      'utf8', 
-      (err, html) => renderDefaultPage(req, res, html)
-    );
+  app.get('/', async (req, res) => {
+    const filePath = path.join(__dirname, '../', 'build', 'index.html');
+    const html = await readFile(filePath);
+    renderDefaultPage(req, res, html);
   });
   app.get('*', express.static(path.join(__dirname, '../build')))
 }

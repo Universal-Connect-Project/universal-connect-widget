@@ -121,7 +121,6 @@ if (widgetConfig.type !== 'master') {
   updateTitleWithWidget(widgetConfig.type)
 }
 
-
 ReactDOM.render(
   <Provider store={Store}>
     <TokenProvider tokenOverrides={{}}>

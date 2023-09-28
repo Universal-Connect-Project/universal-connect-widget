@@ -89,6 +89,7 @@ export class ProviderApiBase{
           const authApi = new AuthClient(token);
           let conf = await authApi.getSecretExchange(iv)
           conf.sophtron.token = token;
+          conf.token = token;
           this.serviceClient = getApiClient(this.context?.provider, {
             ...conf,
             storageClient
@@ -209,14 +210,25 @@ export class ProviderApiBase{
     let connection = await this.getConnectionStatus(connection_id)
     let ret = {
       guid: connection_id,
+      inbound_member_guid: connection_id,
+      outbound_member_guid: connection_id,
       auth_status: connection.status === ConnectionStatus.PENDING ? 1 : ConnectionStatus.CONNECTED ? 2 : 3,
     } as any
     if(ret.auth_status === 3){
       ret.error_reason = connection.status
     }
-    return ret;
+    return {oauth_state: ret};
   }
   
+  async getOauthStates(memberGuid: string){
+    let state = await this.getOauthState(memberGuid);
+    return {
+      oauth_states: [
+        state.oauth_state
+      ]
+    }
+  }
+
   async deleteConnection(connection_id: string): Promise<void> {
     await this.serviceClient.DeleteConnection(connection_id, this.getUserId())
   }
@@ -234,17 +246,19 @@ export class ProviderApiBase{
     return this.context.resolved_user_id;
   }
 
-  async handleOauthResponse(provider: string, rawParams: any, rawQueries: any, body: any){
+  static async handleOauthResponse(provider: string, rawParams: any, rawQueries: any, body: any){
     switch(provider){
       case 'akoya':
       case 'akoya_sandbox':
-        let akoyaClient = getApiClient(provider, {});
-        akoyaClient.UpdateConnection({...rawQueries, ...rawParams})
+        await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
         break;
       case 'finicity':
       case 'finicity_sandbox':
-        let finicityClient = getApiClient(provider, {});
-        finicityClient.UpdateConnection({...rawQueries, ...rawParams, ...body})
+        await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
+        break;
+      case 'mx':
+      case 'mx_int':
+        await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
         break;
       default: 
         return {
@@ -254,10 +268,6 @@ export class ProviderApiBase{
         }
     }
     return 'ok';
-  }
-
-  getVC(connection_id: string, type: VcType) {
-    return this.serviceClient.GetVc(connection_id, type, this.getUserId() || this.context?.user_id);
   }
 
   analytics(path: string, content: any){

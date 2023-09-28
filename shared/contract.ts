@@ -185,9 +185,4 @@ export interface ProviderApiClient {
     single_account_select?: boolean,
     userId?: string
   ): Promise<Connection | undefined>;
-  GetVc(
-    connection_id: string,
-    vc_type: VcType,
-    userId?: string
-  ): Promise<object>;
 }
