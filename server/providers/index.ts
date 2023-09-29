@@ -67,6 +67,7 @@ export async function instrumentation(context: Context, input: any){
     context.auth = decodeAuthToken(input.auth);
   }
   context.job_type = input.job_type || 'agg';
+  context.oauth_referral_source = input.oauth_referral_source || 'BROWSER';
   context.single_account_select = input.single_account_select;
   return true
 }
@@ -247,27 +248,25 @@ export class ProviderApiBase{
   }
 
   static async handleOauthResponse(provider: string, rawParams: any, rawQueries: any, body: any){
+    let ret = {};
     switch(provider){
       case 'akoya':
       case 'akoya_sandbox':
-        await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
-        break;
+        ret = await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
+        return;
       case 'finicity':
       case 'finicity_sandbox':
-        await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
-        break;
+        ret = await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
+        return;
       case 'mx':
       case 'mx_int':
-        await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
-        break;
-      default: 
-        return {
-          provider,
-          rawParams,
-          rawQueries
-        }
+        ret = await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
+        return;
     }
-    return 'ok';
+    return {
+      ...ret,
+      provider
+    }
   }
 
   analytics(path: string, content: any){

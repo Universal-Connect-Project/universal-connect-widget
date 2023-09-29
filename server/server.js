@@ -7,7 +7,7 @@ const logger = require('./infra/logger');
 const useConnect = require('./connect/connectApiExpress');
 const useVcs = require('./incubationVcs/vcsServiceExpress');
 const {readFile} = require('./utils/fs');
-
+const RateLimit = require('express-rate-limit');
 
 process.on('unhandledRejection', (error) => {
   logger.error(`unhandledRejection: ${error.message}`, error);
@@ -16,6 +16,12 @@ process.removeAllListeners('warning'); // remove the noise caused by capacitor-c
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+var limiter = RateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5000, // max average 500 requests per windowMs
+});
+app.use(limiter);
 
 app.get('/ping', function (req, res) {
   res.send('ok');

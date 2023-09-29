@@ -292,7 +292,7 @@ export class MxApi implements ProviderApiClient {
     return user_id;
   }
 
-  static async HandleOauthResponse(request: any): Promise<any> {
+  static async HandleOauthResponse(request: any): Promise<Connection> {
     const { member_guid, status, error_reason, token } = request;
     if(status === 'error'){
       const db = new StorageClient(token);
@@ -301,6 +301,9 @@ export class MxApi implements ProviderApiClient {
         error_reason
       })
     }
-    return null;
+    return {
+      id: member_guid,
+      status: status === 'error' ? ConnectionStatus.REJECTED : status === 'success' ? ConnectionStatus.CONNECTED : ConnectionStatus.PENDING 
+    };
   }
 }

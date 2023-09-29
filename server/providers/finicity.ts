@@ -15,7 +15,6 @@ import * as logger from '../infra/logger';
 import FinicityClient from '../serviceClients/finicityClient';
 import { StorageClient } from'../serviceClients/storageClient';
 
-const { finicity: mapper } = require('../adapters')
 const { v4: uuidv4, } = require('uuid');
 
 export class FinicityApi implements ProviderApiClient {
@@ -113,7 +112,7 @@ export class FinicityApi implements ProviderApiClient {
     return user_id;
   }
 
-  static async HandleOauthResponse(request: any): Promise<any> {
+  static async HandleOauthResponse(request: any): Promise<Connection> {
     const {connection_id, eventType} = request;
     const db = new StorageClient(connection_id.split(';')[0])
     let institutionLoginId = false;

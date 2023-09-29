@@ -96,7 +96,7 @@ export class AkoyaApi implements ProviderApiClient {
     return user_id;
   }
 
-  static async HandleOauthResponse(request: any): Promise<any> {
+  static async HandleOauthResponse(request: any): Promise<Connection> {
     const { state: request_id, code } = request;
     logger.info(`Received akoya oauth redirect response ${request_id}`)
     const db = new StorageClient(request_id.split(';')[0])

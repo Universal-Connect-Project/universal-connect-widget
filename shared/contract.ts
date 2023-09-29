@@ -16,6 +16,7 @@ export interface Context {
   job_type?: string;
   single_account_select?: boolean;
   auth?: AuthRequest;
+  oauth_referral_source?: string;
 }
 
 export interface KeyValuePair {
