@@ -175,22 +175,6 @@ export class ConnectApi extends ProviderApiBase{
     return ret?.member?.oauth_window_uri;
   }
 
-  async getOauthState(memberGuid: string){
-    let ret: any = await this.getConnectionStatus(memberGuid) 
-    ret.inbound_member_guid = memberGuid;
-    ret.outbound_member_guid = memberGuid;
-    return {oauth_state: ret};
-  }
-
-  async getOauthStates(memberGuid: string){
-    let state = await this.getOauthState(memberGuid);
-    return {
-      oauth_states: [
-        state.oauth_state
-      ]
-    }
-  }
-
   async deleteMember(member: Member): Promise<void> {
     await this.deleteConnection(member.guid)
   }

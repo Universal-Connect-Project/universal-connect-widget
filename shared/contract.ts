@@ -16,6 +16,7 @@ export interface Context {
   job_type?: string;
   single_account_select?: boolean;
   auth?: AuthRequest;
+  oauth_referral_source?: string;
 }
 
 export interface KeyValuePair {
@@ -185,9 +186,4 @@ export interface ProviderApiClient {
     single_account_select?: boolean,
     userId?: string
   ): Promise<Connection | undefined>;
-  GetVc(
-    connection_id: string,
-    vc_type: VcType,
-    userId?: string
-  ): Promise<object>;
 }

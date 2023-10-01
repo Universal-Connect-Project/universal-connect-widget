@@ -7,6 +7,8 @@ const stubs = require('./instrumentations.js');
 const config = require('../config');
 const logger = require('../infra/logger');
 const http = require('../infra/http');
+const {readFile} = require('../utils/fs');
+const { ConnectionStatus } = require('shared/contract');
 
 module.exports = function(app){
   stubs(app)
@@ -73,20 +75,6 @@ module.exports = function(app){
   app.get(`${ApiEndpoints.INSTITUTIONS}/favorite`, async (req, res) => {
     let ret = await req.connectService.loadPopularInstitutions();
     res.send(ret);
-    // res.send([{
-    //     name: 'MX Bank',
-    //     guid: 'mxbank',
-    //     url: 'https://www.mx.com',
-    //     logo_url: 'https://content.moneydesktop.com/storage/MD_Assets/Ipad%20Logos/100x100/INS-1572a04c-912b-59bf-5841-332c7dfafaef_100x100.png'
-    //   },
-    //   {
-    //     supports_oauth: true,
-    //     name: 'MX Bank (OAuth)',
-    //     guid: 'mx_bank_oauth',
-    //     url: 'www.mx.com',
-    //     logo_url: 'https://content.moneydesktop.com/storage/MD_Assets/Ipad%20Logos/100x100/INS-1572a04c-912b-59bf-5841-332c7dfafaef_100x100.png'
-    //   }
-    // ])
   })
   app.get(`${ApiEndpoints.INSTITUTIONS}/discovered`, async (req, res) => {
     let ret = await req.connectService.loadDiscoveredInstitutions();
@@ -143,46 +131,24 @@ module.exports = function(app){
   })
 
   app.all('/webhook/:provider/*', async function (req, res) {
-    // logger.info(`echo`, {
-    //   method: req.method,
-    //   headers: req.headers,
-    //   path: req.path,
-    //   queries: req.queries,
-    //   body: req.body
-    // })
-
     const { provider } = req.params
-    req.connectService = new ConnectApi({context:{provider}})
     logger.info(`received web hook at: ${req.path}`, req.query)
-    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query, req.body)
+    const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query, req.body)
     res.send(ret);
   })
 
-  // oauth/redirect_from?error=access_denied&error_description=The+resource+owner+or+authorization+server+denied+the+request.&state=1526452cd3dbfa71e9b13bf12f95c40d
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
-    //For mx, successful oauth request will get the member updated hence will not need this to receive responses
-    //however, when error happens and received by this, mx only returned memberId but not user_id hence errors can't be resonsiled to member through this for now
-
-    //For banks and akoya, this endpoint is used to receive all oauth responses 
-    // const { error, error_description, state } = req.query;
-    const { member_guid, status,error_reason } = req.query;
+    const { member_guid, error_reason } = req.query;
     const { provider } = req.params
-    req.connectService = new ConnectApi({context:{provider}})
-    const ret = await req.connectService.handleOauthResponse(provider, req.params, req.query)
+    const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query)
     const metadata = JSON.stringify({member_guid, error_reason});
     const app_url = `mx://oauth_complete?metadata=${encodeURIComponent(metadata)}`
-    // console.log(req.params);
-    // console.log(req.query)
-    //res.type('.html');
-    // res.redirect(app_url);
-    // return;
-    // https://test.sophtron-prod.com/oauth/mx_int/redirect_from?status=success&member_guid=MBR-51e2f1a6-a84b-4475-957c-1c43712cd9b2
     const queries = {
-      status: 'success',
+      status: ret.status === ConnectionStatus.CONNECTED ? 'success': 'error',
       app_url,
-      redirect: 'true',
+      redirect: `true`,
       error_reason,
-      member_guid
+      member_guid: ret.id,
     };
 
     const oauthParams =  new RegExp(Object.keys(queries).map(r => `\\$${r}`).join('|'), 'g');
@@ -191,17 +157,12 @@ module.exports = function(app){
     }
 
     if(config.ResourcePrefix !== 'local'){
-        const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
-        http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
+      const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
+      http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
     }else{
-      const fs = require('fs');
-      app.get('/', (req, res) => {
-        fs.readFile(
-          path.join(__dirname, '../', 'build', 'oauth/success.html'), 
-          'utf8', 
-          (err, html) => mapOauthParams(queries, res, html)
-        );
-      });
+      const filePath = path.join(__dirname, '../', 'build', 'oauth/success.html');
+      const html = await readFile(filePath);
+      mapOauthParams(queries, res, html);
     }
   })
 }
