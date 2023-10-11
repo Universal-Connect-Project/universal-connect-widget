@@ -1,8 +1,8 @@
 # The Universal-Connect-Widget
 
-This is part of the Universal-Connect project, that provides a embed-able widget-ui designed for end user to authorize a `provider` to login to their financial institution account and extract data
-It provides:
-- A unified work flow for end-user to: select a financial institution -> login -> resolve security challenges -> extract data
+This is part of the Universal-Connect project, that provides a embed-able-widget-ui designed for end user to authorize a `provider` loginning into their financial institution account and extract data.
+The widget provides:
+- A unified work flow for end-user to: select a financial institution -> login -> resolve security challenges -> extract data.
 - A unified search against all selected `data aggregation provider`'s support list, then integrate the processing through the `provider`'s API
 - The ability to collect performance metrics from all used `providers` and dynamically route user request to gain the best coverage
 
