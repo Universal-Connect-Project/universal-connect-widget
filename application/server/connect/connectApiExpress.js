@@ -8,7 +8,6 @@ const config = require('../config');
 const logger = require('../infra/logger');
 const http = require('../infra/http');
 const {readFile} = require('../utils/fs');
-const { ConnectionStatus } = require('shared/contract');
 
 module.exports = function(app){
   stubs(app)

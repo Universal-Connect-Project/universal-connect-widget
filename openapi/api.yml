@@ -1,0 +1,83 @@
+info:
+  description: Universal-Connect-Widget endpoint definitions
+  title: Universal-Connect-Widget
+  version: 1.0.0
+openapi: 3.0.0
+servers:
+  - url: https://universalwidget.sophtron-prod.com/
+    description: Production preview server (uses live data)
+  - url: https://universalwidget.sophtron.com/
+    description: Production server (live data)
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: auth
+      description: 'The auth token ([Example](https://github.com/sophtron/Sophtron-Integration/blob/9ff99124721923692d4171646ec80f9615a65a11/demo/application/index.js#L56)), for authenticating the widget client and exchanging secrets in order to access multiple providers: <img src="openapi/universal-widget/auth_flow.png" />' 
+paths:
+  # client_guid,
+  # update_credentials,
+  # server,
+  /:
+    get:
+      security: 
+        - ApiKeyAuth: []
+      parameters:
+        - name: current_institution_code
+          description: For selecting an institution, skip the search step
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: current_member_guid
+          description: For refreshing an existing member, skip the search step, current_provider is required
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: current_provider
+          description: The provider last time used making the connection, when refreshing a member, this is required
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: job_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          description: End user Id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: is_mobile_webview
+          description: Set to true if its used in mobile device
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: scheme
+          description: the scheme of the event, used to navigate in mobile
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: single_account_select
+          description: set to false to disable single_account_select
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: oauth_referral_source
+          in: query
+          required: true
+          schema:
+            type: string
+      description: |2-
+        Load the widget html to browser frame, authenticated by `auth` parameter 
+      responses:
+        "200":
+          description: The widget page

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Widget Loader Example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+  <body style="background:url(/static/bg_loader.jpeg); max-height: 99vh; overflow:hidden;">
+    <div id="app" class="container body-content">
+      <div style="padding:50px;">
+        <div style=" margin:auto; padding: 50px; min-height:700px">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <br />
+                      <br />
+                      <h2>Widget Example</h2>
+                      <br />
+                      <br /> 
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <b>Choose job type</b>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <select class="form-select" aria-label="Default select example" v-model="action">
+                        <option value="agg">Agg</option>
+                        <option value="auth">Auth</option>
+                        <option value="identify">Identify</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button id="start_btn" type="button" class="btn btn-success w-100" @click="connect();">Show</button>
+                    </div>
+                  <div class="row" style="padding-top:20px;">
+                    <div class="col-md-5">
+                      <button id="identity" v-show="finished" type="button" class="btn btn-secondary " @click="showData('identity', connection.id)">Get identity data</button>
+                    </div>
+                    <div class="col-md-5">
+                      <button id="accounts" v-show="finished" type="button" class="btn btn-secondary" @click="showData('accounts', connection.id)">Get accounts</button>
+                    </div>
+                  </div>
+                  <div class="row" v-if="accounts" style="padding-top:20px;">
+                    <div class="col-md-5">
+                      <select class="form-select" aria-label="Select Account" v-model="account_id">
+                        <option value="" disabled selected>Select account</option>
+                        <option class="form-select" v-for="acc in accounts" :key="name" :value="acc.accountId">
+                          {{ acc.accountNumberDisplay }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-5">
+                      <button id="transactions" :disabled="!account_id" v-show="finished" style="width: 180px" type="button" class="btn btn-secondary" @click="showData('transactions', account_id)">Get transactions</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <pre id="json" v-if="json" style="max-height: 600px; overflow: scroll; background-color: bisque;" >{{json}}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <footer>
+          <p>&copy; 2019 - Sohptron Example</p>
+      </footer>
+    </div>
+    <script src="/static/vue3.js"></script>
+    <script type="text/javascript" src="/static/universal-widget-loader.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript" >
+      function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+        function(m,key,value) {
+          vars[key] = value;
+        });
+        return vars;
+      }
+      function onEvent(e){
+        console.log('Widget Event: ')
+        console.log(e)
+      }
+    
+      Vue.createApp({
+        data() {
+          return {
+            data: '',
+            account_id: '',
+            accounts: null,
+            action: 'agg',
+            finished: true,
+            connection: null,
+          }
+        },
+        mounted(){
+          window.demoApp = this;
+        },
+        computed: {
+          json(){
+            return this.data ? JSON.stringify(this.data, null, 2) : null;
+          }
+        },
+        methods: {
+          initWidget(jobType){
+            let params = getUrlVars(window.location);
+            axios.get('/example/getAuthCode').then(res =>{
+              sophtron.init({ 
+                env: params.env || 'prod',
+                user_id: params.user_id,
+                jobType,
+                auth: res.data,
+                onEvent: onEvent,
+                onShow: onEvent,
+                onInit: onEvent,
+                onClose: onEvent,
+                onSelectBank: onEvent,
+                onLogin: onEvent,
+                onLoginSuccess: onEvent,
+                onMfa: onEvent,
+                onFinish: this.onFinish,
+                onError: onEvent,
+              }, true );
+            })
+          },
+          onFinish(e){
+            console.log(e);
+            this.connection = e.data
+            this.finished = true;
+            return true;
+          },
+          connect(){
+            this.finished = false;
+            this.accounts = null;
+            this.initWidget(this.action);
+            sophtron.show();
+          },
+          showData(vcType, id){
+            let {user_id} = getUrlVars(window.location);
+            axios.get(`/example/did/vc/${vcType}/${this.connection.provider}/${id}/${this.connection.user_guid || user_id}`).then(res => {
+              this.data = res.data;
+              if(this.data?.credentialSubject?.accounts?.length){
+                var arr = this.data?.credentialSubject?.accounts;
+                this.accounts = arr.map(a => Object.values(a)[0])
+              }
+            });
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
