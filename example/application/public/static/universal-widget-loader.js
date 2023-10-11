@@ -183,6 +183,7 @@ const sophtron = (function () {
       console.log(Object.keys(urls));
       throw Error(`Invalid env ${conf.env}`);
     }
+    url = url.trimEnd('/')
     let ret = `${url}/?job_type=${conf.jobType}&auth=${conf.auth}`;
     if(conf.connection_id){
       ret += `&connection_id=${conf.connection_id}`

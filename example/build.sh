@@ -1,3 +1,3 @@
 #!/bin/env bash
 
-docker build -t sophtron-demo .
+docker build -t uvcs-demo .
