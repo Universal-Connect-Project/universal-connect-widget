@@ -5,4 +5,4 @@
 - Build and run the docker image.
 - Or `npm i` and `npm run start` in `application` folder to get the server up
 - Browse `http://localhost:8088/loader.html?env=<url to the hosted widget>`
-- An hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com)
+- A hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com)
