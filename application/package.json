@@ -73,7 +73,8 @@
     "build": "react-app-rewired build",
     "build-android": "mobile=true react-app-rewired build && npx cap sync android",
     "build-ios": "mobile=true react-app-rewired build && npx cap sync ios",
-    "test": "react-app-rewired test"
+    "test": "react-app-rewired test",
+    "keys": "node -e 'console.log(`key: ${crypto.randomBytes(32).toString(\"hex\")}\n IV: ${crypto.randomBytes(16).toString(\"hex\")}`)'"
   },
   "eslintConfig": {
     "extends": [

@@ -20,8 +20,8 @@ const config = {
   Env: 'pre', // mocked
   Version: '',
   UseAxios: true,
-  CryptoKey: '', //crypto.randomBytes(32).toString('hex');
-  CryptoIv: '', //crypto.randomBytes(16).toString('hex');
+  CryptoKey: '', //crypto.randomBytes(32).toString("hex");
+  CryptoIv: '', //crypto.randomBytes(16).toString("hex");
   CryptoAlgorithm: 'aes-256-cbc',
   ResourcePrefix: 'http://localhost:3000',
   // ResourcePrefix: 'local',
