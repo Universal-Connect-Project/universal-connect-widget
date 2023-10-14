@@ -13,8 +13,8 @@ const config = {
   SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
   
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
-  SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
-  // SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
+  //SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
   SophtronApiUserId: '',
   SophtronApiUserSecret: '',
@@ -40,9 +40,6 @@ const config = {
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {
   const key = arr[i];
-  // if(key === 'SophtronApiUserId' || key === 'SophtronApiUserSecret'){
-  //   continue;
-  // }
   config[key] = processEnv[key.toUpperCase()] || config[key];
 }
 module.exports = config;

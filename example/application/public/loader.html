@@ -94,14 +94,27 @@
     
       Vue.createApp({
         data() {
-          return {
+          let {dummy} = getUrlVars(window.location);
+
+          let ret = {
             data: '',
             account_id: '',
             accounts: null,
             action: 'agg',
-            finished: true,
+            finished: false,
             connection: null,
           }
+          if(dummy === 'true'){
+            ret.finished = true;
+            ret.connection = {
+                "session_guid": "",
+                "user_guid": "1d93d99e-e2f4-4dd0-b0d4-3bddd267b4c3",
+                "member_guid": "21a97684-5fef-4ac3-9f80-d77804b71945",
+                "provider": "sophtron",
+                "id": "21a97684-5fef-4ac3-9f80-d77804b71945"
+            }
+          }
+          return ret;
         },
         mounted(){
           window.demoApp = this;

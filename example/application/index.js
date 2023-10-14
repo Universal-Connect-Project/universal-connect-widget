@@ -48,6 +48,14 @@ function getVc(provider, id, type, userId){
   }
 }
 
+function parseVc(jwt){
+  if(jwt.startsWith('{')){
+    return jwt; //it's actually json, for backward compatiblity
+  }
+  let payload = jwt.split('.')[1];
+  return Buffer.from(payload, 'base64').toString('utf-8')
+}
+
 app.get('/example/getAuthCode', asyncHandler(async (req, res) => {
   const uuid = Buffer.from(config.SophtronApiUserSecret, 'base64').toString('utf-8');
   const key = Buffer.from(uuid.replaceAll('-', '')).toString('hex');
@@ -82,7 +90,7 @@ app.get('/example/did/vc/identity/:provider/:id/:userId?',
         userId
       );
       res.setHeader('content-type', 'application/json');
-      res.send(data);
+      res.send(parseVc(data));
     } else {
       res.status(404).send('invalid id');
     }
@@ -100,7 +108,7 @@ app.get('/example/did/vc/accounts/:provider/:id/:userId?',
         userId
       );
       res.setHeader('content-type', 'application/json');
-      res.send(data);
+      res.send(parseVc(data));
     } else {
       res.status(404).send('invalid id');
     }
@@ -118,7 +126,7 @@ app.get('/example/did/vc/transactions/:provider/:id/:userId?',
         userId
       );
       res.setHeader('content-type', 'application/json');
-      res.send(data);
+      res.send(parseVc(data));
     } else {
       res.status(404).send('invalid id');
     }

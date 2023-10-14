@@ -13,6 +13,7 @@ module.exports = async  function GetVc(
         path = `customers/${userId}/members/${connection_id}/identity?filters=name,addresses`;
         break;
       case 'accounts':
+      case 'banking':
         path = `customers/${userId}/members/${connection_id}/accounts`;
         break;
       case 'transactions':
@@ -24,6 +25,7 @@ module.exports = async  function GetVc(
       return vcClient.getVC(path).then((vc) => {
         // for data security purpose when doing demo, should remove the connection once vc is returned to client.
         // clearConnection(vc, connection_id, userId);
+        // console.log(vc)
         return vc;
       });
     }
