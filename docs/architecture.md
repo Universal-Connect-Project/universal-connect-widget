@@ -1,20 +1,11 @@
 # This document describes the system components and interaction design and considerations
 
 
-It is important that we make this open source widget easy to use and maintain. hence it is necessary to seperate concerns about some different aspects
-There are the following logical components required for the widget to work: 
-- Search: the first step that a user has to take on landing on the widget ui. however, for supporting multiple providers, it is different from a provider-specific searching, it needs some special abilties to:
-  * Use one search to lookup all selected provider, it needs to be complete and combining duplications, efficient mapping and indexing is crytical
-  * Include providers information in the search result and allow further logic to select one particular provider
-  * Different providers require different institution identifiers, the search result would need to map it to the selected provider. 
-  * Strategies need to be applied when resolving the search result to select a provider.  
-  As a result, the search component is made as a stand-alone service, available [here (coming soon)]()
-- Authentication: 
-  * By design, it is considerred that the open source widget may be hosted and consumed within the secured domain, or maybe embeded in another domain, therefore, a token based session authentication is implemented, however it is necessary to keep it simple so that it is easy for clients to adapt their existing auth infrastrucure to drive the widget 
-  * The widget is caplable of routing traffics to different providers, as well as handling multiple clients' requests. it is un-avoid-able that there are going to be complications on secret management: each client will need their own registered api credentials per each provider they chose, the widget need to be able to identify the client and select the proper secret, therefore this is not possible to hard-configure the credentials into the widget server configuration, to solve this problem. the provider specific credentials are offloaded to the clients through auth process, a `secret exchange` flow is used during authentication to manage the secrets:
-    1. The client web server (which integrates/embeds the widget) stores their own provider credentials 
-    2. On a user request to load the widget, and auth token is needed, at this stage, the auth server takes an additional `secret exchange payload` while generating the token, the `secret exchange payload` is the encrypted credential collection, the encryption is done by the client server that uses the auth-service-knowning key plus an additional one time key that is not knowing by the auth-service, the auth-servie response with the Auth token, that is valid for a period, it's used to identify the client as well as being the key to locate the temporary stored credentials.
-    3. the above step stores the secret into the auth-service for the period of the auth token validaty, while the auth server itself is unable to decode it due to missing the one time key, the client then use the auth token as well as the one time encryption key as the auth phraze to load the widget.
-    4. Once the request reaches the widget, the widget will talk to auth service to identify the user session, get user's encryption key and retrieves the encrypted credentials, the widget then is able to decode the credentials as it has the 2 keys and the payload, then it makes the credential available and only available to this particular user session, this ensures the minimal access to the credentials, and only available for a short period in the widget server memory 
-  * Storage: There are some information needs to be persisted, most of such information can be persisted in the user's browser session however, the wiget will also have to receive provider's server callback and oauth redirect which cannot access the browser session, a storage-service is used by the wiget, it can be as simple as a redis cache, the persisted data only needs to be available for the length of the user session, but it have to be an authenticated session to ensure there is no potential cross-client access
-  * Analytics: One of the very important feature that the universal widget provides is the ability to dynamically route traffic based on performance metrics. a unified analytics is neccessary for this so that more data can be aggregated so that clients can rely on it more, this should be secure and ensure sesitive information anonymouse, although, the widget host should also have the option to choose their own metrics server to keep the performance data to themselves, with the cost of not being able to leverage the larger scaled data. 
+This chart describes the full interaction flow of the widget and related parties: 
+![component chart](./component_diagram.png.png)
+
+For detailed considerations explained, please read about the following docs:
+- [Auth](./auth.md)
+- [Search](./search.md)
+- [Storage](./storage.md)
+- [Analytics](./analytics.md)
