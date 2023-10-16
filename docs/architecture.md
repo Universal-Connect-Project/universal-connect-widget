@@ -2,7 +2,7 @@
 
 
 This chart describes the full interaction flow of the widget and related parties: 
-![component chart](./component_diagram.png.png)
+![component chart](./component_diagram.png)
 
 For detailed considerations explained, please read about the following docs:
 - [Auth](./auth.md)
