@@ -2,6 +2,15 @@
   "name": "universal-connect-widget",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "server": "npx ts-node server/server.js",
+    "dev": "npx cross-env BROWSER=none react-app-rewired start",
+    "build": "react-app-rewired build",
+    "build-android": "npx cross-env mobile=true react-app-rewired build && npx cap sync android",
+    "build-ios": "npx cross-env mobile=true react-app-rewired build && npx cap sync ios",
+    "test": "react-app-rewired test",
+    "keys": "node -e 'console.log(`key: ${crypto.randomBytes(32).toString(\"hex\")}\n IV: ${crypto.randomBytes(16).toString(\"hex\")}`)'"
+  },
   "dependencies": {
     "@babel/eslint-parser": "^7.18.2",
     "@babel/polyfill": "^7.0.0",
@@ -67,15 +76,6 @@
     "stream-browserify": "^3.0.0",
     "typescript": "^5.0.4"
   },
-  "scripts": {
-    "server": "ts-node server/server.js",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "build-android": "mobile=true react-app-rewired build && npx cap sync android",
-    "build-ios": "mobile=true react-app-rewired build && npx cap sync ios",
-    "test": "react-app-rewired test",
-    "keys": "node -e 'console.log(`key: ${crypto.randomBytes(32).toString(\"hex\")}\n IV: ${crypto.randomBytes(16).toString(\"hex\")}`)'"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -102,6 +102,7 @@
     "@babel/preset-react": "^7.18.6",
     "@capacitor/cli": "^4.8.1",
     "babel-plugin-js-logger": "^1.0.17",
+    "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
     "eslint-config-mx": "^4.0.0",
     "eslint-plugin-redux-namespaced-actions": "^1.0.0",

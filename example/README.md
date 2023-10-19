@@ -4,5 +4,5 @@
   `NOTE: please use envrionment variables to provide the api secrets` variable names are the keys in the `config.js`
 - Build and run the docker image.
 - Or `npm i` and `npm run start` in `application` folder to get the server up
-- Browse `http://localhost:8088/loader.html?env=<url to the hosted widget>`
+- Browse `http://localhost:8088/loader.html?env=http://localhost:8080`
 - An hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com)

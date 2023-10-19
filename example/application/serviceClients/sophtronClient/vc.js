@@ -20,6 +20,6 @@ module.exports = class SophtronVcClient extends SophtronBaseClient{
       Authorization: buildSophtronAuthCode('get', path, this.apiConfig.clientId, this.apiConfig.secret)
     };
     const ret = await http.get(`${this.apiConfig.vcEndpoint}vc/${path}`, headers)
-    return ret;
+    return ret?.vc || ret;
   }
 };
