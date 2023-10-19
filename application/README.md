@@ -16,3 +16,10 @@ There are 3 services to start to get a widget demo locally
   * Run `npm i` and `npm run start` in `example/application` folder to get the demo server up
   * Browse `http://localhost:8088/loader.html?env=http://localhost:8080`
   * An hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com) too
+
+
+  ## List of banks to test with 
+  - Sophtron: Sophtron Bank
+  - MX: MX Bank
+  - Finicity: Finbank
+  - Akoya: mikomo

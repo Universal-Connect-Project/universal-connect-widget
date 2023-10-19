@@ -7,13 +7,6 @@ module.exports = class SophtronBaseClient{
   apiConfig;
   constructor(apiConfig){
     this.apiConfig = apiConfig;
-    this.apiConfig.endpoint = this.apiConfig.endpoint
-      .replace('https://api.sophtron.com', 'http://api-prod.sophtron-int.com')
-      .replace('https://api.sophtron-prod.com', 'http://api-pre.sophtron-int.com')
-
-    this.apiConfig.vcEndpoint = this.apiConfig.vcEndpoint
-      .replace('https://vc.sophtron.com', 'http://vc-prod.sophtron-int.com')
-      .replace('https://vc.sophtron-prod.com', 'http://vc-pre.sophtron-int.com')
   }
 
   getAuthHeaders(method, path){
