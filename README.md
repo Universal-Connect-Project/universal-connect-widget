@@ -19,7 +19,7 @@ The UCP is currently routing traffic to MX, Finicity, Sophtron and Akoya, but if
 The UCP combines the FDX data standard with Verifiable Credentials to provide running code (a reference implementation) that eliminates ambiguity and embeds proof that the data has not been tampered with after it is created. 
 Previous attempts to simplify access to financial services data have used an industry consortium approach rather than an Internet Standards approach. While Internet Standards take longer to establish the success of the Internet itself shows the benefits justify the extra work. 
 Verifiable Credentials allow users to take possession of data without gaining the ability to modify the data. This enables the ideal “one click to instantly share” user experience that wasn’t previously possible. 
-As the Internet itself is upgraded to improve privacy, security and reliability using Verifiable Credentials new applications for financial data will be unlocked. By adopting Verifiable Credentials now companies gain a competitive advantage. 
+As the Internet itself is upgraded to improve privacy, security and reliability using Verifiable Credentials, new applications for financial data will be unlocked. By adopting Verifiable Credentials now companies gain a competitive advantage. 
 Verifiable Credentials are being embraced by regulators because they allow users to take possession of their data and completely control how that data is shared.
 
 ## Get started
