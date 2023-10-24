@@ -2,7 +2,7 @@
 
 There are 3 services to start to get a widget demo running locally.
 ## The dev server (this is not required in production but needed in local development)
-  1. In `/application`, run `npm install`.
+  1. In `/application`, run `npm ci`.
   2. Start react dev server by running `npm run dev`. This will serve the client side code (browser) through port `3000` but won't handle end-to-end development.
 ## The API server
   1. Run `npm run keys` in `/application` to generate a new set of `key` and `IV` values.
@@ -23,7 +23,7 @@ There are 3 services to start to get a widget demo running locally.
   1. Aquire credentials for one of the supported aggregators (currently MX or Sophtron). To sign up with MX, go [here](https://dashboard.mx.com/sign_up).
   2. Fill in the relavant credentials in [example/application/config.js](../example/application/config.js) (e.g., if you want to see `mx bank` working in the widget, `MxClientId` and `MxApiSecret` must be provided).
   3. Fill in the `SophtronApiUserId` and `SophtronApiUserSecret` in the [example/application/config.js](../example/application/config.js) file with the values provided by Sophtron (the same values used in step 4 for the The API server).
-  3. Run `npm install` and `npm run start` in `example/application` folder to run the demo website.
+  3. Run `npm ci` and `npm run start` in `example/application` folder to run the demo website.
   5. Open `http://localhost:8088/loader.html?env=http://localhost:8080` in a web browser.
 
 *Please use envrionment variables to provide the api secrets using the keys in `config.js` as the variable names.*
