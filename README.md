@@ -23,10 +23,12 @@ As the Internet itself is upgraded to improve privacy, security and reliability 
 Verifiable Credentials are being embraced by regulators because they allow users to take possession of their data and completely control how that data is shared.
 
 ## Get started
+
 - For a quick view check out [this demo site](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com)
+- For examples on how to integrate with and embed an hosted widget, please refer to [example/README.md](example/README.md)
 - For development and deployment, please refer to [application/README.md](application/README.md)
 - Usage documentation [openapi](openapi/)
-- For examples on how to integrate with and embed an hosted widget, please refer to [example/README.md](example/README.md)
+
 
 ### Terms explained
 - `Provider` (`data aggregation provider`): Data providers/issuers of financial data.
