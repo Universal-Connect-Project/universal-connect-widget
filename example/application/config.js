@@ -13,8 +13,8 @@ const config = {
   SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
   
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
-  //SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
-  SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
+  SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
   SophtronApiUserId: '',
   SophtronApiUserSecret: '',
