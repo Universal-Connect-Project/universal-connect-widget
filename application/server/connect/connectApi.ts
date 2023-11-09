@@ -149,6 +149,7 @@ export class ConnectApi extends ProviderApiBase{
       return {member};
     }else{
       let connection = await this.updateConnection({
+        job_type: this.context.job_type,
         id: member.guid,
         credentials: member.credentials.map(c => ({
           id: c.guid,
@@ -159,10 +160,13 @@ export class ConnectApi extends ProviderApiBase{
     }
   }
   async loadMembers(): Promise<Member[]> {
+    if(this.context.connection_id){
+      let focusedMember = await this.getConnection(this.context.connection_id);
+      return [mapConnection(focusedMember)];
+    }
     return []
   }
   async loadMemberByGuid(memberGuid: string): Promise<MemberResponse> {
-    // console.log(this.context)
     let mfa = await this.getConnectionStatus(memberGuid);
     if(!mfa?.institution_code){
       let connection = await this.getConnection(memberGuid);

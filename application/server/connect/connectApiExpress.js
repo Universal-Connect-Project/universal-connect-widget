@@ -59,7 +59,7 @@ module.exports = function(app){
   })
   app.get(`${ApiEndpoints.MEMBERS}/:member_guid/oauth_window_uri`, async (req, res) => {
     let ret = await req.connectService.getOauthWindowUri(req.params.member_guid);
-    res.send(ret);
+    res.send({oauth_window_uri:ret});
     // res.sendFile(__dirname + '/stubs/member.json')
   })
   app.delete(`${ApiEndpoints.MEMBERS}/:member_guid`, async (req, res) => {
@@ -132,6 +132,7 @@ module.exports = function(app){
   app.all('/webhook/:provider/*', async function (req, res) {
     const { provider } = req.params
     logger.info(`received web hook at: ${req.path}`, req.query)
+    //console.log(req.body)
     const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query, req.body)
     res.send(ret);
   })

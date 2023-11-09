@@ -62,6 +62,7 @@ export async function instrumentation(context: Context, input: any){
   }
   if(input.current_member_guid && input.current_provider){
     context.provider = input.current_provider;
+    context.connection_id = input.current_member_guid;
   }
   if(input.auth){
     context.auth = decodeAuthToken(input.auth);

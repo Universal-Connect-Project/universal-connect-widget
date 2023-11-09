@@ -64,9 +64,9 @@ function del(url, headers, returnFullResObject) {
   return handleResponse(axios.delete(url, { headers }), url, 'del', returnFullResObject)
 }
 
-function put(url, headers, returnFullResObject) {
+function put(url, data, headers, returnFullResObject) {
   logger.debug(`put request: ${url}`);
-  return handleResponse(axios.delete(url, { headers }), url, 'put', returnFullResObject)
+  return handleResponse(axios.put(url, data, { headers }), url, 'put', returnFullResObject)
 }
 
 function post(url, data, headers, returnFullResObject) {

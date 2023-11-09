@@ -131,7 +131,9 @@
               sophtron.init({ 
                 env: params.env || 'prod',
                 user_id: params.user_id,
-                jobType,
+                jobType: params.job_type || '',
+                connection_id: params.connection_id,
+                provider: params.provider,
                 auth: res.data,
                 onEvent: onEvent,
                 onShow: onEvent,

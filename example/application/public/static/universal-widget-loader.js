@@ -185,10 +185,10 @@ const sophtron = (function () {
     }
     url = url.trimEnd('/')
     let ret = `${url}/?job_type=${conf.jobType}&auth=${conf.auth}`;
-    if(conf.connection_id){
-      ret += `&connection_id=${conf.connection_id}`
-    }else if(conf.bank_id){
-      ret += `&bankId=${encodeURIComponent(conf.bank_id)}`
+    if(conf.connection_id && conf.provider){
+      ret += `&connection_id=${conf.connection_id}&provider=${conf.provider}`
+    }else if(conf.institution_id){
+      ret += `&institution_id=${encodeURIComponent(conf.institution_id)}`
     }
 
     if(conf.user_id){

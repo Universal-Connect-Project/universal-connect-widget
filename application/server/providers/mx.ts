@@ -101,10 +101,6 @@ export class MxApi implements ProviderApiClient {
     request: CreateConnectionRequest,
     userId: string
   ): Promise<Connection> {
-    // console.log(request);
-    // console.log(userId)
-    // console.log(this.mxConfig)
-    
     const entityId = request.institution_id;
     const existings = await this.apiClient.listMembers(userId);
     const existing = existings.data.members.find(m => m.institution_code === entityId)
@@ -152,8 +148,14 @@ export class MxApi implements ProviderApiClient {
     request: UpdateConnectionRequest,
     userId: string
   ): Promise<Connection> {
-    // console.log("UpdateConnection")
     const ret = await this.UpdateConnectionInternal(request, userId);
+    if (request.job_type === 'verify') {
+      await this.apiClient.verifyMember(request.id, userId);
+    } else if (request.job_type === 'identify') {
+      await this.apiClient.identifyMember(request.id, userId);
+    }else{
+      await this.apiClient.aggregateMember(request.id, userId);
+    }
     return ret;
   }
 
@@ -184,6 +186,8 @@ export class MxApi implements ProviderApiClient {
     return {
       id: member.guid!,
       institution_code: member.institution_code,
+      is_oauth: member.is_oauth,
+      oauth_window_uri: member.oauth_window_uri,
       provider: this.provider,
       user_id: userId
     };
@@ -207,8 +211,10 @@ export class MxApi implements ProviderApiClient {
       id: member.guid!,
       cur_job_id: member.guid!,
       user_id: userId,
-      //status: member.connection_status,
-      //error_reason: oauthStatus?.error_reason,
+      // is_oauth: member.is_oauth,
+      // oauth_window_uri: member.oauth_window_uri,
+      // status: member.connection_status,
+      // error_reason: oauthStatus?.error_reason,
       status:
         ConnectionStatus[
           status! as keyof typeof ConnectionStatus

@@ -130,6 +130,7 @@ export interface Connection {
 }
 export interface UpdateConnectionRequest {
   id: string | undefined;
+  job_type?: string;
   credentials?: Array<Credential>;
   challenges?: Array<Challenge>;
 }
