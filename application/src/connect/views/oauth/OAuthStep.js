@@ -298,7 +298,6 @@ export const OAuthStep = props => {
           }}
         />
       ) : null
-
     // This view has a unique footer, so return now
     return (
       <StickyComponentContainer footer={footer} ref={containerRef}>

@@ -31,14 +31,14 @@ useConnect(app);
 // useVcs(app);
 
 const pageQueries = new RegExp([
-  'current_institution_code',
+  'institution_id',
   'job_type',
   'scheme',
   'auth',
   'user_id',
   'client_guid',
-  'current_member_guid',
-  'current_provider',
+  'connection_id',
+  'provider',
   'oauth_referral_source',
   'single_account_select',
   'update_credentials',
@@ -46,16 +46,12 @@ const pageQueries = new RegExp([
   'is_mobile_webview',
 ].map(r => `\\$${r}`).join('|'), 'g');
 function renderDefaultPage(req, res, html){
-  if(req.query.current_member_guid && !req.query.current_provider){
-    delete req.query.current_member_guid;
+  if(req.query.connection_id && !req.query.provider){
+    delete req.query.connection_id;
   }
-  let queries = {
-    current_member_guid: req.query.connection_id,
-    current_institution_code: req.query.bankid,
-    ...req.query,
-  }
-  res.send(html.replaceAll(pageQueries, q => encodeURIComponent(queries[q.substring(1)] || '')));
+  res.send(html.replaceAll(pageQueries, q => encodeURIComponent(req.query[q.substring(1)] || '')));
 }
+
 if(config.ResourcePrefix !== 'local'){
   app.get('/', function (req, res) {
     logger.info(`serving resources from ${config.ResourcePrefix}`)

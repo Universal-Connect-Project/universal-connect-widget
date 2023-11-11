@@ -84,12 +84,12 @@ export class FinicityApi implements ProviderApiClient {
     return null;
   }
 
-  GetConnectionById(connectionId: string): Promise<Connection> {
-    return this.db.get(connectionId);
+  GetConnectionById(connectionId: string, user_id: string): Promise<Connection> {
+    return this.getConnection(connectionId, user_id);
   }
 
   GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
-    return this.db.get(connectionId);
+    return this.getConnection(connectionId, user_id);
   }
 
   async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {
@@ -113,13 +113,23 @@ export class FinicityApi implements ProviderApiClient {
   }
 
   static async HandleOauthResponse(request: any): Promise<Connection> {
-    const {connection_id, eventType} = request;
+    const {connection_id, eventType, reason, code} = request;
     const db = new StorageClient(connection_id.split(';')[0])
     let institutionLoginId = false;
     switch(eventType){
       case 'added':
         institutionLoginId = request.payload.accounts?.[0]?.institutionLoginId;
         break;
+      default:
+        switch(reason){
+          case 'error':
+            if(code === '201'){
+              // refresh but unnecessary 
+              institutionLoginId = connection_id.split(';')[1];
+            }
+            break;
+        }
+      
     }
     logger.info(`Received finicity webhook response ${connection_id}`)
     let connection = await db.get(connection_id)
@@ -133,5 +143,28 @@ export class FinicityApi implements ProviderApiClient {
     }
     await db.set(connection_id, connection)
     return connection;
+  }
+
+  async getConnection(id: string, user_id: string){
+    if(id.startsWith(this.token)){
+      return this.db.get(id);
+    }else{
+      let request_id = `${this.token};${id}`;
+      let existing = await this.db.get(request_id);
+      if(existing?.id){
+        return existing;
+      }
+      const obj = {
+        id: request_id,
+        is_oauth: true,
+        user_id,
+        credentials: [] as any[],
+        oauth_window_uri: await this.apiClient.generateConnectFixUrl(id, user_id, request_id),
+        provider: this.apiClient.apiConfig.provider,
+        status: ConnectionStatus.PENDING
+      }
+      await this.db.set(request_id, obj);
+      return obj;
+    }
   }
 }

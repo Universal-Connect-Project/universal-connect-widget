@@ -202,8 +202,8 @@ const loadConnectSuccess = (state, action) => {
     selectedInstitution: institution,
     step: startingStep,
     hasInvalidData,
-    updateCredentials:
-      member?.connection_status === ReadableStatuses.DENIED || state.updateCredentials,
+    updateCredentials: !!member,
+      // member?.connection_status === ReadableStatuses.DENIED || state.updateCredentials,
     members,
   }
 }

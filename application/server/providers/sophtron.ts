@@ -186,13 +186,11 @@ export class SophtronApi implements ProviderApiClient {
     const password = request.credentials!.find(
       (item) => item.id === 'password'
     )!.value;
-    await this.apiClient.updateMember(userId, request.id, job_type, username, password);
-    // todo: retrieve institutionId
-    const ret = await this.apiClient.refreshMember(request.id);
+    const ret = await this.apiClient.updateMember(userId, request.id, job_type, username, password);
     return {
       id: ret.MemberID,
       cur_job_id: ret.JobID,
-      institution_code: request.id, // TODO
+      institution_code: 'institution_code', // TODO
       provider: 'sophtron'
     };
   }
@@ -208,6 +206,10 @@ export class SophtronApi implements ProviderApiClient {
   }
 
   async GetConnectionStatus(memberId: string, jobId: string, single_account_select: boolean, userId: string): Promise<Connection> {
+    if(!jobId){
+      let ret = await this.GetConnectionById(memberId, userId);
+      return ret;
+    }
     const job = await this.apiClient.getJobInfo(jobId);
     const challenge: Challenge = {
       id: '',

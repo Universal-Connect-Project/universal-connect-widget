@@ -93,6 +93,18 @@ export default class FinicityClient{
     }).then(ret => ret.link)
   }
 
+  generateConnectFixUrl(institutionLoginId, customerId, request_id){
+    return this.post('connect/v2/generate/fix',{
+      language: 'en-US',
+      partnerId: this.apiConfig.partnerId,
+      customerId: customerId,
+      institutionLoginId,
+      redirectUri: `${config.HostUrl}/oauth/${this.apiConfig.provider}/redirect_from?connection_id=${request_id}`,
+      webhook: `${config.WebhookHostUrl}/webhook/${this.apiConfig.provider}/?connection_id=${request_id}`,
+      webhookContentType: 'application/json',
+    }).then(ret => ret.link)
+  }
+
   createCustomer(unique_name){
     return this.post(`aggregation/v2/customers/${this.apiConfig.provider === 'finicity_sandbox' ? 'testing': 'active'}`, {
       username: unique_name,
