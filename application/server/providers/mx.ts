@@ -30,6 +30,7 @@ function fromMxInstitution(ins: InstitutionResponse, provider: string): Institut
     id: ins.code!,
     logo_url: ins.medium_logo_url || ins.small_logo_url!,
     name: ins.name!,
+    oauth: ins.supports_oauth!,
     url: ins.url!,
     provider,
   };
