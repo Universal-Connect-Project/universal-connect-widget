@@ -10,6 +10,7 @@ module.exports = {
         Accept: 'application/vnd.mx.api.v1+json',
       },
     },
+    vcEndpoint: 'https://int-api.mx.com/',
   },
   mxProd: {
     username: config.MxClientIdProd,
@@ -20,6 +21,7 @@ module.exports = {
         Accept: 'application/vnd.mx.api.v1+json',
       },
     },
+    vcEndpoint: 'https://api.mx.com/',
   },
   akoyaSandbox: {
     clientId: config.AkoyaClientId,
