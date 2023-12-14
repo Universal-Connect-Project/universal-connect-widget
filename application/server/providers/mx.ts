@@ -69,12 +69,11 @@ export class MxApi implements ProviderApiClient {
     const {mxInt, mxProd, token} = config;
     this.token = token;
     this.db = new StorageClient(token);
-    this.provider = int ? 'mx_int': this.provider;
+    this.provider = int ? 'mx_int': 'mx';
     this.mxConfig = int ? mxInt: mxProd;
     this.apiClient = MxPlatformApiFactory(new Configuration(this.mxConfig));
   }
   async GetInstitutionById(id: string): Promise<Institution> {
-    // console.log(this.mxConfig)
     const res = await this.apiClient.readInstitution(id);
     const ins = res.data.institution!;
     return fromMxInstitution(ins, this.provider);
