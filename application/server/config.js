@@ -15,7 +15,7 @@ const config = {
   ServiceName: 'universal_widget',
   Demo: true,
   DefaultProvider: 'sophtron',
-  OrgName: 'sophtron',
+  OrgName: 'tyson',
   LogLevel: 'debug',
   Port: '8080',
   Env: 'pre', // mocked
