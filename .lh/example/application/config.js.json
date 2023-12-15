@@ -1,0 +1,26 @@
+{
+    "sourceFile": "example/application/config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1702573274954,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1702573931656,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,10 +16,10 @@\n   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',\n   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',\n \n   SophtronApiUserId:\n-    '70eeaf77cd090702eb51d14375039b1750e45e128f984f3b53e1ae3b2ecd0926',\n-  SophtronApiUserSecret: '428df7351394e48641ba7f55febcbcf6',\n+    '8eaf206f-0bb5-4e1f-be34-474de1f3e336',\n+  SophtronApiUserSecret: 'MGNmODI1YWItODU5ZS00YTY3LWEzMDktY2EzYTYwODNlYzJl',\n \n   MxClientId: '',\n   MxApiSecret: '',\n   MxClientIdProd: '',\n"
+                },
+                {
+                    "date": 1702657747182,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,11 +20,11 @@\n   SophtronApiUserSecret: 'MGNmODI1YWItODU5ZS00YTY3LWEzMDktY2EzYTYwODNlYzJl',\n \n   MxClientId: '',\n   MxApiSecret: '',\n-  MxClientIdProd: '',\n-  MxApiSecretProd: '',\n-\n+  MxClientIdProd: 'MDEmployees',\n+  MxApiSecretProd: '4582b747-34e9-4e3d-89e4-03963f391329',\n+  \n   AkoyaClientId: '',\n   AkoyaApiSecret: '',\n   AkoyaClientIdProd: '',\n   AkoyaApiSecretProd: '',\n"
+                }
+            ],
+            "date": 1702573274954,
+            "name": "Commit-0",
+            "content": "const processEnv = {};\nconst envs = {...process.env, ...process.client_envs};\nObject.keys(envs).forEach((k) => {\n  processEnv[k.toUpperCase()] = envs[k];\n});\nconst config = {\n  LogLevel: 'debug',\n  Port: '8088',\n  Env: 'pre', // mocked\n  Version: '',\n  CryptoAlgorithm: 'aes-256-cbc',\n\n  SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',\n  \n  SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',\n  SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',\n  //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',\n\n  SophtronApiUserId: '70eeaf77cd090702eb51d14375039b1750e45e128f984f3b53e1ae3b2ecd0926',\n  SophtronApiUserSecret: '428df7351394e48641ba7f55febcbcf6',\n\n  MxClientId:'',\n  MxApiSecret: '', \n  MxClientIdProd: '',\n  MxApiSecretProd: '',\n\n  AkoyaClientId:'',\n  AkoyaApiSecret: '', \n  AkoyaClientIdProd: '',\n  AkoyaApiSecretProd: '',\n\n  FinicityPartnerId: '',\n  FinicityAppKey: '',\n  FinicitySecret: '',\n  FinicityPartnerIdProd: '',\n  FinicityAppKeyProd: '',\n  FinicitySecretProd: '',\n};\n\nconst arr = Object.keys(config);\nfor (let i = 0; i < arr.length; i++) {\n  const key = arr[i];\n  config[key] = processEnv[key.toUpperCase()] || config[key];\n}\nmodule.exports = config;"
+        }
+    ]
+}

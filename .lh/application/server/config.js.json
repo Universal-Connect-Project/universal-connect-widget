@@ -1,0 +1,26 @@
+{
+    "sourceFile": "application/server/config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1702571724252,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1702572215545,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,10 +27,10 @@\n   ResourcePrefix: 'http://localhost:3000',\n   // ResourcePrefix: 'local',\n   ResourceVersion: '', // 'development'\n \n-  SophtronClientId: '',\n-  SophtronClientSecret: '',\n+  SophtronClientId: '8eaf206f-0bb5-4e1f-be34-474de1f3e336',\n+  SophtronClientSecret: 'MGNmODI1YWItODU5ZS00YTY3LWEzMDktY2EzYTYwODNlYzJl',\n };\n const arr = Object.keys(config);\n for (let i = 0; i < arr.length; i++) {\n   const key = arr[i];\n"
+                },
+                {
+                    "date": 1702590911531,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n   UseAxios: true,\n   CryptoKey: '70eeaf77cd090702eb51d14375039b1750e45e128f984f3b53e1ae3b2ecd0926', //crypto.randomBytes(32).toString(\"hex\");\n   CryptoIv: '428df7351394e48641ba7f55febcbcf6', //crypto.randomBytes(16).toString(\"hex\");\n   CryptoAlgorithm: 'aes-256-cbc',\n-  ResourcePrefix: 'http://localhost:3000',\n+  ResourcePrefix: 'http://127.0.0.1:3000',\n   // ResourcePrefix: 'local',\n   ResourceVersion: '', // 'development'\n \n   SophtronClientId: '8eaf206f-0bb5-4e1f-be34-474de1f3e336',\n"
+                }
+            ],
+            "date": 1702571724252,
+            "name": "Commit-0",
+            "content": "const processEnv = {};\nconst envs = {...process.env, ...process.client_envs};\nObject.keys(envs).forEach((k) => {\n  processEnv[k.toUpperCase()] = envs[k];\n});\nconst config = {\n  AuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',\n  StorageEndpoint: 'https://search.sophtron-prod.com/api/',\n  SearchEndpoint: 'https://search.sophtron-prod.com/api/',\n  // SearchEndpoint: 'http://localhost:8082/api/',\n  AnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',\n  HostUrl: 'https://test.sophtron-prod.com',\n  WebhookHostUrl: 'https://webhook.sophtron-prod.com',\n  Component: 'UniversalWidget',\n  ServiceName: 'universal_widget',\n  Demo: true,\n  DefaultProvider: 'sophtron',\n  OrgName: 'sophtron',\n  LogLevel: 'debug',\n  Port: '8080',\n  Env: 'pre', // mocked\n  Version: '',\n  UseAxios: true,\n  CryptoKey: '70eeaf77cd090702eb51d14375039b1750e45e128f984f3b53e1ae3b2ecd0926', //crypto.randomBytes(32).toString(\"hex\");\n  CryptoIv: '428df7351394e48641ba7f55febcbcf6', //crypto.randomBytes(16).toString(\"hex\");\n  CryptoAlgorithm: 'aes-256-cbc',\n  ResourcePrefix: 'http://localhost:3000',\n  // ResourcePrefix: 'local',\n  ResourceVersion: '', // 'development'\n\n  SophtronClientId: '',\n  SophtronClientSecret: '',\n\n};\nconst arr = Object.keys(config);\nfor (let i = 0; i < arr.length; i++) {\n  const key = arr[i];\n  config[key] = processEnv[key.toUpperCase()] || config[key];\n}\nmodule.exports = config;\n"
+        }
+    ]
+}
