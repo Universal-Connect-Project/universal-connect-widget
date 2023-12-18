@@ -16,13 +16,13 @@ const config = {
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
-  SophtronApiUserId: '8eaf206f-0bb5-4e1f-be34-474de1f3e336',
-  SophtronApiUserSecret: 'MGNmODI1YWItODU5ZS00YTY3LWEzMDktY2EzYTYwODNlYzJl',
+  SophtronApiUserId: '',
+  SophtronApiUserSecret: '',
 
   MxClientId: '',
   MxApiSecret: '',
-  MxClientIdProd: 'MDEmployees',
-  MxApiSecretProd: '4582b747-34e9-4e3d-89e4-03963f391329',
+  MxClientIdProd: '',
+  MxApiSecretProd: '',
 
   AkoyaClientId: '',
   AkoyaApiSecret: '',

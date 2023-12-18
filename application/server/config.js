@@ -21,15 +21,15 @@ const config = {
   Env: 'pre', // mocked
   Version: '',
   UseAxios: true,
-  CryptoKey: '70eeaf77cd090702eb51d14375039b1750e45e128f984f3b53e1ae3b2ecd0926', //crypto.randomBytes(32).toString("hex");
-  CryptoIv: '428df7351394e48641ba7f55febcbcf6', //crypto.randomBytes(16).toString("hex");
+  CryptoKey: '', //crypto.randomBytes(32).toString("hex");
+  CryptoIv: '', //crypto.randomBytes(16).toString("hex");
   CryptoAlgorithm: 'aes-256-cbc',
   ResourcePrefix: 'http://127.0.0.1:3000',
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
-  SophtronClientId: '8eaf206f-0bb5-4e1f-be34-474de1f3e336',
-  SophtronClientSecret: 'MGNmODI1YWItODU5ZS00YTY3LWEzMDktY2EzYTYwODNlYzJl',
+  SophtronClientId: '',
+  SophtronClientSecret: '',
 };
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {
