@@ -48,7 +48,7 @@ paths:
           schema:
             type: string
         - name: user_id
-          description: End user Id
+          description: A unique id of end-user's
           in: query
           required: true
           schema:
