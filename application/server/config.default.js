@@ -1,8 +1,10 @@
 const processEnv = {};
 const envs = {...process.env, ...process.client_envs};
+
 Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
+
 const config = {
   AuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
   StorageEndpoint: 'https://search.sophtron-prod.com/api/',
@@ -32,9 +34,11 @@ const config = {
   SophtronClientSecret: '',
 
 };
+
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {
   const key = arr[i];
   config[key] = processEnv[key.toUpperCase()] || config[key];
 }
+
 module.exports = config;

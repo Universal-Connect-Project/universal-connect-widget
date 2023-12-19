@@ -1,3 +1,7 @@
+# Application configs
+application/server/config.js
+example/application/config.js
+
 # Logs
 logs
 *.log
