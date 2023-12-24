@@ -115,23 +115,35 @@ export default class FinicityClient{
       email: 'myname@mycompany.com'
     })
   }
-
-  async post(path, body){
-    const token = await this.getAuthToken();
-    const headers = makeFinicityAuthHeaders(this.apiConfig, token);
-    const ret = await axios.post(`${this.apiConfig.basePath}/${path}`, body, {headers}).then(res => res.data)
-    .catch(err => {
-      logger.error(`Error at finicityClient.post ${path}`,  err?.response?.data)
-    })
-    return ret;
+  
+  post(path, body){
+    return this.request('post', path, null, body)
   }
-  async get(path, params){
-    const token = await this.getAuthToken();
-    const headers = makeFinicityAuthHeaders(this.apiConfig, token);
-    const ret = await axios.get(`${this.apiConfig.basePath}/${path}`, {headers, params})
+  get(path, params){
+    return this.request('get', path, params)
+  }
+  del(path, params){
+    return this.request('delete', path, params)
+  }
+  async request(method, url, params, data){
+    if(!this.axios){
+      const token = await this.getAuthToken();
+      const headers = makeFinicityAuthHeaders(this.apiConfig, token);
+      this.axios = axios.create({
+        baseURL: this.apiConfig.basePath,
+        headers
+      })
+    }
+    let ret = await this.axios.request({
+        url,
+        method,
+        params,
+        data
+      })
       .then(res => res.data)
       .catch(err => {
-        logger.error(`Error at finicityClient.get ${path}`,  err?.response?.data)
+        let newErr = new Error(`Error at finicityClient.${method} ${url}`,  err?.response?.data)
+        throw newErr
       })
     return ret;
   }

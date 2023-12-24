@@ -128,13 +128,16 @@
           initWidget(jobType){
             let params = getUrlVars(window.location);
             axios.get('/example/getAuthCode').then(res =>{
+              let ps = {institution_id, provider, connection_id, user_id, job_type='', env='prod', ...rest} = params;
               sophtron.init({ 
-                env: params.env || 'prod',
-                user_id: params.user_id,
-                jobType: params.job_type || '',
-                connection_id: params.connection_id,
-                provider: params.provider,
+                env,
+                jobType,
+                user_id,
+                connection_id,
+                institution_id,
+                provider,
                 auth: res.data,
+                params: rest,
                 onEvent: onEvent,
                 onShow: onEvent,
                 onInit: onEvent,

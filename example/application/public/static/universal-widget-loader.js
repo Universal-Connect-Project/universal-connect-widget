@@ -9,6 +9,7 @@ const sophtron = (function () {
   const defaultConf = {
     env: 'pre',
     jobType: 'agg',
+    params: null,
     user_id: null,
     auth: null,
     connection_id: null,
@@ -194,6 +195,10 @@ const sophtron = (function () {
     if(conf.user_id){
       ret += `&user_id=${encodeURIComponent(conf.user_id)}`
     }
+    for(let [k,v] of Object.entries(conf.params)){
+      ret += `&${k}=${encodeURIComponent(v)}`
+    }
+
     // let ret= `${url}/${conf.partner}/${action}?integration_key=${conf.integration_key || '' }&request_id=${conf.request_id || ''}`;
     // if(action == 'Refresh'){
     //     if(conf.userInstitution_id ){

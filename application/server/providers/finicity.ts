@@ -147,7 +147,7 @@ export class FinicityApi implements ProviderApiClient {
 
   async getConnection(id: string, user_id: string){
     if(id.startsWith(this.token)){
-      return this.db.get(id);
+      return await this.db.get(id);
     }else{
       let request_id = `${this.token};${id}`;
       let existing = await this.db.get(request_id);

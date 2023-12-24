@@ -6,10 +6,10 @@ const logger = require('./infra/logger');
 const crypto = require('crypto');
 const {encrypt} = require('./utils');
 const ProviderCredentials = require('./configuration.js')
-const {AuthClient} = require('./serviceClients/sophtronClient/auth.js');
+const {AuthClient} = require('./serviceClients/authClient');
 const SophtronClient = require('./serviceClients/sophtronClient');
-const GetSophtronVc = require('./providers/sophtron');
-const GetMxVc = require('./providers/mx');
+const {GetSophtronVc} = require('./providers/sophtron');
+const {GetMxIntVc, GetMxProdVc} = require('./providers/mx');
 const GetAkoyaVc = require('./providers/akoya');
 const GetFinicityVc = require('./providers/finicity');
 
@@ -19,6 +19,14 @@ process.on('unhandledRejection', (error) => {
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(function (err, req, res, next) {
+  if(err){
+    logger.err("Unhandled error: ", err);
+    res.status(500);
+    res.send(err.message);
+  }
+});
 
 app.get('/ping', function (req, res) {
   res.send('ok');
@@ -35,20 +43,27 @@ const asyncHandler = (fn) => (req, res, next) => {
   });
 };
 
-function getVc(provider, id, type, userId){
+function getVc(provider, id, type, userId, account_id){
+  logger.info(`Getting vc from provider: ${provider}`)
   switch(provider){
     case 'mx':
-      return GetMxVc(id, type, userId);
+      return GetMxProdVc(id, type, userId, account_id);
+    case 'mx-int':
+    case 'mx_int':
+      return GetMxIntVc(id, type, userId, account_id);
     case 'akoya':
-      return GetAkoyaVc(id, type, userId);
+      return GetAkoyaVc(id, type, userId, account_id);
     case 'finicity':
-      return GetFinicityVc(id, type, userId);
+      return GetFinicityVc(id, type, userId, account_id);
     case 'sophtron':
-      return GetSophtronVc(id, type, userId);
+      return GetSophtronVc(id, type, userId, account_id);
   }
 }
 
 function parseVc(jwt){
+  if(!jwt){
+    return '';
+  }
   if(jwt.startsWith('{')){
     return jwt; //it's actually json, for backward compatiblity
   }
@@ -57,12 +72,11 @@ function parseVc(jwt){
 }
 
 app.get('/example/getAuthCode', asyncHandler(async (req, res) => {
-  const uuid = Buffer.from(config.SophtronApiUserSecret, 'base64').toString('utf-8');
-  const key = Buffer.from(uuid.replaceAll('-', '')).toString('hex');
+  const key = Buffer.from(config.UcpEncryptionKey, 'base64').toString('hex');
   const iv = crypto.randomBytes(16).toString('hex');
   const payload = encrypt(JSON.stringify(ProviderCredentials), key, iv);
   const token = await authApi.secretExchange(payload);
-  const str = `sophtron;${token.Token};${iv}`
+  const str = `ucp;${token.Token};${iv}`
   const b64 = Buffer.from(str).toString('base64')
   res.send(b64)
 })),
@@ -121,9 +135,10 @@ app.get('/example/did/vc/transactions/:provider/:id/:userId?',
     if (id) {
       const data = await getVc(
         provider,
-        id,
+        null,//get transactions doesn't need memberId/connectionId, 
         'transactions',
-        userId
+        userId,
+        id 
       );
       res.setHeader('content-type', 'application/json');
       res.send(parseVc(data));

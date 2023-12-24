@@ -8,6 +8,7 @@ const useConnect = require('./connect/connectApiExpress');
 const useVcs = require('./incubationVcs/vcsServiceExpress');
 const {readFile} = require('./utils/fs');
 const RateLimit = require('express-rate-limit');
+require('express-async-errors');
 
 process.on('unhandledRejection', (error) => {
   logger.error(`unhandledRejection: ${error.message}`, error);
@@ -16,6 +17,8 @@ process.removeAllListeners('warning'); // remove the noise caused by capacitor-c
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 var limiter = RateLimit({
   windowMs: 10 * 60 * 1000,
@@ -27,9 +30,14 @@ app.get('/ping', function (req, res) {
   res.send('ok');
 });
 
+
 useConnect(app);
 // useVcs(app);
-
+app.use(function (err, req, res, next) {
+  logger.error(`Unhandled error on ${req.method} ${req.path}: `, err);
+  res.status(500);
+  res.send(err.message);
+});
 const pageQueries = new RegExp([
   'institution_id',
   'job_type',

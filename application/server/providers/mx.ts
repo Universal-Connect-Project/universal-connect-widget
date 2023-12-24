@@ -203,7 +203,7 @@ export class MxApi implements ProviderApiClient {
     const member = res.data.member!;
     let status = member.connection_status!;
     const oauthStatus = await this.db.get(member.guid);
-    if(oauthStatus.error){
+    if(oauthStatus?.error){
       status = ConnectionStatus[ConnectionStatus.REJECTED];
     }
     return {

@@ -10,11 +10,15 @@ const config = {
   Version: '',
   CryptoAlgorithm: 'aes-256-cbc',
 
-  SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
+  AuthServiceEndpoint: 'http://localhost:8081/api',
   
   SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
+
+  UcpClientId: '',
+  UcpClientSecret: '',
+  UcpEncryptionKey: '',
 
   SophtronApiUserId: '',
   SophtronApiUserSecret: '',

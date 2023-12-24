@@ -36,6 +36,7 @@
     "@types/jest": "^29.5.0",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "@types/redis": "^4.0.11",
     "assert-browserify": "^2.0.0",
     "axios": "^0.21.1",
     "bowser": "^2.11.0",
@@ -48,6 +49,8 @@
     "date-fns": "^2.29.3",
     "dompurify": "^2.3.6",
     "downshift": "^7.4.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
     "express-rate-limit": "^7.0.2",
     "gettext.js": "^1.2.0",
     "honeybadger-js": "^0.5.1",
@@ -67,6 +70,7 @@
     "react-intl": "^2.3.0",
     "react-intl-loader": "^1.0.2",
     "react-redux": "^7.1.0",
+    "redis": "^4.6.12",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-observable": "^1.0.0",
@@ -74,7 +78,8 @@
     "reselect": "^2.5.4",
     "rxjs": "^6.6.2",
     "stream-browserify": "^3.0.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "url": "^0.11.3"
   },
   "eslintConfig": {
     "extends": [

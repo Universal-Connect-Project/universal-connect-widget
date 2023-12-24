@@ -4,7 +4,7 @@ Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
 const config = {
-  AuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
+  AuthServiceEndpoint: 'http://localhost:8081/api',
   StorageEndpoint: 'https://search.sophtron-prod.com/api/',
   SearchEndpoint: 'https://search.sophtron-prod.com/api/',
   // SearchEndpoint: 'http://localhost:8082/api/',
@@ -24,12 +24,18 @@ const config = {
   CryptoKey: '', //crypto.randomBytes(32).toString("hex");
   CryptoIv: '', //crypto.randomBytes(16).toString("hex");
   CryptoAlgorithm: 'aes-256-cbc',
+  RedisServer: 'redis://localhost:6379',
+  RedisCacheTimeSeconds: 600,
   ResourcePrefix: 'http://localhost:3000',
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
   SophtronClientId: '',
   SophtronClientSecret: '',
+
+  UcpAuthClientId: '',
+  UcpAuthClientSecret: '',
+  UcpEncryptionKey: ''
 
 };
 const arr = Object.keys(config);
