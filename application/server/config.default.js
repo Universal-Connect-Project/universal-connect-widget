@@ -1,8 +1,10 @@
 const processEnv = {};
 const envs = {...process.env, ...process.client_envs};
+
 Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
+
 const config = {
   AuthServiceEndpoint: 'http://localhost:8081/api',
   StorageEndpoint: 'https://search.sophtron-prod.com/api/',
@@ -26,7 +28,7 @@ const config = {
   CryptoAlgorithm: 'aes-256-cbc',
   RedisServer: 'redis://localhost:6379',
   RedisCacheTimeSeconds: 600,
-  ResourcePrefix: 'http://localhost:3000',
+  ResourcePrefix: 'http://127.0.0.1:3000',
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
@@ -38,9 +40,11 @@ const config = {
   UcpEncryptionKey: ''
 
 };
+
 const arr = Object.keys(config);
 for (let i = 0; i < arr.length; i++) {
   const key = arr[i];
   config[key] = processEnv[key.toUpperCase()] || config[key];
 }
+
 module.exports = config;

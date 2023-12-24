@@ -1,5 +1,6 @@
 const processEnv = {};
 const envs = {...process.env, ...process.client_envs};
+
 Object.keys(envs).forEach((k) => {
   processEnv[k.toUpperCase()] = envs[k];
 });
@@ -46,4 +47,5 @@ for (let i = 0; i < arr.length; i++) {
   const key = arr[i];
   config[key] = processEnv[key.toUpperCase()] || config[key];
 }
+
 module.exports = config;
