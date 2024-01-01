@@ -6,18 +6,16 @@ Object.keys(envs).forEach((k) => {
 });
 
 const config = {
-  AuthServiceEndpoint: 'http://localhost:8081/api',
-  StorageEndpoint: 'https://search.sophtron-prod.com/api/',
-  SearchEndpoint: 'https://search.sophtron-prod.com/api/',
-  // SearchEndpoint: 'http://localhost:8082/api/',
-  AnalyticsServiceEndpoint: 'https://analytics.sophtron-prod.com/api/',
-  HostUrl: 'https://test.sophtron-prod.com',
-  WebhookHostUrl: 'https://webhook.sophtron-prod.com',
+  AuthServiceEndpoint: 'https://ucp-login.sophtron-prod.com/api',
+  StorageEndpoint: 'https://ucp-search.sophtron-prod.com/api/',
+  SearchEndpoint: 'https://ucp-search.sophtron-prod.com/api/',
+  AnalyticsServiceEndpoint: 'https://ucp-analytics.sophtron-prod.com/api/',
+  HostUrl: 'https://ucp-test.sophtron-prod.com',
+  WebhookHostUrl: 'https://ucp-webhook.sophtron-prod.com',
   Component: 'UniversalWidget',
   ServiceName: 'universal_widget',
   Demo: true,
   DefaultProvider: 'sophtron',
-  OrgName: 'sophtron',
   LogLevel: 'debug',
   Port: '8080',
   Env: 'pre', // mocked

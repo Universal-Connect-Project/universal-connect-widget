@@ -1,3 +1,4 @@
+require('dotenv').config({override: true});
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -47,6 +48,7 @@ const pageQueries = new RegExp([
   'client_guid',
   'connection_id',
   'provider',
+  'partner',
   'oauth_referral_source',
   'single_account_select',
   'update_credentials',

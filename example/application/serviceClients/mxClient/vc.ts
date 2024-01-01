@@ -1,5 +1,5 @@
 
-import { Configuration } from "./configuration.ts";
+import { Configuration } from "./configuration";
 import axios from 'axios';
 const logger = require('../../infra/logger');
 

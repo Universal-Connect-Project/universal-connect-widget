@@ -86,12 +86,14 @@ export class AppWrapper extends React.Component {
     widgetType: '',
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const widgetConfig = window.app.options || {}
 
     window.BrokawClient = BrokawClient
 
     const browser = Bowser.getParser(window.navigator.userAgent)
+
+    await this._logWidgetConfig(widgetConfig)
 
     this.props.initializeAnalyticsSession({
       product_name: widgetConfig.product_name || 'Individual Widget',
@@ -107,7 +109,6 @@ export class AppWrapper extends React.Component {
       user_guid: this.props.user.guid,
     })
 
-    this._logWidgetConfig(widgetConfig)
     this.props.loadMasterData()
     this.props.loadExperiments(window.app.experiments)
     this.props.loadUserFeatures()
@@ -373,7 +374,7 @@ export class AppWrapper extends React.Component {
     }
   }
 
-  _logWidgetConfig = widgetConfig => {
+  _logWidgetConfig = async (widgetConfig) => {
     // Extract connect and client configs
     const { connect: connectConfig, ...clientConfig } = this.props.clientConfig
 
@@ -385,7 +386,7 @@ export class AppWrapper extends React.Component {
         ...connectConfig,
       },
     }
-    FireflyAPI.instrumentation(instrumentationData)
+    await FireflyAPI.instrumentation(instrumentationData)
   }
 
   _logSDKConfig = sdkConfig => {

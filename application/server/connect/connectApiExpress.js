@@ -84,7 +84,7 @@ module.exports = function(app){
     res.send(ret)
   })
   app.get(ApiEndpoints.INSTITUTIONS, async (req, res) => {
-    let ret = await req.connectService.loadInstitutions(req.query.search_name);
+    let ret = await req.connectService.loadInstitutions(req.query.search_name || req.query.routing_number);
     res.send(ret);
   })
   app.get('/jobs/:guid', async (req, res) => {
