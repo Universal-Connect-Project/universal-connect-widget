@@ -14,6 +14,7 @@ export interface Context {
   resolved_user_id?: string;
   provider?: string;
   job_type?: string;
+  partner?: string;
   single_account_select?: boolean;
   auth?: AuthRequest;
   oauth_referral_source?: string;

@@ -47,6 +47,10 @@ module.exports = class FinicityClient{
       .then(ret => ret.customers?.[0])
   }
 
+  deleteCustomer(customerId){
+    return this.del(`aggregation/v1/customers/${customerId}`)
+  }
+
   getCustomerAccounts(customerId){
     return this.get(`aggregation/v1/customers/${customerId}/accounts`)
   }
@@ -104,22 +108,33 @@ module.exports = class FinicityClient{
     })
   }
 
-  async post(path, body){
-    const token = await this.getAuthToken();
-    const headers = makeFinicityAuthHeaders(this.apiConfig, token);
-    const ret = await axios.post(`${this.apiConfig.basePath}/${path}`, body, {headers}).then(res => res.data)
-    .catch(err => {
-      logger.error(`Error at finicityClient.post ${path}`,  err?.response?.data)
-    })
-    return ret;
+  post(path, body){
+    return this.request('post', path, null, body)
   }
-  async get(path, params){
-    const token = await this.getAuthToken();
-    const headers = makeFinicityAuthHeaders(this.apiConfig, token);
-    const ret = await axios.get(`${this.apiConfig.basePath}/${path}`, {headers, params})
+  get(path, params){
+    return this.request('get', path, params)
+  }
+  del(path, params){
+    return this.request('delete', path, params)
+  }
+  async request(method, url, params, data){
+    if(!this.axios){
+      const token = await this.getAuthToken();
+      const headers = makeFinicityAuthHeaders(this.apiConfig, token);
+      this.axios = axios.create({
+        baseURL: this.apiConfig.basePath,
+        headers
+      })
+    }
+    let ret = await this.axios.request({
+        url,
+        method,
+        params,
+        data
+      })
       .then(res => res.data)
       .catch(err => {
-        logger.error(`Error at finicityClient.get ${path}`,  err?.response?.data)
+        logger.error(`Error at finicityClient.${method} ${path}`,  err?.response?.data)
       })
     return ret;
   }

@@ -2,7 +2,7 @@ import { MxApi } from './mx';
 import { SophtronApi } from './sophtron';
 import { AkoyaApi } from './akoya';
 import { FinicityApi } from './finicity';
-import * as config from '../config';
+import * as config from '../config.js';
 import * as logger from '../infra/logger';
 import {
   Challenge,
@@ -22,8 +22,6 @@ import { SearchClient } from '../serviceClients/searchClient';
 import { AuthClient } from '../serviceClients/authClient';
 import { StorageClient } from'../serviceClients/storageClient';
 import { decodeAuthToken } from '../utils';
-
-const searchApi = new SearchClient();
 
 function getApiClient(provider: string, config: any): ProviderApiClient {
   //console.log(config)
@@ -67,6 +65,7 @@ export async function instrumentation(context: Context, input: any){
   if(input.auth){
     context.auth = decodeAuthToken(input.auth);
   }
+  context.partner = input.current_partner;
   context.job_type = input.job_type || 'agg';
   context.oauth_referral_source = input.oauth_referral_source || 'BROWSER';
   context.single_account_select = input.single_account_select;
@@ -75,13 +74,16 @@ export async function instrumentation(context: Context, input: any){
 
 export class ProviderApiBase{
   context: Context
-  serviceClient: ProviderApiClient
+  serviceClient: ProviderApiClient;
   analyticsClient: AnalyticsClient;
+  searchApi: SearchClient;
+
   constructor(req: any){
     this.context = req.context;
   }
 
   async init(){
+    this.searchApi = new SearchClient(this.context.auth?.token, this.context.partner);
     if(this.context.auth?.token){
       const {iv, token} = this.context.auth;
       const storageClient = new StorageClient(token);
@@ -112,7 +114,7 @@ export class ProviderApiBase{
   }
 
   institutions() {
-    return searchApi.institutions();
+    return this.searchApi.institutions();
   }
 
   async search(query: string) {
@@ -122,7 +124,7 @@ export class ProviderApiBase{
       query = q.search_name;
     }
     if (query?.length >= 3) {
-      let list = await searchApi.institutions(query);
+      let list = await this.searchApi.institutions(query);
       return list?.institutions?.sort((a:any,b:any) => a.name.length - b.name.length);
     }
     return []
@@ -133,7 +135,7 @@ export class ProviderApiBase{
       id,
     } as any
     if (!this.context.provider || (this.context.institution_uid && this.context.institution_uid != id && this.context.institution_id != id)) {
-      let resolved = await searchApi.resolve(id);
+      let resolved = await this.searchApi.resolve(id);
       if(resolved){
         logger.debug(`resolved institution ${id} to provider ${resolved.provider} ${resolved.target_id}`);
         this.context.provider = resolved.provider;
@@ -271,6 +273,6 @@ export class ProviderApiBase{
   }
 
   analytics(path: string, content: any){
-    this.analyticsClient?.analytics(path.replaceAll('/', ''), content);
+    return this.analyticsClient?.analytics(path.replaceAll('/', ''), content);
   }
 }

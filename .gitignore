@@ -1,7 +1,7 @@
-# Application configs
-application/server/config.js
-example/application/config.js
 
+test.js
+test.ts
+.env
 # Logs
 logs
 *.log
