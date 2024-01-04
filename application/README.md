@@ -39,7 +39,7 @@
 DO NOT put any credentials in any of the js files. this way it will get accidentially committed and leaked to public
 USE `.evn` FILE
 
-*A hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com).*
+*A hosted example can be found [here](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com).*
 
 ## List of banks to test with 
 - Sophtron: Sophtron Bank
