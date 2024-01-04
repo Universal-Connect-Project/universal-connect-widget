@@ -35,7 +35,7 @@ const config = {
 
   UcpAuthClientId: '',
   UcpAuthClientSecret: '',
-  UcpEncryptionKey: ''
+  UcpAuthEncryptionKey: ''
 
 };
 
