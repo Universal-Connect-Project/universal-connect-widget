@@ -2,10 +2,12 @@
 const {sophtron} = require('../configuration')
 const SophtronVcClient = require('../serviceClients/sophtronClient/vc');
 const vcClient = new SophtronVcClient(sophtron)
-module.exports = async  function GetVc(
+module.exports = {
+  GetSophtronVc: async function(
     connection_id,
     type,
-    userId
+    userId,
+    account_id
   ){
     let path = '';
     switch (type) {
@@ -17,7 +19,7 @@ module.exports = async  function GetVc(
         path = `customers/${userId}/members/${connection_id}/accounts`;
         break;
       case 'transactions':
-        throw new Error('Not Implemented')
+        path = `customers/${userId}/accounts/${account_id}/transactions`;
       default:
         break;
     }
@@ -31,3 +33,5 @@ module.exports = async  function GetVc(
     }
     return null;
   }
+}
+

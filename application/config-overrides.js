@@ -22,7 +22,10 @@ module.exports = override(
   addWebpackModuleRule({
       test: /\.js$/,
       include: path.resolve(__dirname, 'node_modules/@kyper/'),
-      exclude: [/__tests__/],
+      exclude: [
+        /__tests__/,
+        path.resolve(__dirname,'node_modules/@redis')
+      ],
       loader: 'babel-loader',
       options: {"sourceType": "unambiguous",
         presets: [
@@ -46,14 +49,19 @@ module.exports = override(
       alias: {
         ...config.alias,
         'services': path.resolve(__dirname, '/server/connect'),
-        'interfaces': path.resolve(__dirname, '/shared/connect')
+        'interfaces': path.resolve(__dirname, '/shared/connect'),
+        'redis': path.resolve(__dirname, '/server/serviceClients/storageClient/redis_mock.js')
       },
       fallback: { 
         ...config.resolve.fallback, 
         crypto: require.resolve("crypto-browserify"),
         buffer: require.resolve("buffer-browserify"),
         stream: require.resolve("stream-browserify"),
-        assert: require.resolve("assert-browserify")
+        assert: require.resolve("assert-browserify"),
+        url: require.resolve("url/"),
+        net: false,
+        tls: false,
+        redis: false
       },
     };
     config.optimization = {

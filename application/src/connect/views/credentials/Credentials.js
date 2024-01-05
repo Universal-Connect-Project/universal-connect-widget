@@ -244,6 +244,7 @@ export const Credentials = ({
         category: EventCategories.CONNECT,
         label: EventLabels.ENTER_CREDENTIALS,
         provider: institution.provider,
+        mode: connectConfig.mode,
         institution: institution.name,
         action: EventLabels.ENTER_CREDENTIALS + ' - ' + EventActions.END + ' (Submitted)',
       }),
