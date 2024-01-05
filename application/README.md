@@ -36,7 +36,7 @@
   5. Open `http://localhost:8088/loader.html?env=http://localhost:8080` in a web browser.
 
 *Please use `.env` to provide the api secrets using the keys in `config.js` as the variable names.*
-DO NOT put any credentials in any of the js files. this way it will get accidentially committed and leaked to public
+DO NOT put any credentials in any of the js files. If you do so, it could accidentally get committed and leaked to public.
 USE `.env` FILE
 
 *A hosted example can be found [here](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com).*
