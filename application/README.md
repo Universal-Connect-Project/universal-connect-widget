@@ -1,6 +1,6 @@
 # Quick How-to
 
-## FIRST: Get familia with [dotenv](https://www.npmjs.com/package/dotenv)
+## FIRST: Get familiar with [dotenv](https://www.npmjs.com/package/dotenv)
 - Create your config file `/application/.env` `/example/application/.env`
 
 ## SECOND: There are 3 services to start to get a widget demo running locally.
