@@ -19,7 +19,7 @@
 
   *Please remember that secrets are passed through environment variables instead of hardcoded in the js file.*
   DO NOT put any credentials in any of the js files. this way it will get accidentially committed and leaked to public
-  USE `.evn` FILE
+  USE `.env` FILE
 
   *UCP credentials are required for authentication and secret exchange, storage (redis-like session cache) and analytics services.*
   
