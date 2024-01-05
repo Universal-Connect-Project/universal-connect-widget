@@ -37,7 +37,7 @@
 
 *Please use `.env` to provide the api secrets using the keys in `config.js` as the variable names.*
 DO NOT put any credentials in any of the js files. this way it will get accidentially committed and leaked to public
-USE `.evn` FILE
+USE `.env` FILE
 
 *A hosted example can be found [here](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com).*
 
