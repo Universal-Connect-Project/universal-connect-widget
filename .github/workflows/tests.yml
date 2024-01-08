@@ -31,6 +31,11 @@ jobs:
           node-version: 20
 
       - name: Install all dependencies
+        run: |
+          cd ./application
+          npm ci
 
       - name: Run Jest Tests
-        run: cd ./application && npm run test
+        run: | 
+          cd ./application
+          npm run test
