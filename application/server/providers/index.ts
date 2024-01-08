@@ -256,15 +256,15 @@ export class ProviderApiBase{
       case 'akoya':
       case 'akoya_sandbox':
         ret = await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
-        return;
+        break;
       case 'finicity':
       case 'finicity_sandbox':
         ret = await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
-        return;
+        break;
       case 'mx':
       case 'mx_int':
         ret = await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
-        return;
+        break;
     }
     return {
       ...ret,
