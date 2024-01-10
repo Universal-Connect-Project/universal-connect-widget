@@ -1,3 +1,4 @@
+import _isFunction from 'lodash/isFunction'
 import { TestScheduler } from 'rxjs/testing'
 
 /**
@@ -29,4 +30,61 @@ export const expectRx = {
   toBe: { run: wrapScheduler((a, b) => expect(a).toBe(b)) },
   toEqual: { run: wrapScheduler((a, b) => expect(a).toEqual(b)) },
   toMatchObject: { run: wrapScheduler((a, b) => expect(a).toMatchObject(b)) },
+}
+
+/**
+ * Usage example:
+ *   const { createReduxActionUtils, resetSpyObj } = require('utils/Test');
+ *   const { itemAction } = require('utils/ActionHelpers');
+ *   const FireflyAPIMock = jest.fn();
+ *   const FooActions = require('inject!reduxify/actions/foo');
+ *   const dispatcher = FooActions({
+ *     'utils/FireflyAPI': FireflyAPIMock
+ *   });
+ *   const { actions, expectDispatch, resetDispatch } = createReduxActionUtils(dispatcher);
+ *
+ *   describe('Reduxy Actions', () => {
+ *     let actions;
+ *     beforeEach(() => {
+ *       resetDispatch();
+ *       resetSpyObj(FireflyAPIMock);
+ *     });
+ *     it('tests async stuff', done => {
+ *       actions.myAction().then(() => {
+ *         expectDispatch(itemAction(DID_SOME_STUFF, true));
+ *         done();
+ *       });
+ *     });
+ *   });
+ */
+
+export const createReduxActionUtils = (dispatcher, state = {}) => {
+  const getState = jest.fn().mockReturnValue(state)
+  const dispatch = jest.fn(arg => (_isFunction(arg) ? arg(dispatch, getState) : arg))
+  const actions = dispatcher(dispatch)
+
+  /* filter out the initial dispatch call that receives the action function
+   * e.g.
+   *   const dispatcher = dispatch => ({
+   *     updateRetirementGoal: goal => dispatch(fetchUpdateRetirementGoal(goal))
+   *   });
+   */
+  const allCallArgs = () => dispatch.mock.calls.filter(c => !_isFunction(c[0]))
+
+  return {
+    actions,
+
+    expectDispatch: action => {
+      expect(allCallArgs()).toEqual(expect.arrayContaining([[action]]))
+    },
+
+    expectNoDispatch: action => {
+      expect(allCallArgs()).not.toEqual(expect.arrayContaining([[action]]))
+    },
+
+    resetDispatch: () => {
+      // dispatch.mockClear() this is not working as expected
+      jest.clearAllMocks()
+    },
+  }
 }

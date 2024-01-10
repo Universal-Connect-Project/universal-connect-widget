@@ -1,16 +1,25 @@
 export const EventCategories = {
+  AB_TEST: 'AB Test',
+  APP: 'App',
   CONNECT: 'Connect',
+  CONNECTIONS: 'Connections',
 }
 
 export const EventLabels = {
+  ACCOUNT_OPTIONS: 'Account Options',
+  DELETE_SURVEY: 'Delete Survey',
   DISCLOSURE: 'Disclosure',
   DUPLICATE_CONNECTION: 'Duplicate Connection',
   CONNECT_MEMBER_SUCCESS: 'Connect Member Success',
   CONNECT_MEMBER_ERROR: 'Connect Member Error',
   CONNECT_START: 'Connect Start',
+  CONNECTION_DETAILS: 'Connection Details',
   CREDENTIALS_GO_TO_INSTITUTION: 'Credentials Go To Institution',
   ENTER_CREDENTIALS: 'Enter Credentials',
   ERROR: 'Error',
+  IE_DEPRECATION: 'IE Deprecation',
+  INSTITUTION_ACTIONS: 'Institution Actions',
+  INSTITUTION_LIST: 'Institution List',
   INSTITUTION_SEARCH: 'Institution Search',
   LOGIN_ERROR: 'Login Error',
   MANUAL_ACCOUNT: 'Manual Account',
@@ -18,7 +27,7 @@ export const EventLabels = {
   MICRODEPOSITS: 'Microdeposits',
   REQUEST_AN_INSTITUTION: 'Request an Institution',
   TIMEOUT: 'Timeout',
-  DELETE_SURVEY: 'Delete Survey',
+  TOO_SMALL_MODAL: 'Too Small Modal',
   OAUTH: 'OAuth',
   VERIFICATION: 'Verification',
   SINGLE_ACCOUNT_SELECT: 'Single Account Select',
@@ -26,26 +35,49 @@ export const EventLabels = {
 }
 
 export const EventActions = {
+  ADD_ACCOUNT: 'Add Account',
   ADD_ANOTHER: 'Add Another',
+  BACK: 'Go Back',
+  BACK_TO_CONNECTIONS: 'Back to Connections',
+  BACK_TO_CONNECTION_DETAILS: 'Back to Connection Details',
   CANCEL: 'Cancel',
   CHALLENGE: 'Challenge',
   CHALLENGES: 'Challenges',
   CLEAR: 'Clear',
+  CLICK: 'Click',
   CLOSE: 'Close',
   CREDENTIAL_RECOVERY: 'Credential Recovery',
+  DATA_REQUESTED: 'Data Requested',
+  DATA_AVAILABLE: 'Data Available',
   DELETE_MEMBER: 'Delete Member',
   DISCOVERED_SELECT: 'Discovered Select',
+  DOWNLOAD: 'Download',
   EDIT: 'Edit',
   END: 'End',
+  EXTERNAL_INSTITUTION_SELECTED: 'External Institution Selected',
   OAUTH_ERROR_RETRY: 'OAuth Error Retry',
   GO_BACK: 'Go Back',
+  HIDE_ACCOUNT: 'Hide Account',
   HIDE_PASSWORD: 'Hide Password',
+  HOME_INSTITUTION_SELECTED: 'Home Institution Selected',
   IMAGE: 'Image',
   IMAGES: 'Images',
   INITIAL_STEP: 'Initial Step',
   INSTITUTION_SELECTED: 'Institution Selected',
   INVALID_ACCOUNT_NUMBER: 'Invalid Account Number',
   INVALID_ROUTING_NUMBER: 'Invalid Routing Number',
+  MARK_AS_CLOSED_START: 'Mark as Closed - Start',
+  MARK_AS_CLOSED_END: 'Mark as Closed - End',
+  MARK_AS_CLOSED_CANCEL: 'Mark as Closed - Cancel',
+  MARK_AS_DUPLICATE_START: 'Mark as Duplicate - Start',
+  MARK_AS_DUPLICATE_END: 'Mark as Duplicate - End',
+  MARK_AS_DUPLICATE_MERGE: 'Mark as Duplicate - Merge',
+  MARK_AS_DUPLICATE_SELECTED: 'Mark as Duplicate - Duplicate Selected',
+  MARK_AS_DUPLICATE_ABORT: 'Mark as Duplicate - Abort',
+  MARK_AS_OPEN_START: 'Mark as Open - Start',
+  MARK_AS_OPEN_END: 'Mark as Open - End',
+  MARK_AS_OPEN_CANCEL: 'Mark as Open - Cancel',
+  MOUNT: 'Mount',
   NEED_HELP: 'Need Help',
   OPTIONS: 'Options',
   PASSWORD_ENTERED: 'Password Entered',
@@ -59,11 +91,62 @@ export const EventActions = {
   SUBMIT: 'Submit',
   VERIFY_NEW: 'Verify New',
   TRY_REFRESHING: 'Try Refreshing',
+  UNHIDE_ACCOUNT: 'Unhide Account',
   USERNAME_ENTERED: 'Username Entered',
   UPDATE_CREDENTIALS: 'Update Credentials',
   VISIT_BANK: 'Visit Bank',
+  VISIT_BANK_START: 'Visit Bank - Start',
+  VISIT_BANK_CANCEL: 'Visit Bank - Cancel',
+  VISIT_BANK_END: 'Visit Bank - End',
   SUBMITTED: 'Submitted',
   FEED_BACK: 'Feedback',
+}
+
+/**
+ * AnalyticEvents for Custom PostHog Events
+ *
+ * The util that sends these events will prefix all events with `connect_`.
+ *
+ * connect_<location_in_connect>_<verb>_<optional-further-context>
+ * For reference, the expected naming convention for the full name is the following.
+ *
+ * Events should be unique and not re-used. This helps with data/funnels.
+ */
+export const AnalyticEvents = {
+  CREATE_CREDENTIALS_CLICKED_FORGOT_PASSWORD: 'create_credentials_clicked_forgot_password',
+  CREATE_CREDENTIALS_CLICKED_FORGOT_USERNAME: 'create_credentials_clicked_forgot_username',
+  CREATE_CREDENTIALS_CLICKED_TROUBLE_SIGNING_IN: 'create_credentials_clicked_trouble_signing_in',
+  CREDENTIALS_CLICKED_GET_HELP: 'credentials_clicked_get_help',
+  ENTERED_LOGIN: 'entered_login',
+  ENTERED_PASSWORD: 'entered_password',
+  LOGIN_ERROR_CLICKED_GET_HELP: 'login_error_clicked_get_help',
+  MFA_CLICKED_GET_HELP: 'mfa_clicked_get_help',
+  MFA_ENTERED_INPUT: 'mfa_entered_input',
+  MFA_SUBMITTED_INPUT: 'mfa_submitted_input',
+  MFA_SELECTED_IMAGE: 'mfa_selected_image',
+  MFA_SUBMITTED_IMAGE: 'mfa_submitted_image',
+  MFA_SELECTED_OPTION: 'mfa_selected_option',
+  MFA_SUBMITTED_OPTION: 'mfa_submitted_option',
+  MONEY_MANAGER_POPUP: 'money_manager_popup',
+  MONEY_MANAGER_POPUP_CLOSED: 'money_manager_popup_closed',
+  NO_ELIGIBLE_ACCOUNTS_RETRY: 'no_eligible_accounts_retry',
+  NO_ELIGIBLE_ACCOUNTS_TRY_ANOTHER_INSTITUTION: 'no_eligible_accounts_try_another_institution',
+  OAUTH_DEFAULT_CANCEL: 'oauth_default_cancel',
+  OAUTH_DEFAULT_GO_TO_INSTITUTION: 'oauth_default_go_to_institution',
+  SEARCH_QUERY: 'search_query',
+  SELECT_POPULAR_INSTITUTION: 'select_popular_institution',
+  SELECT_SEARCHED_INSTITUTION: 'select_searched_institution',
+  SUBMITTED_CREDENTIALS: 'submitted_credentials',
+  UPDATE_CREDENTIALS_CLICKED_FORGOT_PASSWORD: 'update_credentials_clicked_forgot_password',
+  UPDATE_CREDENTIALS_CLICKED_FORGOT_USERNAME: 'update_credentials_clicked_forgot_username',
+  UPDATE_CREDENTIALS_CLICKED_TROUBLE_SIGNING_IN: 'update_credentials_clicked_trouble_signing_in',
+  WAITING_FOR_OAUTH_CANCEL: 'waiting_for_oauth_cancel',
+  WAITING_FOR_OAUTH_TRYAGAIN: 'waiting_for_oauth_tryagain',
+  WIDGET_LOAD: 'widget_load',
+}
+
+export const defaultEventMetadata = {
+  widgetType: 'isolated',
 }
 
 /**
@@ -82,6 +165,8 @@ export const PageviewInfo = {
   CONNECT_DELETE_MEMBER_SUCCESS: ['Connect Delete Member Success', '/delete_member/success'],
   CONNECT_DELETE_MEMBER_SURVEY: ['Connect Delete Member Survey', '/delete_member/survey'],
   CONNECT_DISCLOSURE: ['Connect Disclosure', '/disclosure'],
+  CONNECT_DISCLOSURE_DATA_AVAILABLE: ['Connect Disclosure Data Available', '/data_available'],
+  CONNECT_DISCLOSURE_DATA_REQUESTED: ['Connect Disclosure Data Requested', '/data_requested'],
   CONNECT_DISCLOSURE_PRIVACY_POLICY: ['Connect Disclosure Privacy Policy', '/privacy_policy'],
   CONNECT_EXISTING_MEMBER_WARNING: ['Connect Existing Member Warning', '/existing_member_warning'],
   CONNECT_LOGIN_ERROR: ['Connect Login Error', '/login_error'],
@@ -119,20 +204,38 @@ export const PageviewInfo = {
     'Connect Microdeposits Verify Deposits',
     '/verify_deposits',
   ],
-  CONNECT_OAUTH: ['Connect Oauth Step', '/credentials/oauth_step'],
+  CONNECT_OAUTH_INSTRUCTIONS: [
+    'Connect Oauth Step Instructions',
+    '/credentials/oauth_step/instructions',
+  ],
+  CONNECT_OAUTH_WAITING: ['Connect Oauth Step Waiting', '/credentials/oauth_step/waiting'],
   CONNECT_OAUTH_ERROR: ['Connect Oauth Error', '/oauth_error'],
+  CONNECT_NO_ELIGIBLE_ACCOUNTS: ['Connect No Eligible Accounts', '/no_eligible_accounts'],
   CONNECT_SEARCH: ['Connect Search', '/search'],
   CONNECT_SEARCH_FAILED: ['Connect Search Failed', '/search_failed'],
   CONNECT_SEARCH_NO_RESULTS: ['Connect Search No Results', '/no_results'],
   CONNECT_SEARCH_POPULAR: ['Connect Search Popular', '/popular'],
-  CONNECT_SEARCH_TOO_MANY: ['Connect Search Too Many', '/too_many'],
   CONNECT_SEARCHED: ['Connect Searched', '/searched'],
+  CONNECT_SHARED_ROUTING_NUMBER: ['Connect Shared Routing Number', '/shared_routing_number'],
+  CONNECT_SUPPORT_MENU: ['Connect Support Menu', '/support/support_menu'],
+  CONNECT_SUPPORT_REQUEST_INSTITUTION: [
+    'Connect Support Request Institution',
+    '/support/request_institution',
+  ],
+  CONNECT_SUPPORT_GENERAL: ['Connect Support General', '/support/support_general'],
+  CONNECT_SUPPORT_SUCCESS: ['Connect Support Success', '/support/support_success'],
   CONNECT_SURVEY_FEEDBACK: ['Connect Survey Feedback', '/survey/feedback'],
   CONNECT_TIMEOUT: ['Connect Timeout', '/timeout'],
   CONNECT_UPDATE_CREDENTIALS: [
     'Connect Update Credentials',
     '/credentials/update_credentials_form',
   ],
+  CONNECT_UNSUPPORTED_RESOLUTION: ['Connect Unsupported Resolution', '/unsupported_resolution'],
   CONNECT_VERIFY_EXISTING_MEMBER: ['Connect Verify Existing Member', '/verify_existing_member'],
   CONNECTIONS: ['Connections', '/connections'],
+}
+
+export const AuthenticationMethods = {
+  OAUTH: 'OAuth',
+  NON_OAUTH: 'Non-OAuth',
 }

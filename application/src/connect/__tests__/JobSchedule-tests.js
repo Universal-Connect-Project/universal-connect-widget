@@ -1,6 +1,6 @@
 import * as JobSchedule from '../JobSchedule'
 import { JOB_TYPES, JOB_STATUSES } from '../consts'
-import { VERIFY_MODE, AGG_MODE } from '../../connect/const/Connect'
+import { VERIFY_MODE, AGG_MODE } from '../const/Connect'
 
 describe('JobSchedule.initialize', () => {
   const nonAggregatingMember = { guid: 'MBR-1', is_being_aggregated: false }

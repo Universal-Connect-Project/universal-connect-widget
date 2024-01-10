@@ -1,8 +1,8 @@
 // import React from 'react'
 // import { mount } from 'enzyme'
 //
-// import { getMountOptions } from '../../../connect/utilities/Store'
-// import { MemberError } from '../../../connect/components/MemberError'
+// import { getMountOptions } from '../../utilities/Store'
+// import { MemberError } from '../MemberError'
 // import { Store } from '../../../redux/__mocks__/Store'
 //
 // const createMountOptions = customStore => {

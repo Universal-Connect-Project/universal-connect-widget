@@ -1,5 +1,5 @@
 /*
-  This file helps with our API Dependecy Injection
+  This file helps with our API Dependency Injection
 
   This is the "dirty" file that ties concrete implementations together
   and returns the api to be used in Connect/Connections.
@@ -8,8 +8,8 @@
   the correct/current dataSource(s).
 */
 
-import { FireflyDataSource } from '../../connect/services/FireflyDataSource'
-import { ConnectAPIService } from '../../connect/services/ConnectAPIService'
+import { FireflyDataSource } from 'FireflyDataSource'
+import { ConnectAPIService } from 'ConnectAPIService'
 
 let axiosInstance
 

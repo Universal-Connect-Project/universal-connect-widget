@@ -22,9 +22,6 @@ export const createIdentityProxy = (target = {}) =>
 // TODO: replace uses with Promise.resolve()
 export const createPromise = result => Promise.resolve(result)
 
-export const createPromiseWithTimeout = (delay = 0, result = null) =>
-  new Promise(resolve => setTimeout(() => resolve(result), delay))
-
 export const createRejectedPromise = error => Promise.reject(error)
 
 /**
@@ -62,10 +59,10 @@ export const expectRx = {
  * Usage example:
  *   const { createReduxActionUtils, resetSpyObj } = require('utils/Test');
  *   const { itemAction } = require('utils/ActionHelpers');
- *   const FireflyAPIMock = jest.fn();
+ *   const connectAPIMock = jest.fn();
  *   const FooActions = require('inject!reduxify/actions/foo');
  *   const dispatcher = FooActions({
- *     'utils/FireflyAPI': FireflyAPIMock
+ *     'src/connect/services/__mocks__/api.js': connectAPIMock
  *   });
  *   const { actions, expectDispatch, resetDispatch } = createReduxActionUtils(dispatcher);
  *
@@ -73,7 +70,7 @@ export const expectRx = {
  *     let actions;
  *     beforeEach(() => {
  *       resetDispatch();
- *       resetSpyObj(FireflyAPIMock);
+ *       resetSpyObj(connectAPIMock);
  *     });
  *     it('tests async stuff', done => {
  *       actions.myAction().then(() => {

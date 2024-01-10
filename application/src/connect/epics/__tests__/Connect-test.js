@@ -7,14 +7,14 @@
 //   selectInstitution as selectInstitutionAction,
 //   selectInstitutionSuccess,
 //   selectInstitutionError,
-// } from 'reduxify/actions/Connect'
-// import * as epics from '../../../connect/epics/Connect.js'
-// import FireflyAPI from '../../../utils/FireflyAPI'
-// import { expectRx } from '../../../connect/utilities/Test'
-// import { VERIFY_MODE } from '../../../connect/const/Connect'
-// import { ReadableStatuses } from '../../../connect/const/Statuses'
+// } from '../../../redux/actions/Connect'
+// import * as epics from '../../epics/Connect'
+// import connectAPI from '../../services/api'
+// import { expectRx } from '../../utilities/Test'
+// import { VERIFY_MODE } from '../../const/Connect'
+// import { ReadableStatuses } from '../../const/Statuses'
 //
-// jest.mock('utils/FireflyAPI')
+// jest.mock('../../services/api')
 
 describe('loadConnect placeholder', () => {
   it('should be a placeholder', () => {
@@ -24,12 +24,12 @@ describe('loadConnect placeholder', () => {
 
 // describe('loadConnect', () => {
 //   afterEach(() => {
-//     FireflyAPI.loadMembers.mockClear()
-//     FireflyAPI.loadMemberByGuid.mockReset()
-//     FireflyAPI.loadInstitutionByGuid.mockReset()
-//     FireflyAPI.loadInstitutionByCode.mockReset()
-//     FireflyAPI.loadAccounts.mockReset()
-//     FireflyAPI.loadInstitutions.mockReset()
+//     connectAPI.loadMembers.mockClear()
+//     connectAPI.loadMemberByGuid.mockReset()
+//     connectAPI.loadAccounts.mockReset()
+//     connectAPI.loadInstitutionByGuid.mockReset()
+//     connectAPI.loadInstitutionByCode.mockReset()
+//     connectAPI.loadInstitutions.mockReset()
 //   })
 //   const state$ = {
 //     value: {
@@ -45,7 +45,7 @@ describe('loadConnect placeholder', () => {
 //     }
 //     const members = [member]
 //
-//     FireflyAPI.loadMembers = jest.fn(() => of(members))
+//     connectAPI.loadMembers = jest.fn(() => of(members))
 //     expect.assertions(1)
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
@@ -67,9 +67,9 @@ describe('loadConnect placeholder', () => {
 //     const members = [member]
 //     const config = { current_member_guid: 'MBR-1' }
 //
-//     FireflyAPI.loadMemberByGuid = jest.fn(() => of(member))
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
-//     FireflyAPI.loadMembers = jest.fn(() => of(members))
+//     connectAPI.loadMemberByGuid = jest.fn(() => of(member))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
+//     connectAPI.loadMembers = jest.fn(() => of(members))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -87,7 +87,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_member_guid: 'bad member' }
 //     const notFound = { response: { status: 404 } }
 //
-//     FireflyAPI.loadMemberByGuid = jest.fn(() => throwError(notFound))
+//     connectAPI.loadMemberByGuid = jest.fn(() => throwError(notFound))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -105,7 +105,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_member_guid: 'bad member' }
 //     const notFound = { response: { status: 500 } }
 //
-//     FireflyAPI.loadMemberByGuid = jest.fn(() => throwError(notFound))
+//     connectAPI.loadMemberByGuid = jest.fn(() => throwError(notFound))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -122,7 +122,7 @@ describe('loadConnect placeholder', () => {
 //     expect.assertions(3)
 //     const member = { guid: 'MBR-1', verification_is_enabled: false }
 //
-//     FireflyAPI.loadMemberByGuid = jest.fn(() => of(member))
+//     connectAPI.loadMemberByGuid = jest.fn(() => of(member))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -137,15 +137,15 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadMemberByGuid).toHaveBeenCalledWith('MBR-1')
-//     expect(FireflyAPI.loadInstitutionByGuid).not.toHaveBeenCalled()
+//     expect(connectAPI.loadMemberByGuid).toHaveBeenCalledWith('MBR-1')
+//     expect(connectAPI.loadInstitutionByGuid).not.toHaveBeenCalled()
 //   })
 //
 //   it('should dispatch LOAD_CONNECT_SUCCESS with current_institution_guid', () => {
 //     expect.assertions(2)
 //     const institution = { guid: 'INST-1' }
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -157,7 +157,7 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
+//     expect(connectAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
 //   })
 //
 //   it('should dispatch loadConnectError if institution is not found with current_institution_guid', () => {
@@ -165,7 +165,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_institution_guid: 'bad institution' }
 //     const notFound = { response: { status: 404 } }
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => throwError(notFound))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => throwError(notFound))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -183,7 +183,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_institution_guid: 'bad institution' }
 //     const error = { response: { status: 500 } }
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => throwError(error))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => throwError(error))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -201,7 +201,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { mode: VERIFY_MODE, current_institution_guid: 'INST-1' }
 //     const institution = { guid: 'INST-1', account_verification_is_enabled: false }
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -213,14 +213,14 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
+//     expect(connectAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
 //   })
 //
 //   it('should dispatch LOAD_CONNECT_SUCCESS with an institution with current_institution_code', () => {
 //     expect.assertions(2)
 //     const institution = { code: 'gringotts' }
 //
-//     FireflyAPI.loadInstitutionByCode = jest.fn(() => of(institution))
+//     connectAPI.loadInstitutionByCode = jest.fn(() => of(institution))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -235,7 +235,7 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByCode).toHaveBeenCalledWith('gringotts')
+//     expect(connectAPI.loadInstitutionByCode).toHaveBeenCalledWith('gringotts')
 //   })
 //
 //   it('should dispatch loadConnectError if institution is not found with current_institution_code', () => {
@@ -243,7 +243,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_institution_code: 'bad institution' }
 //     const notFound = { response: { status: 404 } }
 //
-//     FireflyAPI.loadInstitutionByCode = jest.fn(() => throwError(notFound))
+//     connectAPI.loadInstitutionByCode = jest.fn(() => throwError(notFound))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -261,7 +261,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { current_institution_code: 'bad institution' }
 //     const error = { response: { status: 500 } }
 //
-//     FireflyAPI.loadInstitutionByCode = jest.fn(() => throwError(error))
+//     connectAPI.loadInstitutionByCode = jest.fn(() => throwError(error))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -279,7 +279,7 @@ describe('loadConnect placeholder', () => {
 //     const config = { mode: VERIFY_MODE, current_institution_code: 'gringotts' }
 //     const institution = { code: 'gringotts', account_verification_is_enabled: false }
 //
-//     FireflyAPI.loadInstitutionByCode = jest.fn(() => of(institution))
+//     connectAPI.loadInstitutionByCode = jest.fn(() => of(institution))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -291,17 +291,15 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByCode).toHaveBeenCalledWith('gringotts')
+//     expect(connectAPI.loadInstitutionByCode).toHaveBeenCalledWith('gringotts')
 //   })
 //
 //   it('should load properly in verification mode with only verification mode', () => {
 //     expect.assertions(1)
 //     const config = { mode: VERIFY_MODE }
-//     const accounts = [{ guid: 'MBR-1' }]
-//     const institutions = [{ guid: 'INST-1' }]
+//     const accounts = [{ guid: 'ACC-123', institution_guid: 'INS-123' }]
 //
-//     FireflyAPI.loadAccounts = jest.fn(() => of({ accounts: [{ guid: 'MBR-1' }] }))
-//     FireflyAPI.loadInstitutions = jest.fn(() => of([{ guid: 'INST-1' }]))
+//     connectAPI.loadAccounts = jest.fn(() => of(accounts))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', {
@@ -309,7 +307,7 @@ describe('loadConnect placeholder', () => {
 //       })
 //
 //       expectObservable(epics.loadConnect(actions$, state$)).toBe('a', {
-//         a: loadConnectSuccess({ accounts, institutions, config: { mode: VERIFY_MODE } }),
+//         a: loadConnectSuccess({ accounts, config: { mode: VERIFY_MODE } }),
 //       })
 //     })
 //   })
@@ -327,67 +325,27 @@ describe('loadConnect placeholder', () => {
 //     },
 //   }
 //
-//   it('should dispatch selectInstitutionSuccess with showExistingMember and institution', () => {
+//   it('should dispatch selectInstitutionSuccess with an institution', () => {
 //     expect.assertions(2)
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', { a: selectInstitutionAction('INST-1') })
 //       const state = { value: emptyMemberState }
 //
 //       expectObservable(epics.selectInstitution(actions$, state)).toBe('a', {
-//         a: selectInstitutionSuccess({ institution, showExistingMember: false }),
+//         a: selectInstitutionSuccess({ institution }),
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
-//   })
-//
-//   it('should dispatch selectInstitutionSuccess with showExistingMember true if members exist', () => {
-//     expect.assertions(2)
-//
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
-//
-//     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
-//       const actions$ = hot('a', { a: selectInstitutionAction('INST-1') })
-//       const state = { value: memberState }
-//
-//       expectObservable(epics.selectInstitution(actions$, state)).toBe('a', {
-//         a: selectInstitutionSuccess({ institution, showExistingMember: true }),
-//       })
-//     })
-//
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
-//   })
-//
-//   it('it should showExistingMember with a pending member and any other member', () => {
-//     const pendingState = {
-//       members: {
-//         items: [{ institution_guid: 'INST-1', connection_status: ReadableStatuses.PENDING }],
-//       },
-//     }
-//
-//     expect.assertions(2)
-//
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => of(institution))
-//
-//     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
-//       const actions$ = hot('a', { a: selectInstitutionAction('INST-1') })
-//       const state = { value: pendingState }
-//
-//       expectObservable(epics.selectInstitution(actions$, state)).toBe('a', {
-//         a: selectInstitutionSuccess({ institution, showExistingMember: false }),
-//       })
-//     })
-//
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
+//     expect(connectAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
 //   })
 //
 //   it('should dispatch selectInstitutionError if the request fails', () => {
 //     expect.assertions(2)
 //
-//     FireflyAPI.loadInstitutionByGuid = jest.fn(() => throwError({ status: 400 }))
+//     connectAPI.loadInstitutionByGuid = jest.fn(() => throwError({ status: 400 }))
 //
 //     expectRx.toMatchObject.run(({ hot, expectObservable }) => {
 //       const actions$ = hot('a', { a: selectInstitutionAction('INST-1') })
@@ -398,6 +356,6 @@ describe('loadConnect placeholder', () => {
 //       })
 //     })
 //
-//     expect(FireflyAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
+//     expect(connectAPI.loadInstitutionByGuid).toHaveBeenCalledWith('INST-1')
 //   })
 // })

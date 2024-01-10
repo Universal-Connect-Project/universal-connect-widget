@@ -2,7 +2,7 @@
 // TODO: REMOVE no-unused-vars
 import _get from 'lodash/get'
 
-import { REFERRAL_SOURCES, VERIFY_MODE } from '../../connect/const/Connect'
+import { REFERRAL_SOURCES, VERIFY_MODE } from '../const/Connect'
 
 export const ApiEndpoints = {
   MEMBERS: '/members',

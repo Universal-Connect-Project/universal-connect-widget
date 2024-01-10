@@ -1,7 +1,7 @@
 // import { FireflyDataSource } from '../../../connect/services/FireflyDataSource'
 // import { ConnectAPIService } from '../../../connect/services/ConnectAPIService'
 //
-// // FireflyDataSource expects an axios instance, so lets mock it and test the function signatures
+// // FireflyDataSource expects an axios instance, so let's mock it and test the function signatures
 // jest.mock('../../../actions/connect/services/FireflyDataSource')
 //
 // let api = null

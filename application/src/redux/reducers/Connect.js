@@ -12,7 +12,6 @@ import { VERIFY_MODE, STEPS } from '../../connect/const/Connect'
 import * as JobSchedule from '../../connect/JobSchedule'
 import { MicrodepositsStatuses } from '../../connect/views/microdeposits/const'
 
-import { ReadableAccountTypes } from '../../connect/const/Accounts'
 
 export const defaultState = {
   // this is the same as what we get out from the mergeProps function as our
