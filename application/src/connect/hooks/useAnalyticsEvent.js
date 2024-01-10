@@ -18,7 +18,7 @@ export const captureEvent = (eventName, metadata = {}, captureOptions = { client
     $groups: { client: captureOptions.client },
     ...defaultEventMetadata,
     ...metadata,
-  })ß
+  })
 
 /**
  * This will return a function that can be used for sending analytic events.
