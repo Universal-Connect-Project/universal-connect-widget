@@ -12,7 +12,7 @@ export class AuthClient {
   async getSecretExchange(iv){
     const encrypted = await this.get(`/secretexchange?key=${encodeURIComponent(this.token)}`);
     const arr = encrypted.split('#');
-    const secret = arr.length === 2 ? arr[0] : config.UcpEncryptionKey;
+    const secret = arr.length === 2 ? arr[0] : config.UcpAuthEncryptionKey;
 
     const key = Buffer.from(secret, 'base64').toString('hex')
     const configStr = decrypt(arr.length === 2 ? arr[1] : encrypted, key, iv);
