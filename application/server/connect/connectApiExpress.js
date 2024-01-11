@@ -144,11 +144,11 @@ module.exports = function(app){
     const metadata = JSON.stringify({member_guid, error_reason});
     const app_url = `mx://oauth_complete?metadata=${encodeURIComponent(metadata)}`
     const queries = {
-      status: ret.status === ConnectionStatus.CONNECTED ? 'success': 'error',
+      status: ret?.status === ConnectionStatus.CONNECTED ? 'success': 'error',
       app_url,
       redirect: `true`,
       error_reason,
-      member_guid: ret.id,
+      member_guid: ret?.id,
     };
 
     const oauthParams =  new RegExp(Object.keys(queries).map(r => `\\$${r}`).join('|'), 'g');
