@@ -8,5 +8,26 @@ module.exports = {
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-optional-chaining',
     'js-logger',
+    [
+      'module-resolver',
+      {
+        alias: {
+          // actions: './src/actions',
+          clients: './src/clients',
+          components: './src/components',
+          config: './src/config',
+          constants: './src/constants',
+          // css: './src/css',
+          loggerInit: './loggerInit.js',
+          reduxify: './src/redux',
+          schemas: './src/schemas',
+          src: './src',
+          // stores: './src/stores',
+          streams: './src/streams',
+          utils: './src/utils',
+          widgets: './src/widgets',
+        },
+      },
+    ],
   ],
 }
