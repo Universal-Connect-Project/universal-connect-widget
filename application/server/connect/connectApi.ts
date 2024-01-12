@@ -217,6 +217,7 @@ export class ConnectApi extends ProviderApiBase{
   // }
 
   async loadPopularInstitutions(query: string) {
+    this.context.updated = true;
     this.context.provider = null;
     let ret = await this.institutions();
     return ret.institutions.map(mapInstitution)

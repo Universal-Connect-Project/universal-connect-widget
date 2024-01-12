@@ -56,7 +56,7 @@ function wget(url) {
 
 function get(url, headers, returnFullResObject) {
   logger.debug(`get request: ${url}`);
-  return handleResponse(axios.get(url, { headers }), url, 'wget', returnFullResObject)
+  return handleResponse(axios.get(url, { headers }), url, 'get', returnFullResObject)
 }
 
 function del(url, headers, returnFullResObject) {

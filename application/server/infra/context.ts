@@ -18,6 +18,7 @@ function get(req: Request) {
   if (req.headers.meta?.length > 0) {
     const decrypted = decrypt(<string>req.headers.meta, config.CryptoKey, config.CryptoIv);
     req.context = JSON.parse(decrypted);
+    req.context.updated = false;
   } else {
     req.context = {};
   }
@@ -25,7 +26,9 @@ function get(req: Request) {
 }
 
 function set(res: Response) {
-  res.set('meta', encrypt(JSON.stringify(res.context), config.CryptoKey, config.CryptoIv));
+  if(res.context.updated){
+    res.set('meta', encrypt(JSON.stringify(res.context), config.CryptoKey, config.CryptoIv));
+  }
 }
 
 export function contextHandler(
