@@ -69,6 +69,7 @@ export async function instrumentation(context: Context, input: any){
   context.job_type = input.job_type || 'agg';
   context.oauth_referral_source = input.oauth_referral_source || 'BROWSER';
   context.single_account_select = input.single_account_select;
+  context.updated = true;
   return true
 }
 
@@ -77,7 +78,6 @@ export class ProviderApiBase{
   serviceClient: ProviderApiClient;
   analyticsClient: AnalyticsClient;
   searchApi: SearchClient;
-
   constructor(req: any){
     this.context = req.context;
   }
@@ -118,6 +118,7 @@ export class ProviderApiBase{
   }
 
   async search(query: string) {
+    this.context.updated = true;
     this.context.provider = null;
     let q = query as any;
     if(q.search_name){
@@ -131,6 +132,7 @@ export class ProviderApiBase{
   }
 
   async resolveInstitution(id: string): Promise<Institution>{
+    this.context.updated = true;
     let ret = {
       id,
     } as any
@@ -167,6 +169,7 @@ export class ProviderApiBase{
   }
   
   getInstitutionCredentials(guid: string): Promise<Credential[]> {
+    this.context.updated = true;
     this.context.current_job_id = null;
     // let id = await this.resolveInstitution(guid)
     return this.serviceClient.ListInstitutionCredentials(guid)
@@ -181,7 +184,7 @@ export class ProviderApiBase{
   }
   
   async createConnection(connection: CreateConnectionRequest): Promise<Connection> {
-    // console.log(this.context)
+    this.context.updated = true;
     this.context.current_job_id = null;
     let ret = await this.serviceClient.CreateConnection(connection, this.getUserId());
     this.context.current_job_id = ret.cur_job_id;
@@ -190,6 +193,7 @@ export class ProviderApiBase{
 
   async updateConnection(connection: UpdateConnectionRequest): Promise<Connection> {
     let ret = await this.serviceClient.UpdateConnection(connection, this.getUserId());
+    this.context.updated = true;
     this.context.current_job_id = ret.cur_job_id;
     return ret;
   }
@@ -238,6 +242,7 @@ export class ProviderApiBase{
   }
 
   async getConnectionCredentials(memberGuid: string): Promise<Credential[]> {
+    this.context.updated = true;
     this.context.current_job_id = null;
     return this.serviceClient.ListConnectionCredentials(memberGuid, this.getUserId());
   }

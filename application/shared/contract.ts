@@ -18,6 +18,7 @@ export interface Context {
   single_account_select?: boolean;
   auth?: AuthRequest;
   oauth_referral_source?: string;
+  updated?: boolean;
 }
 
 export interface KeyValuePair {
