@@ -1,0 +1,10 @@
+{
+  "connect/disclosure/body\u0004This app will have access to the information below unless you choose to disconnect:": "This app will have access to the information below unless you change information-sharing settings with the account-holding institution:",
+  "connect/disclosure/policy/text\u0004By clicking Continue, you agree to the ": "MX Technologies, Inc. (“MX”) hosts data access connectivity for Regions Bank. By clicking Continue, you acknowledge and agree to the ",
+  "connect/disclosure/policy/link\u0004MX Privacy Policy.": "MX privacy policy.",
+  "connect/oauth/message\u0004Select Sign in to leave this app and go directly to %1 to connect your account. We’ll be here when you’re done.": "Select Sign In to leave this app and go directly to %1 to connect your account. We do not control the content of the %1 website. The linked website has different privacy and security policies. Please consult %1 privacy disclosures for further information.",
+  "": {
+    "language": "en",
+    "plural-forms": "nplurals=2; plural=(n!=1);"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "AccountType\u0004Checking": "Chequing",
+  "Checking Account": "Chequing Account",
+  "Checking Accounts": "Chequing Accounts",
+  "Paycheck": "Paycheque",
+  "Verifying\u0004Checking": "Checking",
+  "": { "language": "en-ca", "plural-forms": "nplurals=2; plural=(n!=1);" }
+}

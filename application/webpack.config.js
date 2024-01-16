@@ -5,7 +5,17 @@ const path = require('path')
 module.exports = {
   module: {
     rules: [
-      { test: /\.html$/, use: {loader: 'html?minimize=false'} }
+      {
+        test: /\.html$/,
+        use: {loader: 'html?minimize=false'}
+      },
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'node_modules/@kyper/'),
+        exclude: [/__tests__/],
+        loader: 'babel-loader',
+      }
+
     ],
   },
   plugins: [
@@ -13,8 +23,8 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      src: path.join(__dirname, 'application/src'),
-      reduxify: path.join(__dirname, 'application/src/redux'),
+      src: path.resolve(__dirname, 'src'),
+      reduxify: path.resolve(__dirname, 'src/redux'),
     }
   }
 }

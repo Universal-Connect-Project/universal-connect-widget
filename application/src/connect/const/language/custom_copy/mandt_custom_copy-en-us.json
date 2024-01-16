@@ -1,0 +1,7 @@
+{
+  "connect/deletesurvey/disclaimer/text\u0004Why do you want to disconnect %1?": "Disconnecting will impact both M&T Money Smart and Bank to Bank Transfers after accessing each service. To cancel any related scheduled transfers, you must access the Bank to Bank Transfers service to complete this change. Why do you want to disconnect %1?",
+  "": {
+    "language": "en",
+    "plural-forms": "nplurals=2; plural=(n!=1);"
+  }
+}

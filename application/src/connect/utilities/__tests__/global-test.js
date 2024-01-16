@@ -1,4 +1,4 @@
-import { urlWithHttps } from '../../../connect/utilities/global'
+import { urlWithHttps } from 'src/connect/utilities/global'
 
 describe('Global Util Tests', () => {
   describe('urlWithHttps', () => {

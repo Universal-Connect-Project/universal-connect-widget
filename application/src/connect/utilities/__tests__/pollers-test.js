@@ -1,7 +1,11 @@
-// import { handlePollingResponse, DEFAULT_POLLING_STATE, CONNECTING_MESSAGES } from '../pollers'
-// import { ErrorStatuses, ProcessingStatuses, ReadableStatuses } from '../../../connect/const/Statuses'
+// import {
+//   handlePollingResponse,
+//   DEFAULT_POLLING_STATE,
+//   CONNECTING_MESSAGES,
+// } from 'src/connect/utilities/pollers'
+// import { ErrorStatuses, ProcessingStatuses, ReadableStatuses } from 'src/connect/const/Statuses'
 
-describe('Pollers placeholder', () => {
+describe('pollers placeholder', () => {
   it('should be a placeholder', () => {
     expect(true).toBe(true)
   });

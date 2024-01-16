@@ -1,12 +1,12 @@
 module.exports = {
   sourceType: "unambiguous",
   presets: [
-    
     '@babel/preset-react',
   ],
   plugins: [
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-optional-chaining',
+    '@babel/plugin-transform-modules-commonjs',
     'js-logger',
     [
       'module-resolver',
@@ -30,4 +30,9 @@ module.exports = {
       },
     ],
   ],
+  env: {
+    test: {
+      plugins: ['dynamic-import-node'],
+    },
+  },
 }
