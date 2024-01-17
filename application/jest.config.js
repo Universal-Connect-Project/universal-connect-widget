@@ -1,6 +1,7 @@
 module.exports = {
+  coverageProvider: 'babel',
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js', '!src/config/*.js'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/config/*.js'],
   coverageDirectory: 'coverage',
   coverageReporters: ['json', 'lcov', 'text', 'json-summary'],
   testPathIgnorePatterns: [

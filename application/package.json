@@ -9,7 +9,8 @@
     "build-android": "npx cross-env mobile=true react-app-rewired build && npx cap sync android",
     "build-ios": "npx cross-env mobile=true react-app-rewired build && npx cap sync ios",
     "test": "react-app-rewired test",
-    "coverage": "npm test -- --coverage",
+    "coverage": "npm test -- --coverage --watchAll",
+    "test-clear": "npm test -- --clearCache",
     "keys": "node -e 'console.log(`key: ${crypto.randomBytes(32).toString(\"hex\")}\n IV: ${crypto.randomBytes(16).toString(\"hex\")}`)'"
   },
   "dependencies": {
