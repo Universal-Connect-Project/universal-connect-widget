@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'test') {
   axiosInstance = null
 } else {
   // Import the actual module if we're running in a non-test environment
-  const mxAxios = require('../../actions/connect/services/mxAxios')
+  const mxAxios = require('src/connect/services/mxAxios')
   axiosInstance = mxAxios.default
 }
 

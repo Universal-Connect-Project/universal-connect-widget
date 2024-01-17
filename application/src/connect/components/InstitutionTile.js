@@ -2,34 +2,36 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from '@mxenabled/cssinjs'
 
-import { __ } from '../../utils/Intl'
+import { __ } from 'src/connect/utilities/Intl'
 
 import { useTokens } from '@kyper/tokenprovider'
-//import { InstitutionLogo } from '@kyper/institutionlogo'
-import { InstitutionLogo } from './InstitutionLogo'
+import { InstitutionLogo } from '@kyper/institutionlogo'
 import { ChevronRight } from '@kyper/icon/ChevronRight'
+
+import { formatUrl } from 'src/connect/utilities/FormatUrl'
 
 export const InstitutionTile = props => {
   const { institution, selectInstitution, size } = props
 
   const tokens = useTokens()
   const styles = getStyles(tokens)
+
   return (
     <button
       aria-label={__('Add account with %1', institution.name)}
       className={css(styles.container)}
-      data-test="institution-tile"
+      data-test={`${institution.name.replace(/\s+/g, '-')}-row`}
       onClick={selectInstitution}
       type="button"
     >
       <div style={styles.institutionBodyContainer}>
         <div style={styles.iconColumn}>
-          <InstitutionLogo alt={Object.keys(institution.providers || {}).join(',')} institution={institution} size={size} />
+          <InstitutionLogo alt="" institutionGuid={institution.guid} size={size} />
         </div>
 
         <div style={styles.textColumn}>
           <div style={styles.name}>{institution.name}</div>
-          <div style={styles.url}>{institution.url}</div>
+          <div style={styles.url}>{formatUrl(institution.url)}</div>
         </div>
 
         <div className={'iconContainer ' + css(styles.caretContainer)}>
@@ -58,7 +60,7 @@ const getStyles = tokens => {
       border: '1px solid transparent',
       zIndex: 1,
       '&:hover': {
-        background: tokens.BackgroundColor.ButtonTransparentHover,
+        background: tokens.BackgroundColor.TableRowHover,
         cursor: 'pointer',
         zIndex: 100,
       },

@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useTokens } from '@kyper/tokenprovider'
 import { MessageBox } from '@kyper/messagebox'
 import { Text } from '@kyper/text'
 
-import { __ } from '../../utils/Intl'
-import { sendPostMessage } from '../../redux/actions/PostMessage'
+import { __ } from 'src/connect/utilities/Intl'
+import { ActionTypes } from 'reduxify/actions/PostMessage'
+import { AriaLive } from 'src/connect/components/AriaLive'
 
 export const MemberError = props => {
   const dispatch = useDispatch()
@@ -20,7 +21,10 @@ export const MemberError = props => {
       institution_code: props.institution.code,
     }
 
-    dispatch(sendPostMessage('connect/createMemberError', errorPayload))
+    dispatch({
+      type: ActionTypes.SEND_POST_MESSAGE,
+      payload: { event: 'connect/createMemberError', data: errorPayload },
+    })
   }, [])
 
   const getMessage = () => {
@@ -36,11 +40,19 @@ export const MemberError = props => {
   }
 
   return (
-    <MessageBox style={styles.messageBox} title={__('Something went wrong')} variant="error">
-      <Text as="Paragraph" role="alert" tag="p">
-        {getMessage()}
-      </Text>
-    </MessageBox>
+    <Fragment>
+      <MessageBox
+        data-test="credentials-error-message-box"
+        style={styles.messageBox}
+        title={__('Something went wrong')}
+        variant="error"
+      >
+        <Text as="Paragraph" tag="p">
+          {getMessage()}
+        </Text>
+      </MessageBox>
+      <AriaLive level="assertive" message={`Something went wrong. ${getMessage()}`} />
+    </Fragment>
   )
 }
 

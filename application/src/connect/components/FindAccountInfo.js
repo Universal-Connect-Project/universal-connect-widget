@@ -1,21 +1,25 @@
 import React, { useRef } from 'react'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { useTokens } from '@kyper/tokenprovider'
 import { Text } from '@kyper/text'
 import { Button } from '@kyper/button'
 
-import { fadeOut } from '../utilities/Animation'
-import { __ } from '../../utils/Intl'
+import { fadeOut } from 'src/connect/utilities/Animation'
+import { __ } from 'src/connect/utilities/Intl'
 
-import AccountCheckImage from '../images/CheckAccountNumber.svg'
-import RoutingCheckImage from '../images/CheckRoutingNumber.svg'
-import { VIEWS } from '../views/microdeposits/Microdeposits'
-import { GoBackButton } from './GoBackButton'
-import { SlideDown } from './SlideDown'
-import { getDelay } from '../utilities/getDelay'
+import AccountCheckImage from 'src/connect/images/CheckAccountNumber.svg'
+import RoutingCheckImage from 'src/connect/images/CheckRoutingNumber.svg'
+import { VIEWS } from 'src/connect/views/microdeposits/Microdeposits'
+import { GoBackButton } from 'src/connect/components/GoBackButton'
+import { SlideDown } from 'src/connect/components/SlideDown'
+import { getDelay } from 'src/connect/utilities/getDelay'
+
+import { shouldShowConnectGlobalNavigationHeader } from 'reduxify/selectors/UserFeatures'
 
 export const FindAccountInfo = ({ onClose, step }) => {
+  const showConnectGlobalNavigationHeader = useSelector(shouldShowConnectGlobalNavigationHeader)
   const containerRef = useRef(null)
   const tokens = useTokens()
   const styles = getStyles(tokens)
@@ -27,7 +31,7 @@ export const FindAccountInfo = ({ onClose, step }) => {
   return (
     <div ref={containerRef} style={styles.container}>
       <SlideDown delay={getNextDelay()}>
-        <GoBackButton handleGoBack={handleClose} />
+        {!showConnectGlobalNavigationHeader && <GoBackButton handleGoBack={handleClose} />}
 
         <Text tag="h2">
           {// --TR: Full string "Find your {account/routing} number"
@@ -89,7 +93,6 @@ const getStyles = tokens => ({
     display: 'flex',
     flexDirection: 'column',
     margin: '0 auto',
-    padding: tokens.Spacing.Large,
     maxWidth: 375,
   },
   title: {

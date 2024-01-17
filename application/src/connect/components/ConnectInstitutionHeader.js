@@ -1,18 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-//import { InstitutionLogo } from '@kyper/institutionlogo'
-import { InstitutionLogo } from './InstitutionLogo'
+import { InstitutionLogo } from '@kyper/institutionlogo'
 import { useTokens } from '@kyper/tokenprovider'
 
-import { COLOR_SCHEME } from '../const/Connect'
-import HeaderDevice from '../images/header/HeaderDevice.svg'
-import HeaderDefaultInstitution from '../images/header/HeaderDefaultInstitution.svg'
-import HeaderBackdropDark from '../images/header/HeaderBackdropDark.svg'
-import HeaderBackdropLight from '../images/header/HeaderBackdropLight.svg'
+import { COLOR_SCHEME } from 'src/connect/const/Connect'
+import HeaderDevice from 'src/connect/images/header/HeaderDevice.svg'
+import HeaderDefaultInstitution from 'src/connect/images/header/HeaderDefaultInstitution.svg'
+import HeaderBackdropDark from 'src/connect/images/header/HeaderBackdropDark.svg'
+import HeaderBackdropLight from 'src/connect/images/header/HeaderBackdropLight.svg'
 
 const propTypes = {
-  institution: PropTypes.object,
+  institutionGuid: PropTypes.string,
 }
 
 export const ConnectInstitutionHeader = props => {
@@ -23,20 +22,14 @@ export const ConnectInstitutionHeader = props => {
     colorScheme === COLOR_SCHEME.LIGHT ? HeaderBackdropLight : HeaderBackdropDark
 
   return (
-    <div style={styles.container}>
-      <SVGImage image={HeaderDevice} size={64} styles={styles.device} />
+    <div data-test="disclosure-svg-header" style={styles.container}>
       <div style={styles.backdropImage}>
         <SVGImage image={backdropImage} />
       </div>
+      <SVGImage image={HeaderDevice} styles={styles.device} />
       <div style={styles.institutionLogo}>
-        {props.institution ? (
-          <InstitutionLogo alt="" institution={props.institution} size={64} 
-            style={{
-              position: 'relative',
-              top: '50%',
-              transform: 'translateY(-50%)'
-            }} 
-          />
+        {props.institutionGuid ? (
+          <InstitutionLogo alt="" institutionGuid={props.institutionGuid} size={64} />
         ) : (
           <SVGImage image={HeaderDefaultInstitution} />
         )}
@@ -79,7 +72,6 @@ function getStyles() {
 
 const SVGImagePropTypes = {
   image: PropTypes.string.isRequired,
-  size: PropTypes.number,
   styles: PropTypes.object,
 }
 
@@ -88,11 +80,8 @@ const SVGImage = props => {
     zIndex: 20,
     ...props.styles,
   }
-  const {size} = props;
-  // return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
-  return (<div style={styles}>
-    <img alt='svg' height={size} src={props.image} width={size} />
-  </div>)
+
+  return <div dangerouslySetInnerHTML={{ __html: props.image }} style={styles} />
 }
 
 SVGImage.propTypes = SVGImagePropTypes

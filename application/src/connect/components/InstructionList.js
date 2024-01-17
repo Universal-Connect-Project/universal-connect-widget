@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { css } from '@mxenabled/cssinjs'
-import DOMPurify from 'dompurify';
+import { sanitize } from 'dompurify'
 
 import { useTokens } from '@kyper/tokenprovider'
 import { Text } from '@kyper/text'
 
-import { goToUrlLink } from '../utilities/global'
+import { goToUrlLink } from 'src/connect/utilities/global'
 
 export const InstructionList = props => {
   const tokens = useTokens()
@@ -14,7 +14,7 @@ export const InstructionList = props => {
   const styles = getStyles(tokens)
 
   const sanitizedItems = props.items.map(item =>
-    DOMPurify.sanitize(item, {
+    sanitize(item, {
       ALLOWED_TAGS: ['a'], // Only allow <a />
       ALLOWED_ATTR: ['href'], // Only allow href attribute
       ALLOWED_URI_REGEXP: new RegExp('^https?://.*'), // Only allow href to be http/https
@@ -53,10 +53,19 @@ export const InstructionList = props => {
   }, [])
 
   return (
-    <ol ref={listRef} style={styles.list}>
+    <ol data-test="instruction-list" ref={listRef} style={styles.list}>
       {sanitizedItems.map(item => (
-        <li className={`step-link ${css(styles.listItems)}`} key={item}>
-          <Text as="Paragraph" dangerouslySetInnerHTML={{ __html: item }} tag="p" />
+        <li
+          className={`step-link ${css(styles.listItems)}`}
+          data-test="instruction-list-item"
+          key={item}
+        >
+          <Text
+            as="Paragraph"
+            dangerouslySetInnerHTML={{ __html: item }}
+            style={styles.text}
+            tag="p"
+          />
         </li>
       ))}
     </ol>
@@ -72,7 +81,8 @@ const getStyles = tokens => ({
   },
   listItems: {
     counterIncrement: 'listCounter',
-    marginBottom: tokens.Spacing.Small,
+    marginBottom: tokens.Spacing.Medium,
+    paddingTop: tokens.Spacing.Tiny,
     position: 'relative',
     '&::before': {
       content: 'counter(listCounter)',
@@ -89,6 +99,9 @@ const getStyles = tokens => ({
       position: 'absolute',
       textAlign: 'center',
     },
+    '&:last-child': {
+      marginBottom: '0px',
+    },
   },
   instructionalLink: {
     display: 'inline',
@@ -98,10 +111,13 @@ const getStyles = tokens => ({
     textAlign: 'left',
     color: tokens.TextColor.ButtonLink,
   },
+  text: {
+    marginLeft: tokens.Spacing.XTiny,
+  },
 })
 
 InstructionList.propTypes = {
   items: PropTypes.array.isRequired,
-  setIsLeavingUrl: PropTypes.func.isRequired,
-  showExternalLinkPopup: PropTypes.bool.isRequired,
+  setIsLeavingUrl: PropTypes.func,
+  showExternalLinkPopup: PropTypes.bool,
 }

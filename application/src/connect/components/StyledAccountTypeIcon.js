@@ -15,7 +15,7 @@ import { Image } from '@kyper/icon/Image'
 import { Health } from '@kyper/icon/Health'
 import { Grid } from '@kyper/icon/Grid'
 
-import { AccountTypes } from '../views/manualAccount/constants'
+import { AccountTypes } from 'src/connect/views/manualAccount/constants'
 
 export const StyledAccountTypeIcon = props => {
   const tokens = useTokens()

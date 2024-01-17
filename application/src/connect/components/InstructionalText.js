@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import DOMPurify from 'dompurify';
+import { sanitize } from 'dompurify'
 
 import { useTokens } from '@kyper/tokenprovider'
 import { Text } from '@kyper/text'
 
-import { goToUrlLink } from '../utilities/global'
+import { goToUrlLink } from 'src/connect/utilities/global'
 
 export const InstructionalText = ({
   instructionalText,
@@ -16,7 +16,7 @@ export const InstructionalText = ({
   const tokens = useTokens()
   const styles = getStyles(tokens)
 
-  const sanitizedInstructionalText = DOMPurify.sanitize(instructionalText, {
+  const sanitizedInstructionalText = sanitize(instructionalText, {
     ALLOWED_TAGS: ['a'], // Only allow <a />
     ALLOWED_ATTR: ['href', 'id'], // Only allow href and id attributes
     ALLOWED_URI_REGEXP: new RegExp('^https?://.*'), // Only allow href to be http/https

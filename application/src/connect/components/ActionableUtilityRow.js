@@ -14,6 +14,7 @@ export const ActionableUtilityRow = props => {
   return (
     <div style={styles.container}>
       <Button
+        data-test="actionable-utility-row"
         onClick={onClick}
         role={role}
         size="small"

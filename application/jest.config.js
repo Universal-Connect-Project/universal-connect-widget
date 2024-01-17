@@ -9,10 +9,14 @@ module.exports = {
     '<rootDir>/src/config/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(@kyper)/)',
+    'node_modules/(?!(@kyper))',
     'node_modules/(?!(axios)',
   ],
   transform: {
     '^.+\\.[t|j]s?$': 'babel-jest',
   },
+  moduleNameMapper: {
+    "^axios$": "axios/dist/node/axios.cjs",
+    "^@kyper/(.*)$": "@kyper/$1/lib/index.js"
+  }
 }

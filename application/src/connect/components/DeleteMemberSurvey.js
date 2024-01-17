@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Text } from '@kyper/text'
 import { Button } from '@kyper/button'
-import { Radio } from '@kyper/input'
 import { useTokens } from '@kyper/tokenprovider'
 import { MessageBox } from '@kyper/messagebox'
+import { AttentionFilled } from '@kyper/icon/AttentionFilled'
+import { Radio } from 'src/privacy/input'
 import { defer } from 'rxjs'
 
-import Modal from '../../components/shared/Modal'
-import { SlideDown } from './SlideDown'
+import { SlideDown } from 'src/connect/components/SlideDown'
 
-import { __, _p } from '../../utils/Intl'
-import FireflyAPI from '../../utils/FireflyAPI'
+import { __, _p } from 'src/connect/utilities/Intl'
+import connectAPI from 'src/connect/services/api'
 
-import useAnalyticsPath from '../hooks/useAnalyticsPath'
-import { PageviewInfo } from '../const/Analytics'
+import useAnalyticsPath from 'src/connect/hooks/useAnalyticsPath'
+import { PageviewInfo } from 'src/connect/const/Analytics'
 
-import { ReadableStatuses } from '../const/Statuses'
+import { ReadableStatuses } from 'src/connect/const/Statuses'
 
 export const DeleteMemberSurvey = props => {
   const { member, onCancel, onDeleteSuccess } = props
@@ -26,13 +26,14 @@ export const DeleteMemberSurvey = props => {
     loading: false,
     error: null,
   })
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const tokens = useTokens()
   const styles = getStyles(tokens)
 
   useEffect(() => {
     if (deleteMemberState.loading === false) return () => {}
 
-    const request$ = defer(() => FireflyAPI.deleteMember(member)).subscribe(
+    const request$ = defer(() => connectAPI.deleteMember(member)).subscribe(
       () => onDeleteSuccess(member, selectedReason),
       err => updateDeleteMemberState({ loading: false, error: err }),
     )
@@ -50,73 +51,103 @@ export const DeleteMemberSurvey = props => {
 
   const hasDeleteError = deleteMemberState.loading === false && deleteMemberState.error != null
 
+  const handleOnDisconnect = () => {
+    // when the user selects to Disconnect the setIsSubmitted is set to true
+    setIsSubmitted(true)
+    //if there are is no selectedOption then the errors will show
+    if (!selectedReason) {
+      return false
+    }
+    return updateDeleteMemberState({ loading: true, error: null })
+  }
   return (
-    <Modal
-      aria-labelledby="mx-delete-survey-header"
-      contentHasTabIndex={false}
-      contentStyle={styles.modalContent}
-      onRequestClose={onCancel}
-      role="dialog"
-      showCloseIcon={false}
-      style={styles.modal}
-      styles={styles.modalScrim}
-    >
-      {hasDeleteError ? (
-        <SlideDown delay={100}>
-          <div style={styles.errorHeader}>{__('Something went wrong')}</div>
-          <MessageBox style={{ marginBottom: tokens.Spacing.XLarge }} variant="error">
-            <Text as="ParagraphSmall" tag="p">
-              {__("Oops! We weren't able to disconnect this institution. Please try again later.")}
+    <div role="dialog" style={styles.container}>
+      <div style={styles.modal}>
+        {hasDeleteError ? (
+          <SlideDown delay={100}>
+            <div data-test="disconnect-error-header" style={styles.errorHeader}>
+              {__('Something went wrong')}
+            </div>
+            <MessageBox
+              data-test="disconnect-error-message"
+              style={{ marginBottom: tokens.Spacing.XLarge }}
+              variant="error"
+            >
+              <Text as="ParagraphSmall" tag="p">
+                {__(
+                  "Oops! We weren't able to disconnect this institution. Please try again later.",
+                )}
+              </Text>
+            </MessageBox>
+
+            <div style={styles.buttons}>
+              <Button
+                data-test="disconnect-ok-button"
+                onClick={onCancel}
+                style={styles.errorButton}
+                variant="primary"
+              >
+                {__('Ok')}
+              </Button>
+            </div>
+          </SlideDown>
+        ) : (
+          <React.Fragment>
+            <Text as="Body" data-test="disconnect-disclaimer">
+              {_p(
+                'connect/deletesurvey/disclaimer/text',
+                'Why do you want to disconnect %1?',
+                member.name,
+              )}
             </Text>
-          </MessageBox>
-          <div style={styles.buttons}>
-            <Button onClick={onCancel} style={styles.errorButton} variant="primary">
-              {__('Ok')}
-            </Button>
-          </div>
-        </SlideDown>
-      ) : (
-        <React.Fragment>
-          <Text as="Body">
-            {_p(
-              'connect/deletesurvey/disclaimer/text',
-              'Why do you want to disconnect %1?',
-              member.name,
+            <div style={styles.reasons}>
+              {reasonList.map((reason, i) => (
+                <div key={reason} style={{ marginBottom: 20 }}>
+                  <Radio
+                    autoFocus={i === 0}
+                    checked={selectedReason === reason}
+                    data-test={`radio-${reason.replace(/\s+/g, '-')}`}
+                    data-testid="disconnect-option"
+                    id={reason}
+                    key={reason}
+                    label={reason}
+                    labelPosition="right"
+                    name="reasons"
+                    onChange={() => {
+                      setSelectedReason(reason)
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {isSubmitted && !selectedReason && (
+              <section role="alert" style={styles.errorContent}>
+                <AttentionFilled color={tokens.Color.Error300} />
+                <p style={styles.errorMessage}>{__('Choose a reason for deleting')}</p>
+              </section>
             )}
-          </Text>
-          <div style={styles.reasons}>
-            {reasonList.map(reason => (
-              <div key={reason} style={{ marginBottom: 20 }}>
-                <Radio
-                  checked={selectedReason === reason}
-                  id={reason}
-                  key={reason}
-                  label={reason}
-                  labelPosition="right"
-                  name="reasons"
-                  onChange={() => {
-                    setSelectedReason(reason)
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-          <div style={styles.buttons}>
-            <Button onClick={onCancel} style={styles.button}>
-              {__('Cancel')}
-            </Button>
             <Button
-              disabled={!selectedReason}
-              onClick={() => updateDeleteMemberState({ loading: true, error: null })}
+              data-test="disconnect-button"
+              onClick={handleOnDisconnect}
               style={styles.button}
               variant="destructive"
             >
               {__('Disconnect')}
             </Button>
-          </div>
-        </React.Fragment>
-      )}
-    </Modal>
+
+            <Button
+              data-test="disconnect-cancel-button"
+              onClick={onCancel}
+              style={styles.cancelButton}
+              variant={'transparent-tertiary'}
+            >
+              {__('Cancel')}
+            </Button>
+          </React.Fragment>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -125,36 +156,34 @@ const getStyles = tokens => ({
     display: 'block',
     whiteSpace: 'normal',
   },
+  container: {
+    zIndex: tokens.ZIndex.Modal,
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: tokens.BackgroundColor.Container,
+    minHeight: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
   modal: {
     backgroundColor: tokens.BackgroundColor.Modal,
     color: tokens.TextColor.Default,
     maxWidth: 400,
     width: '100%',
-  },
-  modalScrim: {
-    scrim: {
-      padding: `0 ${tokens.Spacing.Medium}`,
-    },
-    overlay: {
-      backgroundColor: tokens.BackgroundColor.ModalScrim,
-    },
-  },
-  modalContent: {
-    padding: tokens.Spacing.XLarge,
-    overflowY: 'hidden',
+    padding: '20px',
+    display: 'flex',
+    flexDirection: 'column',
   },
   reasons: {
-    marginBottom: '20px',
     marginTop: tokens.Spacing.Medium,
   },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
   button: {
-    display: 'inline',
-    marginLeft: tokens.Spacing.Tiny,
-    marginRight: tokens.Spacing.Tiny,
+    width: '100%',
+    marginBottom: tokens.Spacing.XSmall,
+    marginTop: '20px',
+  },
+  cancelButton: {
+    width: '100%',
   },
   errorButton: {
     width: '100%',
@@ -163,6 +192,15 @@ const getStyles = tokens => ({
     fontSize: tokens.FontSize.H2,
     fontWeight: tokens.FontWeight.Bold,
     marginBottom: tokens.Spacing.XSmall,
+  },
+  errorContent: {
+    color: tokens.TextColor.Error,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  errorMessage: {
+    marginLeft: tokens.Spacing.Tiny,
+    fontSize: tokens.FontSize.Small,
   },
 })
 

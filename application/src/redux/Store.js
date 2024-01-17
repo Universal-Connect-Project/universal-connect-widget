@@ -17,7 +17,6 @@ import { cashFlow } from './reducers/CashFlow'
 import { categories, categoryTotals } from './reducers/Categories'
 import {
   client,
-  clientCommunicationProfile,
   clientProfile,
   initializedClientConfig,
 } from './reducers/Client'
@@ -83,7 +82,6 @@ const reducer = combineReducers({
   categoryTotals,
   client,
   clientColorScheme,
-  clientCommunicationProfile,
   clientProfile,
   componentStacks,
   connect,

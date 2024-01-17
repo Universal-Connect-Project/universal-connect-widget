@@ -6,12 +6,12 @@ import { useTokens } from '@kyper/tokenprovider'
 import { Button } from '@kyper/button'
 import { Text } from '@kyper/text'
 
-import { fadeOut } from '../utilities/Animation'
-import { __ } from '../../utils/Intl'
+import { fadeOut } from 'src/connect/utilities/Animation'
+import { __ } from 'src/connect/utilities/Intl'
 
-import { GoBackButton } from './GoBackButton'
-import { SlideDown } from './SlideDown'
-import { getDelay } from '../utilities/getDelay'
+import { GoBackButton } from 'src/connect/components/GoBackButton'
+import { SlideDown } from 'src/connect/components/SlideDown'
+import { getDelay } from 'src/connect/utilities/getDelay'
 
 export const DayOfMonthPicker = props => {
   const containerRef = useRef(null)
@@ -28,18 +28,19 @@ export const DayOfMonthPicker = props => {
         />
       </SlideDown>
       <SlideDown delay={getNextDelay()}>
-        <Text style={styles.title} tag="h2">
+        <Text data-test="date-picker-header" style={styles.title} tag="h2">
           {__('Payment due day')}
         </Text>
-        <Text style={styles.body} tag="p">
+        <Text data-test="date-picker-paragraph" style={styles.body} tag="p">
           {__('Choose what day of the month your payment is due.')}
         </Text>
       </SlideDown>
       <SlideDown delay={getNextDelay()}>
-        <div style={styles.buttons}>
+        <div data-test="date-picker-calendar" style={styles.buttons}>
           {days.map(day => (
             <Button
               autoFocus={day === 1}
+              data-test={`date-picker-button-${day}`}
               key={day}
               name={props.name || day}
               onClick={e => {

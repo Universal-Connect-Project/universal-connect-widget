@@ -27,7 +27,7 @@ module.exports = override(
         path.resolve(__dirname,'node_modules/@redis')
       ],
       loader: 'babel-loader',
-      options: {"sourceType": "unambiguous",
+      options: {
         presets: [
           [
             "@babel/env",
@@ -39,7 +39,7 @@ module.exports = override(
           ],
           '@babel/preset-react'
         ],
-        sourceType: "unambiguous"
+        sourceType: "unambiguous",
       },
     },
   ),
@@ -48,9 +48,22 @@ module.exports = override(
       ...config.resolve,
       alias: {
         ...config.alias,
-        'services': path.resolve(__dirname, '/server/connect'),
-        'interfaces': path.resolve(__dirname, '/shared/connect'),
-        'redis': path.resolve(__dirname, '/server/serviceClients/storageClient/redis_mock.js')
+        services: path.resolve(__dirname, '/server/connect'),
+        interfaces: path.resolve(__dirname, '/shared/connect'),
+        redis: path.resolve(__dirname, '/server/serviceClients/storageClient/redis_mock.js'),
+        clients: path.resolve(__dirname, 'src/clients'),
+        components: path.resolve(__dirname, 'src/components'),
+        config: path.resolve(__dirname, 'src/config'),
+        constants: path.resolve(__dirname, 'src/constants'),
+        // css: path.resolve(__dirname, 'src/css'),
+        loggerInit: path.resolve(__dirname, 'loggerInit.js'),
+        reduxify: path.resolve(__dirname, 'src/redux'),
+        schemas: path.resolve(__dirname, 'src/schemas'),
+        // stores: path.resolve(__dirname, 'src/stores'),
+        streams: path.resolve(__dirname, 'src/streams'),
+        utils: path.resolve(__dirname, 'src/utils'),
+        widgets: path.resolve(__dirname, 'src/widgets'),
+        src: path.resolve(__dirname, 'src'),
       },
       fallback: { 
         ...config.resolve.fallback, 

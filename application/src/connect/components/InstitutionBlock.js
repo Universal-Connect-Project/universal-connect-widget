@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { __ } from '../../utils/Intl'
+import { __ } from 'src/connect/utilities/Intl'
 
 import { useTokens } from '@kyper/tokenprovider'
-//import { InstitutionLogo } from '@kyper/institutionlogo'
-import { InstitutionLogo } from './InstitutionLogo'
+import { InstitutionLogo } from '@kyper/institutionlogo'
+
+import { formatUrl } from 'src/connect/utilities/FormatUrl'
 
 export const InstitutionBlock = ({ institution, style }) => {
   const { guid, name, url } = institution
@@ -13,15 +14,20 @@ export const InstitutionBlock = ({ institution, style }) => {
   const styles = getStyles(tokens)
 
   return (
-    <div style={{ ...styles.institutionBlock, ...style, justifyContent:'center' }}>
-      <InstitutionLogo alt="" institution={institution} size={64} />
-      {institution.logo_url ? null : <div style={styles.institutionInfo}>
+    <div data-test="institution-block" style={{ ...styles.institutionBlock, ...style }}>
+      <InstitutionLogo
+        alt={`${name} logo`}
+        data-test="institution-block-logo"
+        institutionGuid={guid}
+        size={64}
+      />
+      <div style={styles.institutionInfo}>
         <div style={styles.institutionName}>
           {guid.startsWith('INS-MANUAL') ? __('Manual Institution') : name}
         </div>
 
-        <div style={styles.institutionUrl}>{url}</div>
-      </div> } 
+        <div style={styles.institutionUrl}>{formatUrl(url)}</div>
+      </div>
     </div>
   )
 }
@@ -32,7 +38,7 @@ const getStyles = tokens => {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: tokens.Spacing.XLarge,
+      marginBottom: tokens.Spacing.Large,
       borderRadius: tokens.BorderRadius.Container,
     },
     institutionInfo: {

@@ -4,27 +4,27 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useTokens } from '@kyper/tokenprovider'
 import { CheckmarkFilled as CheckmarkFilledIcon } from '@kyper/icon/CheckmarkFilled'
 import { Text } from '@kyper/text'
-import { TextArea } from '@kyper/textarea'
 import { Button, ButtonGroup } from '@kyper/button'
-import { UserFeedback, FEED_BACK_ICONS_VARIANTS, FEED_BACK_ICONS_VALUES } from '@kyper/userfeedback'
+import { FEED_BACK_ICONS_VARIANTS, FEED_BACK_ICONS_VALUES } from '@kyper/userfeedback'
+import { TextArea, UserFeedback } from 'src/privacy/input'
 
-import { fadeOut } from '../utilities/Animation'
+import { fadeOut } from 'src/connect/utilities/Animation'
 
-import { SlideDown } from './SlideDown'
-import { getDelay } from '../utilities/getDelay'
+import { SlideDown } from 'src/connect/components/SlideDown'
+import { getDelay } from 'src/connect/utilities/getDelay'
+import connectAPI from 'src/connect/services/api'
 
-import { __ } from '../../utils/Intl'
-import FireflyAPI from '../../utils/FireflyAPI'
+import { __ } from 'src/connect/utilities/Intl'
 
-import useAnalyticsPath from '../hooks/useAnalyticsPath'
+import useAnalyticsPath from 'src/connect/hooks/useAnalyticsPath'
 
 import {
   EventCategories,
   EventLabels,
   EventActions,
   PageviewInfo,
-} from '../const/Analytics'
-import { ConnectionStatusMap } from '../const/Statuses'
+} from 'src/connect/const/Analytics'
+import { ConnectionStatusMap } from 'src/connect/const/Statuses'
 
 const feedbackLabels = {
   [FEED_BACK_ICONS_VARIANTS.FEED_BACK_ICON_1]: {
@@ -108,7 +108,7 @@ export const SurveyPrompt = ({
         source: connectionStatusCode,
       }
 
-      FireflyAPI.submitConnectFeedBack(feedBack).then(() => onFeedBackComplete())
+      connectAPI.submitConnectFeedback(feedBack).then(() => onFeedBackComplete())
     }
   }, [submitting])
 
@@ -170,6 +170,7 @@ export const SurveyPrompt = ({
           </SlideDown>
           <SlideDown delay={getNextDelay()}>
             <UserFeedback
+              data-test="feedback-faces"
               feedbackLabels={feedbackLabels}
               name={`${eventLabel}-userfeedback`}
               onChange={onChangeHandler}
@@ -180,13 +181,14 @@ export const SurveyPrompt = ({
             <SlideDown delay={getNextDelay()}>
               <TextArea
                 aria-label={__('Feedback text box.')}
+                data-test="feedback-textarea"
                 name="feedBackComment"
                 onChange={e => setFeedBackComment(e.target.value)}
                 placeholder={__('What was %1 about it?', labelForRating.toLowerCase())}
                 style={styles.textArea}
                 value={feedBackComment || ''}
               />
-              <Text style={styles.disclaimer} tag="p">
+              <Text data-test="feedback-disclaimer-text" style={styles.disclaimer} tag="p">
                 {__(
                   'We welcome your feedback. Please do not share personal or financial information, such as account numbers or passwords. Your feedback is anonymous and will be available to this app and their data access provider, MX, to help improve the experience of connecting financial data.',
                 )}
@@ -197,6 +199,7 @@ export const SurveyPrompt = ({
           <SlideDown delay={getNextDelay()}>
             <ButtonGroup>
               <Button
+                data-test="cancel-button"
                 onClick={() => {
                   sendAnalytics(eventLabel, EventActions.FEED_BACK, EventActions.CANCEL)
                   fadeOut(containerRef.current, 'up', 300).then(() => onCancel())
@@ -206,6 +209,7 @@ export const SurveyPrompt = ({
                 {__('Cancel')}
               </Button>
               <Button
+                data-test="send-button"
                 disabled={!rating}
                 onClick={() => setSubmitting(true)}
                 style={styles.button}

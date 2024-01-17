@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Container } from './Container'
 import { useTokens } from '@kyper/tokenprovider'
 
 const StickyComponentContainer = React.forwardRef(
@@ -10,11 +9,11 @@ const StickyComponentContainer = React.forwardRef(
     const styles = getStyles(tokens)
 
     return (
-      <Container column={true} flex={true} ref={ref}>
+      <div ref={ref} style={styles.container}>
         {header && <div style={styles.header}>{header}</div>}
         <div style={styles.content}>{children}</div>
         {footer && <div style={styles.footer}>{footer}</div>}
-      </Container>
+      </div>
     )
   },
 )
@@ -27,6 +26,11 @@ StickyComponentContainer.displayName = 'StickyComponentContainer'
 
 const getStyles = tokens => {
   return {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+    },
     content: {
       flexGrow: 1,
     },
@@ -37,6 +41,7 @@ const getStyles = tokens => {
       backgroundColor: tokens.BackgroundColor.Container,
       borderTop: `1px solid ${tokens.BackgroundColor.HrLight}`,
       borderRadius: '0',
+      marginBottom: `-${tokens.Spacing.Large}px`,
     },
     header: {
       width: '100%',

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { useTokens } from '@kyper/tokenprovider'
 import { Text } from '@kyper/text'
+import { Text as ProtectedText } from 'src/privacy/components'
 import { Edit } from '@kyper/icon/Edit'
 
 export const DetailReviewItem = props => {
@@ -12,12 +13,20 @@ export const DetailReviewItem = props => {
   return (
     <div style={styles.infoRow}>
       <div style={styles.textGroup}>
-        <Text as="Small" style={styles.rowHeader}>
+        <Text
+          as="Small"
+          data-test={`${props.label.replace(/\s+/g, '-')}-row`}
+          style={styles.rowHeader}
+        >
           {props.label}
         </Text>
-        <Text as="Body" style={styles.bold}>
+        <ProtectedText
+          as="Body"
+          data-test={`${props.value.replace(/\s+/g, '-')}-row`}
+          style={styles.bold}
+        >
           {props.value}
-        </Text>
+        </ProtectedText>
       </div>
       <button
         aria-label={props.ariaButtonLabel}
@@ -26,6 +35,7 @@ export const DetailReviewItem = props => {
       >
         <Edit
           color={props.isEditable ? tokens.TextColor.ButtonPrimaryDisabled : tokens.Color.Brand300}
+          data-test={`${props.label.replace(/\s+/g, '-')}-edit-button`}
           size={16}
           style={styles.editIcon}
         />

@@ -3,28 +3,28 @@ import PropTypes from 'prop-types'
 
 import { Spinner } from '@kyper/progressindicators'
 import { useTokens } from '@kyper/tokenprovider'
-import { __ } from '../../utils/Intl'
+import { __ } from 'src/connect/utilities/Intl'
 
-export const LoadingSpinner = ({ bgColor, fgColor, showText = false }) => {
+export const LoadingSpinner = ({ showText = false, size = 48 }) => {
   const tokens = useTokens()
   const styles = getStyles(tokens)
 
   return (
     <div style={styles.container}>
       <Spinner
-        bgColor={bgColor ? bgColor : 'transparent'}
-        fgColor={fgColor ? fgColor : tokens.Color.Brand300}
-        size={48}
+        bgColor={tokens.BackgroundColor.Container}
+        fgColor={tokens.Color.Brand300}
+        size={size}
       />
       {showText && <div style={styles.text}>{__('Loading ...')}</div>}
     </div>
   )
 }
 
-const getStyles = (tokens, bgColor) => {
+const getStyles = tokens => {
   return {
     container: {
-      backgroundColor: bgColor ? bgColor : 'transparent',
+      backgroundColor: tokens.BackgroundColor.Container,
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
@@ -42,7 +42,6 @@ const getStyles = (tokens, bgColor) => {
 }
 
 LoadingSpinner.propTypes = {
-  bgColor: PropTypes.string,
-  fgColor: PropTypes.string,
   showText: PropTypes.bool,
+  size: PropTypes.number,
 }

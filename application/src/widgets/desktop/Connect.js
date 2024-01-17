@@ -12,7 +12,7 @@ import { TokenContext } from '@kyper/tokenprovider'
 import * as connectActions from 'reduxify/actions/Connect'
 import { ActionTypes as AnalyticsActionTypes } from 'reduxify/actions/Analytics'
 import { addAnalyticPath, removeAnalyticPath, sendAnalyticsEvent } from 'reduxify/actions/Analytics'
-import { ActionTypes as PostMessageActionTypes } from 'src/connect/redux/actions/PostMessage'
+import { ActionTypes as PostMessageActionTypes } from 'reduxify/actions/PostMessage'
 
 import { isShowNewExistingMemberEnhancementEnabled } from 'reduxify/selectors/UserFeatures'
 import { getExperimentNamesToUserVariantMap } from 'reduxify/selectors/Experiments'

@@ -123,11 +123,5 @@
     "terser-webpack-plugin": "^5.3.7",
     "ts-import-plugin": "^3.0.0",
     "url-loader": "^4.1.1"
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^axios$": "axios/dist/node/axios.cjs",
-      "^@kyper/(.*)$": "@kyper/$1/lib/index.js"
-    }
   }
 }
