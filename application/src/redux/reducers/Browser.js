@@ -1,4 +1,4 @@
-import { ActionTypes } from '../actions/Browser'
+import { ActionTypes } from 'reduxify/actions/Browser'
 
 export default (
   state = { height: 0, isMobile: false, isTablet: false, size: '', width: 0 },

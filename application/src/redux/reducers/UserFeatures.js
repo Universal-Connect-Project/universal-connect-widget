@@ -1,5 +1,5 @@
-import { createReducer } from '../../utils/Reducer'
-import { ActionTypes } from '../actions/UserFeatures'
+import { createReducer } from 'utils/Reducer'
+import { ActionTypes } from 'reduxify/actions/UserFeatures'
 
 const { LOAD_USER_FEATURES, LOAD_USER_FEATURES_SUCCESS } = ActionTypes
 

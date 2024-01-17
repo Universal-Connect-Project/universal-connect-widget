@@ -8,7 +8,10 @@ module.exports = {
     '<rootDir>/src/utils/Test.js',
     '<rootDir>/src/config/',
   ],
-  transformIgnorePatterns: ['node_modules/(?!(@kyper)/)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(@kyper)/)',
+    'node_modules/(?!(axios)',
+  ],
   transform: {
     '^.+\\.[t|j]s?$': 'babel-jest',
   },

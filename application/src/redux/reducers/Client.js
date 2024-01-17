@@ -1,17 +1,12 @@
 import _merge from 'lodash/merge'
 import _get from 'lodash/get'
 
-import { createReducer } from '../../utils/Reducer'
-import { ActionTypes as AppActionTypes } from '../actions/App'
-import { ActionTypes as ClientActionTypes } from '../actions/Client'
-import { AGG_MODE, REFERRAL_SOURCES } from '../../connect/const/Connect'
+import { createReducer } from 'utils/Reducer'
+import { ActionTypes as AppActionTypes } from 'reduxify/actions/App'
+import { ActionTypes as ClientActionTypes } from 'reduxify/actions/Client'
+import { AGG_MODE, REFERRAL_SOURCES } from 'src/connect/const/Connect'
 
-const {
-  CLIENT_COMMUNICATION_PROFILE_LOADED,
-  CLIENT_PROFILE_LOADED,
-  CLIENT_LOADED,
-  INITIALIZED_CLIENT_CONFIG,
-} = ClientActionTypes
+const { CLIENT_PROFILE_LOADED, CLIENT_LOADED, INITIALIZED_CLIENT_CONFIG } = ClientActionTypes
 
 const { LOAD_MASTER_DATA_SUCCESS } = AppActionTypes
 
@@ -29,22 +24,6 @@ export const clientProfile = createReducer(
   },
 )
 
-// Client Communication Profile Reducer
-const clientCommunicationProfileLoaded = (state, action) => action.payload
-
-const clientCommunicationMasterDataLoaded = (state, action) =>
-  action.payload.client_communication_profile
-    ? { ...state, ...action.payload.client_communication_profile }
-    : state
-
-export const clientCommunicationProfile = createReducer(
-  {},
-  {
-    [CLIENT_COMMUNICATION_PROFILE_LOADED]: clientCommunicationProfileLoaded,
-    [LOAD_MASTER_DATA_SUCCESS]: clientCommunicationMasterDataLoaded,
-  },
-)
-
 // Initialize Config Reducer
 export const defaultClientConfig = {
   is_mobile_webview: false,
@@ -59,6 +38,7 @@ export const defaultClientConfig = {
     current_institution_guid: null,
     current_member_guid: null,
     current_microdeposit_guid: null,
+    enable_app2app: true,
     disable_background_agg: null,
     disable_institution_search: false,
     include_identity: null,

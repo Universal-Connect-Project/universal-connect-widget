@@ -1,5 +1,5 @@
-import { ActionTypes } from '../actions/ComponentStacks'
-import { createReducer } from '../../utils/Reducer'
+import { ActionTypes } from 'reduxify/actions/ComponentStacks'
+import { createReducer } from 'utils/Reducer'
 
 const {
   POP_FOCUS_COMPONENT,

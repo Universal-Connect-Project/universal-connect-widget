@@ -1,17 +1,12 @@
-import PropTypes from 'prop-types'
 import React from 'react'
-import { connect } from 'react-redux'
 
-import { Icon } from 'mx-react-components'
+import { AttentionFilled } from '@kyper/icon/AttentionFilled'
+import { TokenContext } from '@kyper/tokenprovider'
 
 export class ErrorLoading extends React.Component {
-  static propTypes = {
-    theme: PropTypes.object,
-  }
+  static contextType = TokenContext
 
   style() {
-    const { theme } = this.props
-
     return {
       container: {
         display: 'flex',
@@ -20,14 +15,11 @@ export class ErrorLoading extends React.Component {
         flexDirection: 'column',
         height: '100%',
       },
-      icon: {
-        fill: theme.Colors.GRAY_700,
-      },
       h1: {
-        color: theme.Colors.GRAY_700,
-        fontFamily: theme.Fonts.SEMIBOLD,
-        fontSize: theme.FontSizes.XXLARGE,
-        marginBottom: theme.Spacing.SMALL,
+        color: this.context.TextColor.Secondary,
+        fontFamily: this.context.Font.Semibold,
+        fontSize: this.context.FontSize.H3,
+        marginBottom: this.context.Spacing.SMALL,
       },
     }
   }
@@ -37,15 +29,12 @@ export class ErrorLoading extends React.Component {
 
     return (
       <div style={style.container}>
-        <Icon size={60} style={style.icon} type="attention-solid" />
+        <AttentionFilled color={this.context.TextColor.Secondary} height={60} width={60} />
+
         <h1 style={style.h1}>Oops! The widget "{window.app.options.type}" is not available.</h1>
       </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  theme: state.theme,
-})
-
-export default connect(mapStateToProps)(ErrorLoading)
+export default ErrorLoading

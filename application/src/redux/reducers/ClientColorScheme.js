@@ -1,4 +1,4 @@
-import { ActionTypes as AppActionTypes } from '../actions/App'
+import { ActionTypes as AppActionTypes } from 'reduxify/actions/App'
 
 const { LOAD_MASTER_DATA_SUCCESS } = AppActionTypes
 
@@ -10,6 +10,7 @@ export const defaultState = {
   primary_400: '',
   primary_500: '',
   color_scheme: 'light',
+  widget_brand_color: null,
 }
 
 // TODO: Replace this with an individual load of the resource.
@@ -20,6 +21,7 @@ export const loadMasterDataSuccess = (state, action) => {
     return {
       ...state,
       ...client_color_scheme,
+      widgetBrandColor: client_color_scheme.widget_brand_color ?? defaultState.widget_brand_color,
     }
   }
 

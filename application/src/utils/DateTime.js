@@ -1,6 +1,6 @@
 import moment from 'moment'
 import 'moment-timezone'
-import { DEFAULT_TIMEZONE } from '../constants/App'
+import { DEFAULT_TIMEZONE } from 'src/connect/const/app'
 import { Config as OSConfig } from 'mx-react-components'
 
 /**

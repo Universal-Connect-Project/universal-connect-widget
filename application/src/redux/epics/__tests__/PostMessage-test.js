@@ -1,11 +1,11 @@
-// import * as actions from '../../actions/PostMessage'
-// import * as epics from '../../epics/PostMessage'
-// import { expectRx } from '../../../utils/Test'
-// import { sendPostMessage, setWebviewURL } from '../../../utils/PostMessage'
+// import * as actions from 'reduxify/actions/PostMessage'
+// import * as epics from 'reduxify/epics/PostMessage'
+// import { expectRx } from 'utils/Test'
+// import { sendPostMessage, setWebviewURL } from 'src/connect/utilities/PostMessage'
 //
-// jest.mock('utils/PostMessage')
+// jest.mock('src/connect/utilities/PostMessage')
 
-describe('PostMessage placeholder', () => {
+describe('PostMessage Redux Epics placeholder', () => {
   it('should be a placeholder', () => {
     expect(true).toBe(true)
   });

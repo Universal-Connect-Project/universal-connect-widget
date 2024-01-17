@@ -1,4 +1,4 @@
-const {ConnectApi} = require('services/connectApi.ts')
+const {ConnectApi} = require('../../../server/connect/connectApi')
 const config = require('../../../server/config')
 
 let context = {

@@ -4,22 +4,23 @@ import { from, of } from 'rxjs'
 import { catchError, filter, flatMap, map, mergeMap, pluck, repeat, take } from 'rxjs/operators'
 import { combineLatest } from 'rxjs'
 import { ofType } from 'redux-observable'
-import posthog from 'posthog-js'
 import sha256 from 'js-sha256'
+import posthog from 'posthog-js'
+import 'posthog-js/dist/recorder-v2' // Added for security requirements to use PostHog Session Recording
 
-import { ActionTypes } from '../actions/Analytics'
+import { ActionTypes } from 'reduxify/actions/Analytics'
+import { maskInputFn } from 'src/privacy/withProtection'
 
-import { AGG_MODE } from '../../connect/const/Connect'
-import { EventCategories } from '../../connect/const/Analytics'
-import FireflyAPI from '../../utils/FireflyAPI'
-import { getHostname } from '../../utils/Browser'
+import connectAPI from 'src/connect/services/api'
+import { getHostname } from 'src/connect/utilities/Browser'
+import { defaultEventMetadata } from 'src/connect/const/Analytics'
 
 export const initializeSession = actions$ =>
   actions$.pipe(
     ofType(ActionTypes.INITIALIZE_ANALYTICS_SESSION),
     pluck('payload'),
     flatMap(sessionDetails =>
-      from(FireflyAPI.createAnalyticsSession({ analytics_session: sessionDetails })).pipe(
+      from(connectAPI.createAnalyticsSession({ analytics_session: sessionDetails })).pipe(
         map(({ analytics_session }) => ({
           type: ActionTypes.INITIALIZE_ANALYTICS_SESSION_SUCCESS,
           payload: analytics_session,
@@ -45,7 +46,7 @@ export const createFeatureVisit = (actions$, state$) =>
     take(1),
     flatMap(([{ payload }, state]) =>
       from(
-        FireflyAPI.createNewFeatureVisit({
+        connectAPI.createNewFeatureVisit({
           feature_visit: {
             ...payload,
             analytics_session_guid: _get(state, 'analytics.currentSession.guid', null),
@@ -76,22 +77,14 @@ export const sendAnalyticsEvent = (actions$, state$) =>
     take(1),
     repeat(),
     flatMap(([{ payload }, store]) => {
-      const currentMode =
-        state$.value.connect.connectConfig.mode ??
-        state$.value.initializedClientConfig.connect?.mode ??
-        AGG_MODE
-
       return from(
-        FireflyAPI.sendAnalyticsEvent({
+        connectAPI.sendAnalyticsEvent({
           ...payload,
-          category:
-            payload.category === EventCategories.CONNECT
-              ? `${EventCategories.CONNECT} - ${currentMode}`
-              : payload.category,
           path: store.analytics.path.map(obj => obj.path).join(''),
           data_source: store.analytics.dataSource,
           session_id: _get(store, 'analytics.currentSession.guid', null),
           host: getHostname(),
+          is_mobile_webview: _get(window.app, 'is_mobile_webview', false),
         }),
       ).pipe(
         map(() => ({
@@ -119,16 +112,20 @@ export const sendAnalyticPageview = (actions$, state$) =>
     repeat(),
     flatMap(([{ payload }, store]) => {
       const path = store.analytics.path.map(obj => obj.path).join('')
+      const clientGuid = store.client.guid
 
       // If posthog has been initialized and the path includes connect, send to posthog for connects analytics.
       if (store.analytics.posthogInitialized && path.includes('/connect')) {
         posthog.capture('$pageview', {
           $current_url: path,
+          $groups: { client: clientGuid },
+          ...defaultEventMetadata,
+          ...payload.metadata,
         })
       }
 
       return from(
-        FireflyAPI.sendAnalyticsPageview({
+        connectAPI.sendAnalyticsPageview({
           data_source: store.analytics.dataSource,
           session_id: _get(store, 'analytics.currentSession.guid', null),
           created_at: moment().unix(), //UTC is set globally for moment
@@ -138,6 +135,7 @@ export const sendAnalyticPageview = (actions$, state$) =>
           path,
           host: getHostname(),
           metadata: _get(window.app, 'clientConfig.metadata', null),
+          is_mobile_webview: _get(window.app, 'is_mobile_webview', false),
         }),
       ).pipe(
         map(() => ({
@@ -161,24 +159,43 @@ export const initializePostHog = (actions$, state$) => {
        * Autocapture below is for events related with a, button, form, input, select, textarea, and label tags.
        * Only the name, id, and class attributes from input tags will be collected.
        */
-      posthog.init(process.env.POSTHOG_API_KEY, {
+      posthog.init(window?.app?.postHogPublicKey || process.env.POSTHOG_API_KEY, {
         api_host: 'https://app.posthog.com', // This is default. Change if self hosted.
         autocapture: false, // Default is true, which will auto capture user events.
         capture_pageview: false, // Do not auto capture pageviews. This doesn't work on SPAs.
-        disable_session_recording: true, // Security didn't approve this due to recorder.js requested at runtime.
+        /*
+          The posthog-js library directly exposes recorder.js using:
+          import 'posthog-js/dist/recorder'
+
+          Without the import, posthog-js gets and applies a js file via the network,
+          which for security purposes is a no-go.  We must import it directly.
+        */
+        disable_session_recording: true,
         persistence: 'memory', // Store identify info on page memory.
         loaded: posthog => {
           const userGuid = _get(state$, 'value.user.details.guid', null)
-          const client = _get(state$, 'value.client', {})
 
           if (userGuid) {
             posthog.identify(sha256(userGuid))
           }
-          if (client.guid) {
-            posthog.group('client', client.guid, { name: client.name || null })
+
+          /**
+           * Conditionally start Session Recording
+           *
+           * Only 'connect' | 'connections' requests for now
+           * MoneyMap 'master' requests have too much PII to enable it
+           */
+          const requestedWidgetType = _get(state$, 'value.widgetProfile.type', null)
+          if (['connect', 'connections'].includes(requestedWidgetType)) {
+            posthog.startSessionRecording()
           }
         },
+        session_recording: {
+          maskAllInputs: true,
+          maskInputFn,
+        },
       })
+
       return of({ type: ActionTypes.INITIALIZE_POSTHOG_SUCCESS })
     }),
   )

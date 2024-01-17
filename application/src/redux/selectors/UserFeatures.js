@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect'
 
 import {
+  SHOW_CONNECT_GLOBAL_NAVIGATION_HEADER,
+  DISMISSABLE_TOO_SMALL_MODAL,
   ENABLE_TWELVE_MONTH_CASH_FLOW,
   GOALS_NOTIFICATIONS,
   GOALS_WIDGET_REDESIGN,
@@ -12,6 +14,7 @@ import {
   SPENDING_WIDGET_OTHER_TAB,
   SHOW_ABSOLUTE_TRANSACTION_AMOUNT,
   SHOW_ACCOUNTS_AGGREGATION_CTA,
+  SHOW_ACCOUNT_NICKNAME,
   SHOW_CARTOGRAPHER_TRANSACTIONS_WIDGET,
   SHOW_CASHFLOW_CALENDAR_VIEW_BY_DEFAULT,
   SHOW_EXTRA_MARGIN_IN_ACCOUNT_FILTER,
@@ -25,9 +28,9 @@ import {
   SHOW_UNSTYLED_GROUPED_ACCOUNTS,
   TRANSACTION_SUBSCRIPTIONS_DISABLED,
   USE_REGIONS_HELP_WIDGET_COPY,
-} from '../../constants/UserFeatures'
+} from 'src/connect/const/UserFeatures'
 
-import * as UserFeatures from '../../utils/UserFeatures'
+import * as UserFeatures from 'utils/UserFeatures'
 
 const getGoalsRedesignWidgetProfileFlagEnabled = state => state.widgetProfile.enable_goals_redesign
 
@@ -53,6 +56,10 @@ export const isGoalsRedesignEnabled = createSelector(
 
 export const isInvestmentsRedesignEnabled = createSelector(getUserFeatures, userFeatures => {
   return UserFeatures.isFeatureEnabled(userFeatures, INVESTMENTS_REDESIGN)
+})
+
+export const shouldShowDismissableTooSmallModal = createSelector(getUserFeatures, userFeatures => {
+  return UserFeatures.isFeatureEnabled(userFeatures, DISMISSABLE_TOO_SMALL_MODAL)
 })
 
 export const shouldShowFinstrongWidget = createSelector(getUserFeatures, userFeatures => {
@@ -128,6 +135,10 @@ export const shouldShowAbsoluteTransactionAmount = createSelector(getUserFeature
   return UserFeatures.isFeatureEnabled(userFeatures, SHOW_ABSOLUTE_TRANSACTION_AMOUNT)
 })
 
+export const shouldShowAccountNickname = createSelector(getUserFeatures, userFeatures => {
+  return UserFeatures.isFeatureEnabled(userFeatures, SHOW_ACCOUNT_NICKNAME)
+})
+
 export const shouldShowExtraMarginInAccountFilter = createSelector(
   getUserFeatures,
   userFeatures => {
@@ -150,3 +161,10 @@ export const shouldEnableTwelveMonthCashFlow = createSelector(getUserFeatures, u
 export const shouldUseRegionsHelpWidgetText = createSelector(getUserFeatures, userFeatures => {
   return UserFeatures.isFeatureEnabled(userFeatures, USE_REGIONS_HELP_WIDGET_COPY)
 })
+
+export const shouldShowConnectGlobalNavigationHeader = createSelector(
+  getUserFeatures,
+  userFeatures => {
+    return UserFeatures.isFeatureEnabled(userFeatures, SHOW_CONNECT_GLOBAL_NAVIGATION_HEADER)
+  },
+)

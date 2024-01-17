@@ -1,9 +1,9 @@
-// import { expectRx } from '../../../utils/Test'
-// import { ActionTypes, updateUser } from '../../actions/User'
-// import * as epics from '../../epics/User'
+// import { expectRx } from 'utils/Test'
+// import { ActionTypes } from 'reduxify/actions/User'
+// import * as epics from 'reduxify/epics/User'
 // import { of } from 'rxjs'
 
-describe('User placeholder', () => {
+describe('User Redux Epics placeholder', () => {
   it('should be a placeholder', () => {
     expect(true).toBe(true)
   });
@@ -11,7 +11,7 @@ describe('User placeholder', () => {
 
 // describe('User Epic', () => {
 //   const ctx = {
-//     FireflyAPI: {
+//     connectAPI: {
 //       updateUser: jest.fn(() => of([])),
 //     },
 //   }
@@ -21,13 +21,13 @@ describe('User placeholder', () => {
 //       expect.assertions(2)
 //
 //       expectRx.toMatchObject.run(({ hot, expectObservable }) => {
-//         const input$ = hot('a', { a: updateUser([]) })
+//         const input$ = hot('a', { a: { type: ActionTypes.UPDATE_USER, payload: [] } })
 //
 //         expectObservable(epics.updateUser(input$, undefined, ctx)).toBe('a', {
 //           a: { type: ActionTypes.UPDATE_USER_SUCCESS },
 //         })
 //       })
-//       expect(ctx.FireflyAPI.updateUser).toHaveBeenCalled()
+//       expect(ctx.connectAPI.updateUser).toHaveBeenCalled()
 //     })
 //   })
 // })

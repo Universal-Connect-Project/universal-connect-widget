@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 
 export const getExperiments = state => state.experiments.items
 export const getActiveExperiments = createSelector(getExperiments, experiments =>
-  experiments?.filter(experiment => experiment.is_active) || [],
+  experiments.filter(experiment => experiment.is_active),
 )
 
 /*

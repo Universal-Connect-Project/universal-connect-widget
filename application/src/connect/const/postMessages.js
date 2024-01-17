@@ -1,0 +1,15 @@
+export const POST_MESSAGES = {
+  MEMBER_CONNECTED: 'connect/memberConnected',
+  MICRODEPOSIT_DETAILS_SUBMITTED: 'connect/microdeposits/detailsSubmitted',
+  MICRODEPOSIT_VERIFIED: 'connect/microdeposits/verified',
+}
+
+export const POST_MESSAGE_CONTEXT = {
+  MANUAL_ACCOUNT_ADDED: 'manualAccountAdded',
+}
+
+export const ANALYTIC_POST_MESSAGES = [
+  POST_MESSAGES.MEMBER_CONNECTED,
+  POST_MESSAGES.MICRODEPOSIT_DETAILS_SUBMITTED,
+  POST_MESSAGES.MICRODEPOSIT_VERIFIED,
+]

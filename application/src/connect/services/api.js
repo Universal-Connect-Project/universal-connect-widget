@@ -8,8 +8,8 @@
   the correct/current dataSource(s).
 */
 
-import { FireflyDataSource } from 'FireflyDataSource'
-import { ConnectAPIService } from 'ConnectAPIService'
+import { FireflyDataSource } from './FireflyDataSource'
+import { ConnectAPIService } from './ConnectAPIService'
 
 let axiosInstance
 

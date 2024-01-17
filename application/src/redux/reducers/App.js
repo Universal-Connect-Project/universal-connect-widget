@@ -1,4 +1,4 @@
-import { ActionTypes } from '../actions/App'
+import { ActionTypes } from 'reduxify/actions/App'
 
 export const defaultState = {
   loading: true,

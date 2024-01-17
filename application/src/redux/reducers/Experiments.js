@@ -1,6 +1,6 @@
-import { createReducer } from '../../utils/Reducer'
+import { createReducer } from 'utils/Reducer'
 
-import { ActionTypes } from '../actions/Experiments'
+import { ActionTypes } from 'reduxify/actions/Experiments'
 
 export const defaultState = {
   items: [],

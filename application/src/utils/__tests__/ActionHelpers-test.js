@@ -1,5 +1,5 @@
 import _keys from 'lodash/keys'
-import { combineDispatchers, filterDispatcher } from '../ActionHelpers'
+import { combineDispatchers, filterDispatcher } from 'utils/ActionHelpers'
 
 describe('ActionHelpers', () => {
   let dispatchCalled = false

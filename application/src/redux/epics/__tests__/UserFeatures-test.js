@@ -1,6 +1,6 @@
-import { expectRx } from '../../../utils/Test'
-import * as actions from '../../actions/UserFeatures'
-import * as epics from '../../epics/UserFeatures'
+import { expectRx } from 'utils/Test'
+import * as actions from 'reduxify/actions/UserFeatures'
+import * as epics from 'reduxify/epics/UserFeatures'
 import { of, throwError } from 'rxjs'
 
 describe('User Features Epic', () => {
@@ -9,7 +9,7 @@ describe('User Features Epic', () => {
 
     it('should emit LOAD_USER_FEATURE_SUCCESS if features load correctly', () => {
       const ctx = {
-        FireflyAPI: {
+        connectAPI: {
           loadUserFeatures: jest.fn(() => of(userFeatures)),
         },
       }
@@ -22,12 +22,12 @@ describe('User Features Epic', () => {
         })
       })
 
-      expect(ctx.FireflyAPI.loadUserFeatures).toHaveBeenCalled()
+      expect(ctx.connectAPI.loadUserFeatures).toHaveBeenCalled()
     })
 
     it('should emit LOAD_USER_FEATURE_ERROR if call fails', () => {
       const ctx = {
-        FireflyAPI: {
+        connectAPI: {
           loadUserFeatures: () => throwError('loadUserFeatures TEST FAILURE'),
         },
       }

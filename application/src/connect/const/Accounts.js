@@ -13,3 +13,19 @@ export const ReadableAccountTypes = {
   PREPAID: 11,
   CHECKING_LINE_OF_CREDIT: 12,
 }
+
+export const AccountTypeNames = [
+  'Other',
+  'Checking',
+  'Savings',
+  'Loan',
+  'Credit Card',
+  'Investment',
+  'Line of Credit',
+  'Mortgage',
+  'Property',
+  'Cash',
+  'Insurance',
+  'Prepaid',
+  'Checking', // Checking line of credit will be referred to as a checking account
+]

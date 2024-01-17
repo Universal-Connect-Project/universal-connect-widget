@@ -1,5 +1,5 @@
-import { createReducer } from '../../utils/Reducer'
-import { ActionTypes } from '../actions/Agreement'
+import { createReducer } from 'utils/Reducer'
+import { ActionTypes } from 'reduxify/actions/Agreement'
 
 const { AGREEMENT_LOADED, AGREEMENT_ERROR } = ActionTypes
 

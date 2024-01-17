@@ -1,17 +1,9 @@
-import { createReducer } from '../../utils/Reducer'
-import { ActionTypes } from '../actions/User'
-import { ActionTypes as AppActionTypes } from '../actions/App'
-import { ActionTypes as UserProfileActionTypes } from '../actions/UserProfile'
+import { createReducer } from 'utils/Reducer'
+import { ActionTypes } from 'reduxify/actions/User'
+import { ActionTypes as AppActionTypes } from 'reduxify/actions/App'
+import { ActionTypes as UserProfileActionTypes } from 'reduxify/actions/UserProfile'
 
-const {
-  UPDATE_USER,
-  UPDATE_USER_SUCCESS,
-  EMAIL_VERIFICATION_STEP,
-  PHONE_VERIFICATION_STEP,
-  PASSWORD_UPDATING,
-  PASSWORD_UPDATED,
-  PASSWORD_UPDATED_ERROR,
-} = ActionTypes
+const { UPDATE_USER, UPDATE_USER_SUCCESS } = ActionTypes
 
 const { LOAD_MASTER_DATA_SUCCESS } = AppActionTypes
 
@@ -37,31 +29,11 @@ const updateUserSuccess = (state, action) => ({
   updating: false,
   details: action.payload,
 })
-const emailVerificationStep = (state, action) => ({
-  ...state,
-  emailVerificationStep: action.payload.step,
-})
-const phoneVerificationStep = (state, action) => ({
-  ...state,
-  phoneVerificationStep: action.payload.step,
-})
-const passwordUpdating = state => ({ ...state, passwordUpdating: true })
-const passwordUpdated = state => ({ ...state, passwordMessage: null, passwordUpdating: false })
-const passwordUpdatedError = (state, action) => ({
-  ...state,
-  passwordMessage: action.payload.error.message,
-  passwordUpdating: false,
-})
 
 const user = createReducer(defaultState, {
   [UPDATE_USER]: updateUser,
   [UPDATE_USER_SUCCESS]: updateUserSuccess,
-  [EMAIL_VERIFICATION_STEP]: emailVerificationStep,
   [LOAD_MASTER_DATA_SUCCESS]: masterDataLoaded,
-  [PHONE_VERIFICATION_STEP]: phoneVerificationStep,
-  [PASSWORD_UPDATING]: passwordUpdating,
-  [PASSWORD_UPDATED]: passwordUpdated,
-  [PASSWORD_UPDATED_ERROR]: passwordUpdatedError,
 })
 
 const userProfile = (state = {}, action) => {

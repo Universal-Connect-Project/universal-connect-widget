@@ -1,6 +1,6 @@
 import _get from 'lodash/get'
 
-import { ActionTypes } from '../actions/Analytics'
+import { ActionTypes } from 'reduxify/actions/Analytics'
 
 const {
   ADD_ANALYTIC_PATH,

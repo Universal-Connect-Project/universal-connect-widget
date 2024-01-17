@@ -1,6 +1,6 @@
-import { createReducer } from '../../utils/Reducer'
+import { createReducer } from 'utils/Reducer'
 
-import { ActionTypes } from '../actions/WidgetProfile'
+import { ActionTypes } from 'reduxify/actions/WidgetProfile'
 
 const { WIDGET_PROFILE_LOADED } = ActionTypes
 
