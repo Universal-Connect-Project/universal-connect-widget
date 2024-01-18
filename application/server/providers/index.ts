@@ -78,6 +78,7 @@ export class ProviderApiBase{
   serviceClient: ProviderApiClient;
   analyticsClient: AnalyticsClient;
   searchApi: SearchClient;
+  providers: string[];
   constructor(req: any){
     this.context = req.context;
   }
@@ -98,6 +99,7 @@ export class ProviderApiBase{
             ...conf,
             storageClient
           });
+          this.providers = Object.values(conf).filter((v: any) => v.available).map((v: any) => v.provider)
           return true;
         }catch(err){
           logger.error('Error parsing auth token', err)
@@ -125,7 +127,7 @@ export class ProviderApiBase{
       query = q.search_name;
     }
     if (query?.length >= 3) {
-      let list = await this.searchApi.institutions(query);
+      let list = await this.searchApi.institutions(query, this.providers);
       return list?.institutions?.sort((a:any,b:any) => a.name.length - b.name.length);
     }
     return []

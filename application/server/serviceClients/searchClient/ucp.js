@@ -10,8 +10,9 @@ export class SearchClient{
     this.partnerName = partnerName;
   }
 
-  async institutions(name){
-    let url = `${config.SearchEndpoint}institutions?query=${encodeURIComponent(name || '')}&partner=${this.partnerName}`;
+  async institutions(name, providers){
+    providers = providers || []
+    let url = `${config.SearchEndpoint}institutions?query=${encodeURIComponent(name || '')}&partner=${this.partnerName}&providers=${providers.join(';')}`;
     //return this.get(url)
     return http.get(url, {Auhorization: `token ${this.token}`})
   }

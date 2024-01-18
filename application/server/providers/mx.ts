@@ -71,7 +71,14 @@ export class MxApi implements ProviderApiClient {
     this.db = new StorageClient(token);
     this.provider = int ? 'mx_int': 'mx';
     this.mxConfig = int ? mxInt: mxProd;
-    this.apiClient = MxPlatformApiFactory(new Configuration(this.mxConfig));
+    this.apiClient = MxPlatformApiFactory(new Configuration({
+      ...this.mxConfig,
+      baseOptions: {
+        headers: {
+          Accept: 'application/vnd.mx.api.v1+json',
+        },
+      },
+    }));
   }
   async GetInstitutionById(id: string): Promise<Institution> {
     const res = await this.apiClient.readInstitution(id);
