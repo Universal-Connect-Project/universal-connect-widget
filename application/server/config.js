@@ -30,10 +30,10 @@ const config = {
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
-  SophtronClientId: '',
-  SophtronClientSecret: '',
+  SophtronClientId: '', //sophtron.com -> api settings -> direct auth -> UserId
+  SophtronClientSecret: '',  //sophtron.com -> api settings -> direct auth -> AccessKey
 
-  UcpAuthClientId: '',
+  UcpAuthClientId: '', // https://ucp-login.sophtron-prod.com/
   UcpAuthClientSecret: '',
   UcpAuthEncryptionKey: ''
 

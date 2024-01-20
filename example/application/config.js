@@ -6,6 +6,7 @@ Object.keys(envs).forEach((k) => {
 });
 const config = {
   LogLevel: 'debug',
+  Component: 'uvcs-demo',
   Port: '8088',
   Env: 'pre', // mocked
   Version: '',
@@ -18,12 +19,12 @@ const config = {
   SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
-  UcpClientId: '',
+  UcpClientId: '', // https://ucp-login.sophtron-prod.com/
   UcpClientSecret: '',
   UcpEncryptionKey: '',
 
-  SophtronApiUserId: '',
-  SophtronApiUserSecret: '',
+  SophtronApiUserId: '', //sophtron.com -> api settings -> direct auth -> UserId
+  SophtronApiUserSecret: '', //sophtron.com -> api settings -> direct auth -> AccessKey
 
   MxClientId:'',
   MxApiSecret: '', 
