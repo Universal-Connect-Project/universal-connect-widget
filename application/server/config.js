@@ -6,12 +6,11 @@ Object.keys(envs).forEach((k) => {
 });
 
 const config = {
-  AuthServiceEndpoint: 'https://ucp-login.sophtron-prod.com/api',
-  StorageEndpoint: 'https://ucp-search.sophtron-prod.com/api/',
-  SearchEndpoint: 'https://ucp-search.sophtron-prod.com/api/',
-  AnalyticsServiceEndpoint: 'https://ucp-analytics.sophtron-prod.com/api/',
-  HostUrl: 'https://ucp-test.sophtron-prod.com',
-  WebhookHostUrl: 'https://ucp-webhook.sophtron-prod.com',
+  AuthServiceEndpoint: 'https://login.universalconnectproject.org/api',
+  SearchEndpoint: 'https://search.universalconnectproject.org/api/',
+  AnalyticsServiceEndpoint: 'https://analytics.universalconnectproject.org/api/',
+  HostUrl: 'https://test.universalconnectproject.org',
+  WebhookHostUrl: 'https://webhook.universalconnectproject.org',
   Component: 'UniversalWidget',
   ServiceName: 'universal_widget',
   Demo: true,
@@ -30,10 +29,10 @@ const config = {
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
 
-  SophtronClientId: '',
-  SophtronClientSecret: '',
+  SophtronClientId: '', //sophtron.com -> api settings -> direct auth -> UserId
+  SophtronClientSecret: '',  //sophtron.com -> api settings -> direct auth -> AccessKey
 
-  UcpAuthClientId: '',
+  UcpAuthClientId: '', // https://login.universalconnectproject.org/
   UcpAuthClientSecret: '',
   UcpAuthEncryptionKey: ''
 

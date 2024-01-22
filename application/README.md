@@ -12,7 +12,7 @@
 ### The API server
   1. Run `npm run keys` in `/application` to generate a new set of `key` and `IV` values.
   2. Fill in the `CryptoKey` and `CryptoIv` in your newly created `application/.env` file with the generated `key` and `IV`.
-  3. Sign up a UCP client account: [here](https://ucp-login.sophtron-prod.com/) (the `Click here to login` link navigates to the aws hosted login page where sign up option is available).
+  3. Sign up a UCP client account: [here](https://login.universalconnectproject.org/) (the `Click here to login` link navigates to the aws hosted login page where sign up option is available).
   4. Generate and view your client secrets once registered and logged in
   5. Fill in the `UcpAuthClientId`, `UcpAuthClientSecret` and `UcpAuthEncryptionKey` in the `application/.env` file with the values provided by login page.
   6. Start the API server by running `npm run server` in `/application`. At this stage, the API server is running and the widget is available at `http://localhost:8080`.
@@ -25,6 +25,11 @@
   
   *The `CryptoKey` and `CryptoIv` values are for encrypting the session token in order to not rely on cookies. They must be shared across server instances if there are multiple instances.*
 
+  * You might see an error about failure to connect redis, the widget doesn't rely on redis to start, but some providers logic require an redis intance, to fix this error you can either: 
+  - start a local redis instance, this way it will be avaliable at localhost:6379 and the widget will use it
+  - Or set in `.env` Env=dev, this way the redis client will use local in-mem object to handle the cache and remove the error, however, this is just for some testing, the cached values won't expire and also will be cleared on server restart. 
+  * Running the docker container:
+    if you encounter some strange errors, especially trying on windows, the environment setup could be tricky, you may choose to run the docker image instead. please scroll all the way down for the instruction on docker.
 ## Demo Website
 
 *To get a working demo locally, you need to act as a client (who embeds the widget within their own domain). An [example demo website](../example/README.md) is provided to demonstrate this.*
@@ -39,10 +44,17 @@
 DO NOT put any credentials in any of the js files. If you do so, it could accidentally get committed and leaked to public.
 USE `.env` FILE
 
-*A hosted example can be found [here](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com).*
+*A hosted example can be found [here](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org).*
 
 ## List of banks to test with 
 - Sophtron: Sophtron Bank
 - MX: MX Bank
 - Finicity: Finbank
 - Akoya: mikomo
+
+# Running the docker container
+- there is a Dockerfile that's used to build a docker image, 
+  you can use `build.sh`, it does the build and tags the image with `uvcs`
+- credentials needs to be configured through envrionment variables. to do it, use `-e` option to pass in
+  you can use the `start-docker.sh`, it assumes the config is up to date with the `.env` file and mounts it to the container then start.
+*in your `.env` file, make sure values are encloses by quotes `"` or `'`, this is a limitation by docker

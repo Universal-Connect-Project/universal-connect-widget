@@ -6,24 +6,25 @@ Object.keys(envs).forEach((k) => {
 });
 const config = {
   LogLevel: 'debug',
+  Component: 'uvcs-demo',
   Port: '8088',
   Env: 'pre', // mocked
   Version: '',
   CryptoAlgorithm: 'aes-256-cbc',
 
-  AuthServiceEndpoint: 'https://ucp-login.sophtron-prod.com/api',
+  AuthServiceEndpoint: 'https://login.universalconnectproject.org/api',
   //AuthServiceEndpoint: 'http://localhost:8081/api',
   
-  SophtronApiServiceEndpoint: 'https://api.sophtron-prod.com/api',
-  SophtronVCServiceEndpoint: 'https://vc.sophtron-prod.com/api/',
+  SophtronApiServiceEndpoint: 'https://api.universalconnectproject.org/api',
+  SophtronVCServiceEndpoint: 'https://vc.universalconnectproject.org/api/',
   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
-  UcpClientId: '',
+  UcpClientId: '', // https://login.universalconnectproject.org/
   UcpClientSecret: '',
   UcpEncryptionKey: '',
 
-  SophtronApiUserId: '',
-  SophtronApiUserSecret: '',
+  SophtronApiUserId: '', //sophtron.com -> api settings -> direct auth -> UserId
+  SophtronApiUserSecret: '', //sophtron.com -> api settings -> direct auth -> AccessKey
 
   MxClientId:'',
   MxApiSecret: '', 
