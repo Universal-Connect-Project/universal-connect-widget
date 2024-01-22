@@ -108,5 +108,5 @@ This example demonstrates a client website that embeds the universal widget and 
   - Build and run the docker image.
   - Or `npm i` and `npm run start` in `application` folder to get the server up
   - Browse `http://localhost:8088/loader.html?env=http://localhost:8080`
-  - An hosted example can be found [here](https://demo.sophtron.com/loader.html?env=https://universalwidget.sophtron-prod.com)
+  - An hosted example can be found [here](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org)
 

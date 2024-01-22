@@ -12,7 +12,7 @@
 ### The API server
   1. Run `npm run keys` in `/application` to generate a new set of `key` and `IV` values.
   2. Fill in the `CryptoKey` and `CryptoIv` in your newly created `application/.env` file with the generated `key` and `IV`.
-  3. Sign up a UCP client account: [here](https://ucp-login.sophtron-prod.com/) (the `Click here to login` link navigates to the aws hosted login page where sign up option is available).
+  3. Sign up a UCP client account: [here](https://login.universalconnectproject.org/) (the `Click here to login` link navigates to the aws hosted login page where sign up option is available).
   4. Generate and view your client secrets once registered and logged in
   5. Fill in the `UcpAuthClientId`, `UcpAuthClientSecret` and `UcpAuthEncryptionKey` in the `application/.env` file with the values provided by login page.
   6. Start the API server by running `npm run server` in `/application`. At this stage, the API server is running and the widget is available at `http://localhost:8080`.
@@ -44,7 +44,7 @@
 DO NOT put any credentials in any of the js files. If you do so, it could accidentally get committed and leaked to public.
 USE `.env` FILE
 
-*A hosted example can be found [here](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com).*
+*A hosted example can be found [here](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org).*
 
 ## List of banks to test with 
 - Sophtron: Sophtron Bank
