@@ -24,7 +24,7 @@ Verifiable Credentials are being embraced by regulators because they allow users
 
 ## Get started
 
-- For a quick view check out [this demo site](https://ucp-demo.sophtron-prod.com/loader.html?env=https://ucp-widget.sophtron-prod.com)
+- For a quick view check out [this demo site](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org)
 - For examples on how to integrate with and embed an hosted widget, please refer to [example/README.md](example/README.md)
 - For development and deployment, please refer to [application/README.md](application/README.md)
 - Usage documentation [openapi](openapi/)
