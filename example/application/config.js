@@ -15,8 +15,8 @@ const config = {
   AuthServiceEndpoint: 'https://login.universalconnectproject.org/api',
   //AuthServiceEndpoint: 'http://localhost:8081/api',
   
-  SophtronApiServiceEndpoint: 'https://api.universalconnectproject.org/api',
-  SophtronVCServiceEndpoint: 'https://vc.universalconnectproject.org/api/',
+  SophtronApiServiceEndpoint: 'https://api.sophtron.com/api',
+  SophtronVCServiceEndpoint: 'https://vc.sophtron.com/api/',
   //SophtronVCServiceEndpoint: 'http://localhost:8083/api/',
 
   UcpClientId: '', // https://login.universalconnectproject.org/
