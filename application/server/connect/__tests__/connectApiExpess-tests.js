@@ -1,6 +1,4 @@
-import mocked from '../../../shared/connect/fireflyApiBridge';
-
-const baseUrl = 'http://127.0.0.1:8080/';
+// import * as mocked from '../../../shared/connect/fireflyApiBridge';
 
 describe('Test Connect Routes', () => {
   test('Test sendAnalyticsEvent route', async () => {

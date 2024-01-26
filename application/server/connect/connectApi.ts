@@ -1,4 +1,4 @@
-import {Credential, Member, MemberResponse} from '../../shared/connect/contract'
+import {Credential, Member, MemberResponse} from 'interfaces/contract'
 import {
   Challenge,
   ChallengeType,
