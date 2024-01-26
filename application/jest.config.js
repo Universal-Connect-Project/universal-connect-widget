@@ -11,10 +11,10 @@ module.exports = {
   ],
   transformIgnorePatterns: [
     '/node_modules/(?!(@kyper)/).*/',
-    '/node_modules/(?!(axios))/'
   ],
   transform: {
-    '^.+\\.[t|j]s?$': 'babel-jest',
+    '^.+\\.[j]s?$': 'babel-jest',
+    '^.+\\.[t]s?$': 'ts-jest',
   },
   moduleNameMapper: {
     '^axios$': require.resolve('axios'),
