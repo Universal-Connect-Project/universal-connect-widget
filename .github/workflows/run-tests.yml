@@ -38,4 +38,4 @@ jobs:
       - name: Run Jest Tests
         run: |
           cd ./application
-          npm run test
+          npx react-app-rewired test --all --ci
