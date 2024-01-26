@@ -46,12 +46,6 @@ module.exports = override(
   function override(config) {
     config.resolve = {
       ...config.resolve,
-      paths: (paths, env) => {
-        paths.testPaths = path.resolve(__dirname, 'tests');
-        paths.appIndexJs = path.resolve(__dirname, 'client/index.jsx');
-        paths.appSrc = path.resolve(__dirname, 'client');
-        return paths;
-      },
       alias: {
         ...config.alias,
         'services': path.resolve(__dirname, '/server/connect'),
