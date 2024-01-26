@@ -1,5 +1,5 @@
-const {ConnectApi} = require('services/connectApi.ts')
-const config = require('../../../server/config')
+const { ConnectApi } = require('../../../server/connect/connectApi');
+const config = require('../../../server/config');
 
 let context = {
   user_id: config.MxDemoUserId
