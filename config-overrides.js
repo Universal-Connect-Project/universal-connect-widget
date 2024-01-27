@@ -48,9 +48,9 @@ module.exports = override(
       ...config.resolve,
       alias: {
         ...config.alias,
-        'services': path.resolve(__dirname, '/server/connect'),
-        'interfaces': path.resolve(__dirname, '/shared/connect'),
-        'redis': path.resolve(__dirname, '/server/serviceClients/storageClient/redis_mock.js'),
+        // 'services': path.resolve(__dirname, '/server/connect'),
+        // 'interfaces': path.resolve(__dirname, '/shared/connect'),
+        // 'redis': path.resolve(__dirname, '/server/serviceClients/storageClient/redis_mock.js'),
         clients: path.resolve(__dirname, 'src/clients'),
         components: path.resolve(__dirname, 'src/components'),
         config: path.resolve(__dirname, 'src/config'),

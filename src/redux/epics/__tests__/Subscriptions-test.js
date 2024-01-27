@@ -4,16 +4,16 @@ import { expectRx } from '../../../utils/Test'
 
 import * as actions from '../../actions/Subscriptions'
 import { ActionTypes } from '../../actions/Subscriptions'
-import { fetchSubscriptionsByDateRange } from '../../epics/Subscriptions'
+import { fetchSubscriptionsByDateRange } from '../Subscriptions'
 
 describe('Subscription test, fetchSubscriptionsByDateRange', () => {
-  it('should emit SUBSCRIPTIONS_LOADED when it is successfull', () => {
+  it('should emit SUBSCRIPTIONS_LOADED when it is successful', () => {
     expect.assertions(1)
     const subscriptions = [
       {
         start_date: '02/05/2019',
         end_date: '05/06/2019',
-        name: 'NetFlix',
+        name: 'Netflix',
       },
       {
         start_date: '02/05/2019',
