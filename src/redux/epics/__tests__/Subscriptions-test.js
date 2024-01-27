@@ -1,6 +1,6 @@
 import { of, throwError } from 'rxjs'
 
-import { expectRx } from 'utils/Test'
+import { expectRx } from '../../../utils/Test'
 
 import * as actions from '../../actions/Subscriptions'
 import { ActionTypes } from '../../actions/Subscriptions'
