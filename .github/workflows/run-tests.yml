@@ -32,7 +32,6 @@ jobs:
 
       - name: Install all dependencies
         run: |
-          cd ./application
           npm ci
 
       - name: Run Jest Tests
