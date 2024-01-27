@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">universalvcs</string>
-    <string name="title_activity_main">universalvcs</string>
-    <string name="package_name">website.tbd.universalvcs</string>
-    <string name="custom_url_scheme">website.tbd.universalvcs</string>
-</resources>
