@@ -1,7 +1,0 @@
-{
-  "name": "vcs",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}

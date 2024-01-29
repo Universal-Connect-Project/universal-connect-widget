@@ -1,6 +1,4 @@
 
-test.js
-test.ts
 .env
 # Logs
 logs
@@ -22,9 +20,12 @@ coverage/
 .vscode/*
 !.vscode/extensions.json
 .idea/*
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS-specific
+.DS_Store
+.Thumbs
