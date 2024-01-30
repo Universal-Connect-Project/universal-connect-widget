@@ -46,7 +46,7 @@ const sophtron = (function () {
   }
 
   function onMessage(message) {
-    if(message.type.startsWith('vcs')){
+    if(message?.type?.startsWith('vcs')){
       message = {
         event: message.type,
         type: 'message',
@@ -55,9 +55,9 @@ const sophtron = (function () {
       }
     }
     // console.log(message)
-    switch (message.type) {
+    switch (message?.type) {
       case 'message':
-        if (message.error) {
+        if (message?.error) {
           if (state.config.onError) {
             state.config.onError({
               _type: 'onError',
@@ -66,7 +66,7 @@ const sophtron = (function () {
           }
           break;
         }
-        switch (message.event) {
+        switch (message?.event) {
           case 'CHALLENGED':
             if (state.config.onMfa) {
               state.config.onMfa({
@@ -129,7 +129,7 @@ const sophtron = (function () {
         }
         break;
       case 'action':
-        switch (message.action) {
+        switch (message?.action) {
           case 'close':
             hide();
             reload();

@@ -1,7 +1,13 @@
 {
-  "name": "universal-connect-widget",
+  "name": "@ucp-npm/universal-connect-widget",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "UCP",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Universal-Connect-Project/universal-connect-widget/issues"
+  },
+  "homepage": "https://github.com/Universal-Connect-Project/universal-connect-widget#readme",
   "scripts": {
     "server": "npx ts-node server/server.js",
     "dev": "npx cross-env BROWSER=none react-app-rewired start",
@@ -124,5 +130,23 @@
     "ts-import-plugin": "^3.0.0",
     "ts-jest": "^29.1.2",
     "url-loader": "^4.1.1"
-  }
+  },
+  "description": "Whether you are an established financial institution with existing data providers or a one person startup the Universal Connect Project (UCP) is the right way to connect to financial services like banks, credit unions and wealth managers.",
+  "main": "babel.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Universal-Connect-Project/universal-connect-widget.git"
+  },
+  "keywords": [
+    "Universal",
+    "Connect",
+    "Widget",
+    "Fintech",
+    "Finance",
+    "Consumer",
+    "Power"
+  ]
 }
