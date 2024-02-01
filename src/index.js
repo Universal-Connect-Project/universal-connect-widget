@@ -3,7 +3,7 @@ import './config/init'
 
 import React from 'react'
 import _get from 'lodash/get'
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import theme from './constants/Style'
 import AppWrapper from './components/app/AppWrapper'
@@ -121,8 +121,7 @@ if (widgetConfig.type !== 'master') {
   updateTitleWithWidget(widgetConfig.type)
 }
 
-ReactDOM.render(
-  <Provider store={Store}>
+const ConnectWidget =  <Provider store={Store}>
     <TokenProvider tokenOverrides={{}}>
       <GlobalErrorBoundary>
         <WidgetDimensionObserver
@@ -134,7 +133,6 @@ ReactDOM.render(
         </WidgetDimensionObserver>
       </GlobalErrorBoundary>
     </TokenProvider>
-  </Provider>,
-  document.getElementById('root'),
-)
+  </Provider>;
 
+export default ConnectWidget;
