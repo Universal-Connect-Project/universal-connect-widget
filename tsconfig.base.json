@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.paths.json",
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "checkJs": false,
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false
+  },
+  "exclude": ["cypress", "docs" ,"openapi", "dist", "node_modules", "build"],
+  "files": [
+    "src/index.js"
+  ]
+}

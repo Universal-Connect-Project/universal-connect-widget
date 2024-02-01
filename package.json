@@ -1,17 +1,38 @@
 {
   "name": "@ucp-npm/universal-connect-widget",
   "version": "0.1.0",
+  "source": "src/index.js",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/types/index.d.ts",
   "private": false,
   "author": "UCP",
   "license": "Apache-2.0",
+  "homepage": "https://github.com/Universal-Connect-Project/universal-connect-widget#readme",
+  "description": "Whether you are an established financial institution with existing data providers or a one person startup the Universal Connect Project (UCP) is the right way to connect to financial services like banks, credit unions and wealth managers.",
   "bugs": {
     "url": "https://github.com/Universal-Connect-Project/universal-connect-widget/issues"
   },
-  "homepage": "https://github.com/Universal-Connect-Project/universal-connect-widget#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Universal-Connect-Project/universal-connect-widget.git"
+  },
+  "keywords": [
+    "Universal",
+    "Connect",
+    "Widget",
+    "Fintech",
+    "Finance",
+    "Consumer"
+  ],
   "scripts": {
-    "server": "npx ts-node server/server.js",
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc -p ./tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json",
+    "prepack": "npm run build",
+
     "dev": "npx cross-env BROWSER=none react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build-orig": "react-app-rewired build",
     "build-android": "npx cross-env mobile=true react-app-rewired build && npx cap sync android",
     "build-ios": "npx cross-env mobile=true react-app-rewired build && npx cap sync ios",
     "test": "react-app-rewired test --watchAll",
@@ -131,22 +152,22 @@
     "ts-jest": "^29.1.2",
     "url-loader": "^4.1.1"
   },
-  "description": "Whether you are an established financial institution with existing data providers or a one person startup the Universal Connect Project (UCP) is the right way to connect to financial services like banks, credit unions and wealth managers.",
-  "main": "babel.config.js",
   "directories": {
     "doc": "docs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Universal-Connect-Project/universal-connect-widget.git"
-  },
-  "keywords": [
-    "Universal",
-    "Connect",
-    "Widget",
-    "Fintech",
-    "Finance",
-    "Consumer",
-    "Power"
-  ]
+  "files": [
+    "lib/**/*"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/types/index.d.ts",
+        "default": "./lib/esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/cjs/types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      }
+    }
+  }
 }

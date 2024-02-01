@@ -1,9 +1,18 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "services/*": ["./server/connect/*"],
-      "interfaces/*": ["./shared/connect/*"]
-    }
+    "baseUrl": "./src",
+//    "paths": {
+//      "src/*": ["./*"],
+//      "clients/*": ["clients/*"],
+//      "components/*": ["components/*"],
+//      "config/*": ["config/*"],
+//      "constants/*": ["constants/*"],
+//      "loggerInit": ["loggerInit.js"],
+//      "reduxify/*": ["redux/*"],
+//      "schemas/*": ["schemas/*"],
+//      "streams/*": ["streams/*"],
+//      "utils/*": ["utils/*"],
+//      "widgets/*": ["widgets/*"],
+//    }
   }
 }
