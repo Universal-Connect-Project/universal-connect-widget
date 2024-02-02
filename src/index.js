@@ -121,18 +121,21 @@ if (widgetConfig.type !== 'master') {
   updateTitleWithWidget(widgetConfig.type)
 }
 
-const ConnectWidget =  <Provider store={Store}>
-    <TokenProvider tokenOverrides={{}}>
-      <GlobalErrorBoundary>
-        <WidgetDimensionObserver
-          heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
-        >
-          <AppWrapper>
-            <Connect />
-          </AppWrapper>
-        </WidgetDimensionObserver>
-      </GlobalErrorBoundary>
-    </TokenProvider>
-  </Provider>;
+const ConnectWidget = () => {
+ return (
+   <Provider store={Store}>
+      <TokenProvider tokenOverrides={{}}>
+        <GlobalErrorBoundary>
+          <WidgetDimensionObserver
+            heightOffset={widgetConfig.type === 'master' ? theme.MasterTopBarHeight : 0}
+          >
+            <AppWrapper>
+              <Connect />
+            </AppWrapper>
+          </WidgetDimensionObserver>
+        </GlobalErrorBoundary>
+      </TokenProvider>
+    </Provider>);
+}
 
-export default ConnectWidget;
+export { ConnectWidget };
