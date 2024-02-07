@@ -32,8 +32,10 @@ jobs:
 
       - name: Install all dependencies
         run: |
+          cd ./application
           npm ci
 
       - name: Run Jest Tests
         run: |
+          cd ./application
           npx react-app-rewired test --all --ci
