@@ -1,5 +1,7 @@
 # The Universal-Connect-Widget
 
+*To jump straight to how to run the code in this repo, go [here](SETUP.md)*
+
 Whether you are an established financial institution with existing data providers or a one person startup the Universal Connect Project (UCP) is the right way to connect to financial services like banks, credit unions and wealth managers. 
 
 ## Why Use an Internet Protocol? 
@@ -24,9 +26,10 @@ Verifiable Credentials are being embraced by regulators because they allow users
 
 ## Get started
 
-- For a quick view check out [this demo site](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org)
-- For examples on how to integrate with and embed an hosted widget, please refer to [EXAMPLE.md](EXAMPLE.md)
-- For development and deployment, please refer to [the UCW-app README.md](https://github.com/Universal-Connect-Project/ucw-app/blob/main/README.md)
+- For a hosted demo, check out [this demo site](https://demo.universalconnectproject.org/loader.html?env=https://widget.universalconnectproject.org)
+- For detailed info on how to run the three pieces that make up the UCW project, refer to [the UCW-example README.md](https://github.com/Universal-Connect-Project/ucw-example/blob/main/README.md) 
+- For info on how to specifically run the code in this repository, please refer to [SETUP.md](SETUP.md)
+- For the API service, please refer to [the UCW-app README.md](https://github.com/Universal-Connect-Project/ucw-app/blob/main/README.md)
 - Usage documentation [openapi](openapi/)
 
 
