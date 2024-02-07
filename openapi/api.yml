@@ -14,7 +14,7 @@ components:
       type: apiKey
       in: query
       name: auth
-      description: 'The auth token ([Example](https://github.com/sophtron/Sophtron-Integration/blob/9ff99124721923692d4171646ec80f9615a65a11/demo/src/index.js#L56)), for authenticating the widget client and exchanging secrets in order to access multiple providers: <img src="openapi/universal-widget/auth_flow.png" />'
+      description: 'The auth token ([Example](https://github.com/sophtron/Sophtron-Integration/blob/9ff99124721923692d4171646ec80f9615a65a11/demo/application/index.js#L56)), for authenticating the widget client and exchanging secrets in order to access multiple providers: <img src="openapi/universal-widget/auth_flow.png" />' 
 paths:
   # client_guid,
   # update_credentials,
