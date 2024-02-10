@@ -3,6 +3,7 @@ const {ConnectApi} = require('./connectApi');
 const {instrumentation} = require('../providers');
 const { contextHandler } = require('../infra/context.ts');
 const {ApiEndpoints} = require('../../shared/connect/ApiEndpoint.js')
+const {ConnectionStatus} = require('../../shared/contract.ts')
 const stubs = require('./instrumentations.js');
 const config = require('../config');
 const logger = require('../infra/logger');

@@ -84,7 +84,7 @@ export class ProviderApiBase{
   }
 
   async init(){
-    this.searchApi = new SearchClient(this.context.auth?.token, this.context.partner);
+    this.searchApi = new SearchClient(this.context.auth?.token);
     if(this.context.auth?.token){
       const {iv, token} = this.context.auth;
       const storageClient = new StorageClient(token);
@@ -218,6 +218,9 @@ export class ProviderApiBase{
 
   async getOauthState(connection_id: string){
     let connection = await this.getConnectionStatus(connection_id)
+    if(!connection){
+      return {}
+    }
     let ret = {
       guid: connection_id,
       inbound_member_guid: connection_id,
