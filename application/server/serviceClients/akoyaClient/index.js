@@ -30,7 +30,9 @@ export default class AkoyaClient{
     }
   }
   getOauthUrl(institution_id, client_redirect_url, state){
-    return `https://${this.apiConfig.basePath}/auth?connector=${institution_id}&client_id=${this.apiConfig.clientId}&redirect_uri=${client_redirect_url}&state=${state}&response_type=code&scope=openid email profile offline_access`
+    const url = `https://${this.apiConfig.basePath}/auth?connector=${institution_id}&client_id=${this.apiConfig.clientId}&redirect_uri=${client_redirect_url}&state=${state}&response_type=code&scope=openid email profile offline_access`
+    // console.log(url)
+    return url;
   }
 
   getIdToken(authCode){

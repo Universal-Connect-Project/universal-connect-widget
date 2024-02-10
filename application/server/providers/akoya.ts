@@ -56,7 +56,7 @@ export class AkoyaApi implements ProviderApiClient {
   async CreateConnection(
     request: CreateConnectionRequest
   ): Promise<Connection | undefined> {
-    const request_id = `${this.token};${uuidv4()}`;
+    const request_id = `${this.token}${uuidv4().replaceAll('-', '')}`;
     const obj = {
       id: request_id,
       is_oauth: true,
@@ -99,7 +99,7 @@ export class AkoyaApi implements ProviderApiClient {
   static async HandleOauthResponse(request: any): Promise<Connection> {
     const { state: request_id, code } = request;
     logger.info(`Received akoya oauth redirect response ${request_id}`)
-    const db = new StorageClient(request_id.split(';')[0])
+    const db = new StorageClient(request_id.substring(0, request_id.length - 32))
     let connection = await db.get(request_id)
     if(!connection){
       return null;
