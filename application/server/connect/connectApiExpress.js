@@ -162,7 +162,7 @@ module.exports = function(app){
       const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
       http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
     }else{
-      const filePath = path.join(__dirname, '../', 'build', 'oauth/success.html');
+      const filePath = path.join(__dirname, '../../', 'build', 'oauth/success.html');
       const html = await readFile(filePath);
       mapOauthParams(queries, res, html);
     }
