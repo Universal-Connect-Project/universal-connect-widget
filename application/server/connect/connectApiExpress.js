@@ -8,6 +8,7 @@ const stubs = require('./instrumentations.js');
 const config = require('../config');
 const logger = require('../infra/logger');
 const http = require('../infra/http');
+const path = require('path');
 const {readFile} = require('../utils/fs');
 
 module.exports = function(app){
@@ -139,7 +140,7 @@ module.exports = function(app){
   })
 
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
-    const { member_guid, error_reason } = req.query;
+    const { member_guid, error_reason, error } = req.query;
     const { provider } = req.params
     const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query)
     const metadata = JSON.stringify({member_guid, error_reason});
@@ -148,7 +149,7 @@ module.exports = function(app){
       status: ret?.status === ConnectionStatus.CONNECTED ? 'success': 'error',
       app_url,
       redirect: `true`,
-      error_reason,
+      error_reason: error_reason || error,
       member_guid: ret?.id,
     };
 
