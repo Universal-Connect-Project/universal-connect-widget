@@ -158,7 +158,9 @@ export function sendPostMessage(event, data, scheme = 'mx') {
       if(window === window.parent){
         console.log('Post message: ' + postUrl);
         console.log(message)
-        window.JSChannel.postMessage(message, postUrl)
+        if(window.JSChannel){
+          window.JSChannel.postMessage(message, postUrl)
+        }
       }else{
         window.parent.postMessage(message, postUrl)
       }
