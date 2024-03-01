@@ -140,9 +140,9 @@ export class MxApi implements ProviderApiClient {
     const member = memberRes.data.member!;
     // console.log(member)
     if (request.initial_job_type === 'verify') {
-      await this.apiClient.verifyMember(member.id, userId);
+      await this.apiClient.verifyMember(member.guid, userId);
     } else if (request.initial_job_type === 'identify') {
-      await this.apiClient.identifyMember(member.id, userId);
+      await this.apiClient.identifyMember(member.guid, userId);
     }
     return fromMxMember(memberRes.data, this.provider);
   }
