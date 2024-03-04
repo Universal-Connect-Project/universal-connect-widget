@@ -125,7 +125,7 @@ export class MxApi implements ProviderApiClient {
       referral_source: 'APP', //request.is_oauth ? 'APP' : '',
       client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from?token=${this.token}` : null,
       member: {
-        skip_aggregation: request.skip_aggregation || request.initial_job_type === 'verify' || request.initial_job_type === 'identify',
+        skip_aggregation: request.skip_aggregation || ['verify', 'auth', 'identify'].includes(request.initial_job_type),
         is_oauth: request.is_oauth,
         credentials: request.credentials?.map(
           (c) => <CredentialRequest>{
@@ -139,7 +139,7 @@ export class MxApi implements ProviderApiClient {
     //console.log(memberRes)
     const member = memberRes.data.member!;
     // console.log(member)
-    if (request.initial_job_type === 'verify') {
+    if (['verify', 'auth'].includes(request.initial_job_type)) {
       await this.apiClient.verifyMember(member.guid, userId);
     } else if (request.initial_job_type === 'identify') {
       await this.apiClient.identifyMember(member.guid, userId);
