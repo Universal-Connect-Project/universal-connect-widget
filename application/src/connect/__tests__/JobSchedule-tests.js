@@ -3,7 +3,7 @@ import { JOB_TYPES, JOB_STATUSES } from '../consts'
 import { VERIFY_MODE, AGG_MODE } from '../../connect/const/Connect'
 
 describe('JobSchedule.initialize', () => {
-  const nonAggregatingMember = { guid: 'MBR-1', is_being_aggregated: false }
+  const nonAggregatingMember = { guid: 'MBR-1', is_being_aggregated: false, provider: 'mx' }
   const aggingMember = { guid: 'MBR-1', is_being_aggregated: true }
   const aggJob = { guid: 'JOB-1', job_type: JOB_TYPES.AGGREGATION }
   const aggMode = { mode: AGG_MODE }
