@@ -71,7 +71,7 @@
       </div>
       <hr />
       <footer>
-          <p>&copy; 2019 - Sohptron Example</p>
+          <p>&copy; 2019 - Sophtron Example</p>
       </footer>
     </div>
     <script src="/static/vue3.js"></script>
@@ -129,7 +129,7 @@
             let params = getUrlVars(window.location);
             axios.get('/example/getAuthCode').then(res =>{
               let ps = {institution_id, provider, connection_id, user_id, job_type='', env='prod', ...rest} = params;
-              sophtron.init({ 
+              sophtron.init({
                 env,
                 jobType,
                 user_id,

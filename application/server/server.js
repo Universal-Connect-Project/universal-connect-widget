@@ -54,7 +54,9 @@ const pageQueries = new RegExp([
   'update_credentials',
   'server',
   'is_mobile_webview',
+  'include_identity',
 ].map(r => `\\$${r}`).join('|'), 'g');
+
 function renderDefaultPage(req, res, html){
   if(req.query.connection_id && !req.query.provider){
     delete req.query.connection_id;

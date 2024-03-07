@@ -36,6 +36,45 @@ function fromMxInstitution(ins: InstitutionResponse, provider: string): Institut
   };
 }
 
+function mapJobType(input: string){
+  switch (input) {
+    case 'agg':
+    case 'aggregation':
+    case 'aggregate':
+    case 'add':
+    case 'utils':
+    case 'util':
+    case 'demo':
+    case 'vc_transactions':
+    case 'vc_transaction':
+      return 'aggregate';
+    case 'all':
+    case 'everything':
+    case 'aggregate_all':
+    case 'aggregate_everything':
+    case 'agg_all':
+    case 'agg_everything':
+      return 'aggregate_identity_verification';
+    case 'fullhistory':
+    case 'aggregate_extendedhistory':
+      return 'aggregate_extendedhistory';
+    case 'auth':
+    case 'bankauth':
+    case 'verify':
+    case 'verification':
+    case 'vc_account':
+    case 'vc_accounts':
+      return 'verification';
+    case 'identify':
+    case 'vc_identity':
+      return 'aggregate_identity';
+    default:
+      // TODO create without job?
+      logger.error(`Invalid job type ${input}`);
+      break;
+  }
+}
+
 function mapCredentials(mxCreds : CredentialsResponseBody) : Credential[]{
   return mxCreds.credentials?.map(item => ({
     id: item.guid!,
@@ -53,6 +92,7 @@ function fromMxMember(mxRes: MemberResponseBody, provider: string): Connection{
     //institution_code: entityId, // TODO
     institution_code: member.institution_code, // TODO
     is_oauth: member.is_oauth,
+    is_being_aggregated: member.is_being_aggregated,
     oauth_window_uri: member.oauth_window_uri,
     provider,
   };
@@ -108,6 +148,7 @@ export class MxApi implements ProviderApiClient {
     request: CreateConnectionRequest,
     userId: string
   ): Promise<Connection> {
+    const job_type = mapJobType(request.initial_job_type?.toLowerCase())
     const entityId = request.institution_id;
     const existings = await this.apiClient.listMembers(userId);
     const existing = existings.data.members.find(m => m.institution_code === entityId)
@@ -125,7 +166,7 @@ export class MxApi implements ProviderApiClient {
       referral_source: 'APP', //request.is_oauth ? 'APP' : '',
       client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from?token=${this.token}` : null,
       member: {
-        skip_aggregation: request.skip_aggregation || ['verify', 'auth', 'identify'].includes(request.initial_job_type),
+        skip_aggregation: request.skip_aggregation || job_type !== 'aggregate',
         is_oauth: request.is_oauth,
         credentials: request.credentials?.map(
           (c) => <CredentialRequest>{
@@ -139,9 +180,9 @@ export class MxApi implements ProviderApiClient {
     //console.log(memberRes)
     const member = memberRes.data.member!;
     // console.log(member)
-    if (['verify', 'auth'].includes(request.initial_job_type)) {
+    if (['verification', 'aggregate_identity_verification'].includes(job_type)) {
       await this.apiClient.verifyMember(member.guid, userId);
-    } else if (request.initial_job_type === 'identify') {
+    } else if (job_type === 'aggregate_identity') {
       await this.apiClient.identifyMember(member.guid, userId);
     }
     return fromMxMember(memberRes.data, this.provider);
@@ -155,15 +196,16 @@ export class MxApi implements ProviderApiClient {
     request: UpdateConnectionRequest,
     userId: string
   ): Promise<Connection> {
-    const ret = await this.UpdateConnectionInternal(request, userId);
+    let ret
     if (request.job_type === 'verify') {
-      await this.apiClient.verifyMember(request.id, userId);
+      ret = await this.apiClient.verifyMember(request.id, userId)
     } else if (request.job_type === 'identify') {
-      await this.apiClient.identifyMember(request.id, userId);
-    }else{
-      await this.apiClient.aggregateMember(request.id, userId);
+      // this only gets called if include_identity=true in url_params
+      ret = await this.apiClient.identifyMember(request.id, userId, { data: { member: { include_transactions: true }}})
+    } else {
+      ret = await this.apiClient.aggregateMember(request.id, userId)
     }
-    return ret;
+    return fromMxMember(ret.data, this.provider)
   }
 
   async UpdateConnectionInternal(
@@ -218,6 +260,7 @@ export class MxApi implements ProviderApiClient {
       id: member.guid!,
       cur_job_id: member.guid!,
       user_id: userId,
+      is_being_aggregated: member.is_being_aggregated,
       // is_oauth: member.is_oauth,
       // oauth_window_uri: member.oauth_window_uri,
       // status: member.connection_status,
