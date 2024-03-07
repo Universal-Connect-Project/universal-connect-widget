@@ -36,6 +36,45 @@ function fromMxInstitution(ins: InstitutionResponse, provider: string): Institut
   };
 }
 
+function mapJobType(input: string){
+  switch (input) {
+    case 'agg':
+    case 'aggregation':
+    case 'aggregate':
+    case 'add':
+    case 'utils':
+    case 'util':
+    case 'demo':
+    case 'vc_transactions':
+    case 'vc_transaction':
+      return 'aggregate';
+    case 'all':
+    case 'everything':
+    case 'aggregate_all':
+    case 'aggregate_everything':
+    case 'agg_all':
+    case 'agg_everything':
+      return 'aggregate_identity_verification';
+    case 'fullhistory':
+    case 'aggregate_extendedhistory':
+      return 'aggregate_extendedhistory';
+    case 'auth':
+    case 'bankauth':
+    case 'verify':
+    case 'verification':
+    case 'vc_account':
+    case 'vc_accounts':
+      return 'verification';
+    case 'identify':
+    case 'vc_identity':
+      return 'aggregate_identity';
+    default:
+      // TODO create without job?
+      logger.error(`Invalid job type ${input}`);
+      break;
+  }
+}
+
 function mapCredentials(mxCreds : CredentialsResponseBody) : Credential[]{
   return mxCreds.credentials?.map(item => ({
     id: item.guid!,
@@ -109,6 +148,7 @@ export class MxApi implements ProviderApiClient {
     request: CreateConnectionRequest,
     userId: string
   ): Promise<Connection> {
+    const job_type = mapJobType(request.initial_job_type?.toLowerCase())
     const entityId = request.institution_id;
     const existings = await this.apiClient.listMembers(userId);
     const existing = existings.data.members.find(m => m.institution_code === entityId)
@@ -126,7 +166,7 @@ export class MxApi implements ProviderApiClient {
       referral_source: 'APP', //request.is_oauth ? 'APP' : '',
       client_redirect_url: request.is_oauth ? `${config.HostUrl}/oauth/${this.provider}/redirect_from?token=${this.token}` : null,
       member: {
-        skip_aggregation: request.skip_aggregation || ['verify', 'auth', 'identify'].includes(request.initial_job_type),
+        skip_aggregation: request.skip_aggregation || job_type !== 'aggregate',
         is_oauth: request.is_oauth,
         credentials: request.credentials?.map(
           (c) => <CredentialRequest>{
@@ -140,9 +180,9 @@ export class MxApi implements ProviderApiClient {
     //console.log(memberRes)
     const member = memberRes.data.member!;
     // console.log(member)
-    if (['verify', 'auth'].includes(request.initial_job_type)) {
+    if (['verification', 'aggregate_identity_verification'].includes(job_type)) {
       await this.apiClient.verifyMember(member.guid, userId);
-    } else if (request.initial_job_type === 'identify') {
+    } else if (job_type === 'aggregate_identity') {
       await this.apiClient.identifyMember(member.guid, userId);
     }
     return fromMxMember(memberRes.data, this.provider);

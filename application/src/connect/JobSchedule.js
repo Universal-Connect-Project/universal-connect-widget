@@ -22,7 +22,7 @@ export const initialize = (member, recentJob, config) => {
   let jobs = []
 
   const jobFromMode = { type: getJobTypeFromMode(config.mode), status: JOB_STATUSES.PENDING }
-
+  const jobType = mapJobType(config.mode)
   /**
    * If the member is aggregating for a job other than what is configured, we
    * need to add it to the list of jobs as the active job
@@ -34,7 +34,7 @@ export const initialize = (member, recentJob, config) => {
     jobs = [jobFromMode]
   }
 
-  if (config.mode !== 'identify' && config.include_identity === true && ['mx_int', 'mx'].includes(member.provider)) {
+  if (config.mode !== 'identify' && (config.include_identity === true || jobType === "aggregate_identity_verification") && ['mx_int', 'mx'].includes(member.provider)) {
     jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
   }
 
@@ -77,3 +77,41 @@ export const areAllJobsDone = schedule => {
 export const getActiveJob = schedule => {
   return _find(schedule.jobs, { status: JOB_STATUSES.ACTIVE })
 }
+
+function mapJobType(input){
+  switch (input) {
+    case 'agg':
+    case 'aggregation':
+    case 'aggregate':
+    case 'add':
+    case 'utils':
+    case 'util':
+    case 'demo':
+    case 'vc_transactions':
+    case 'vc_transaction':
+      return 'aggregate';
+    case 'all':
+    case 'everything':
+    case 'aggregate_all':
+    case 'aggregate_everything':
+    case 'agg_all':
+    case 'agg_everything':
+      return 'aggregate_identity_verification';
+    case 'fullhistory':
+    case 'aggregate_extendedhistory':
+      return 'aggregate_extendedhistory';
+    case 'auth':
+    case 'bankauth':
+    case 'verify':
+    case 'verification':
+    case 'vc_account':
+    case 'vc_accounts':
+      return 'verification';
+    case 'identify':
+    case 'vc_identity':
+      return 'aggregate_identity';
+    default:
+      return 'aggregate'
+  }
+}
+
