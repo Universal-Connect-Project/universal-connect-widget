@@ -38,6 +38,7 @@
         is_mobile_webview: '$is_mobile_webview',
         scheme: '$scheme',
         single_account_select: '$single_account_select',
+        include_identity: '$include_identity',
       }
       window.app = {
         options: {
@@ -68,7 +69,7 @@
             current_microdeposit_guid: null,
             disable_background_agg: null,
             disable_institution_search: false,
-            include_identity: null, // true
+            include_identity: params.include_identity === 'true',
             include_transactions: null, // true
             oauth_referral_source: params.oauth_referral_source || 'BROWSER',
             update_credentials: params.update_credentials === 'true',

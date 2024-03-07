@@ -8,6 +8,7 @@ export interface AuthRequest {
 export interface Context {
   institution_id?: string;
   institution_uid?: string;
+  include_identity?: boolean;
   connection_id?: string;
   current_job_id?: string;
   user_id?: string;

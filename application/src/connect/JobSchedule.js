@@ -34,7 +34,7 @@ export const initialize = (member, recentJob, config) => {
     jobs = [jobFromMode]
   }
 
-  if (config.include_identity === true) {
+  if (config.mode !== 'identify' && config.include_identity === true && ['mx_int', 'mx'].includes(member.provider)) {
     jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
   }
 
@@ -50,23 +50,24 @@ export const initialize = (member, recentJob, config) => {
  * @param  {Object} finishedJob the job that was just finished
  * @return {Object}             an updated jobSchedule
  */
-export const onJobFinished = (schedule, finishedJob) => {
-  let hasSetActiveJob = false
-  const updatedJobs = schedule.jobs.map(scheduledJob => {
-
-    if (finishedJob.job_type === scheduledJob.type) {
-      // If the finished job's type matched the scheduled one, mark it as done
-      return { ...scheduledJob, status: JOB_STATUSES.DONE }
-    } else if (!hasSetActiveJob && scheduledJob.status === JOB_STATUSES.PENDING) {
-      // If we haven't set an active job and this one is pending, mark it as
-      // active, we only have one active job at a time.
-      hasSetActiveJob = true
-      return { ...scheduledJob, status: JOB_STATUSES.ACTIVE }
-    }
-
-    return scheduledJob
-  })
-  return { isInitialized: true, jobs: updatedJobs }
+export const onJobFinished = (schedule, _finishedJob) => {
+  const activeJob = schedule.jobs.find(job => job.status === JOB_STATUSES.ACTIVE)
+  const pendingJobs = schedule.jobs.filter(job => job.status === JOB_STATUSES.PENDING)
+  const doneJobs = schedule.jobs.filter(job => job.status === JOB_STATUSES.DONE)
+  if (pendingJobs.length > 0) {
+    const updatedPending = pendingJobs.map((job, index) => {
+      if (index === 0){
+        return { ...job, status: JOB_STATUSES.ACTIVE }
+      } else {
+        return { ...job }
+      }
+    })
+    return { isInitialized: true, jobs: [{ ...activeJob, status: JOB_STATUSES.DONE }, ...updatedPending, ...doneJobs] }
+  } else if (activeJob != null) {
+    return { isInitialized: true, jobs: [{...activeJob, status: JOB_STATUSES.DONE }, ...doneJobs] }
+  } else {
+    return schedule
+  }
 }
 
 export const areAllJobsDone = schedule => {
