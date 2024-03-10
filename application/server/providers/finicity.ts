@@ -23,9 +23,9 @@ export class FinicityApi implements ProviderApiClient {
   db: StorageClient;
   token: string;
   constructor(config:any, sandbox: boolean) {
-    const { finicityProd, finicitySandbox, token } = config;
+    const { finicityProd, finicitySandbox, token, storageClient } = config;
     this.token = token;
-    this.db = new StorageClient(token);
+    this.db = storageClient;
     this.sandbox = sandbox;
     this.apiClient = new FinicityClient(sandbox ? finicitySandbox : finicityProd);
   }
@@ -141,7 +141,10 @@ export class FinicityApi implements ProviderApiClient {
       connection.guid = connection_id
       connection.id = `${institutionLoginId}`
     }
+    connection.request_id = connection_id
+    connection.error = JSON.stringify(reason || '')
     await db.set(connection_id, connection)
+    connection.storageClient = db;
     return connection;
   }
 

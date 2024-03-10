@@ -54,13 +54,13 @@ paths:
           schema:
             type: string
         - name: is_mobile_webview
-          description: Set to true if its used in mobile device
+          description: Set to true if its used in mobile webview
           in: query
           required: true
           schema:
             type: string
         - name: scheme
-          description: the scheme of the event, used to navigate in mobile
+          description: the scheme of the event, used to navigate deep link in mobile app
           in: query
           required: true
           schema:
@@ -72,6 +72,7 @@ paths:
           schema:
             type: string
         - name: oauth_referral_source
+          description: BROWSER or APP
           in: query
           required: true
           schema:

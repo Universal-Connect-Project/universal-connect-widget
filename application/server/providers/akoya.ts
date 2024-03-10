@@ -23,9 +23,9 @@ export class AkoyaApi implements ProviderApiClient {
   db: StorageClient;
   token: string;
   constructor(config: any, sandbox: boolean) {
-    const { akoyaProd, akoyaSandbox, token } = config;
+    const { akoyaProd, akoyaSandbox, token, storageClient } = config;
     this.token = token;
-    this.db = new StorageClient(token);
+    this.db = storageClient;
     this.sandbox = sandbox;
     this.apiClient = new AkoyaClient(sandbox ? akoyaSandbox : akoyaProd);
   }
@@ -85,7 +85,9 @@ export class AkoyaApi implements ProviderApiClient {
   }
 
   async GetConnectionStatus(connectionId: string, jobId: string, single_account_select?: boolean, user_id?: string): Promise<Connection> {
-    return this.db.get(connectionId);
+    const ret = await this.db.get(connectionId);
+    // console.log(connectionId, ret)
+    return ret;
   }
 
   async AnswerChallenge(request: UpdateConnectionRequest, jobId: string): Promise<boolean> {
@@ -108,10 +110,11 @@ export class AkoyaApi implements ProviderApiClient {
       connection.status = ConnectionStatus.CONNECTED
       connection.guid = connection.institution_code
       connection.id = connection.institution_code
-      connection.user_id = code
+      connection.user_id = code,
+      connection.request_id = request_id
     }
-    // console.log(connection)
     await db.set(request_id, connection)
+    connection.storageClient = db;
     return connection;
   }
 }

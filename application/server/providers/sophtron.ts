@@ -17,7 +17,6 @@ import * as logger from '../infra/logger';
 import * as http from '../infra/http';
 
 const SophtronClient = require('../serviceClients/sophtronClient/v2');
-const SophtronVcClient = require('../serviceClients/sophtronClient/vc');
 const SophtronClientV1 = require('../serviceClients/sophtronClient');
 
 const uuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
@@ -77,7 +76,6 @@ function mapJobType(input: string){
 export class SophtronApi implements ProviderApiClient {
   apiClient: any;
   apiClientV1: any;
-  vcClient: any;
 
   httpClient = http;
 
@@ -85,7 +83,6 @@ export class SophtronApi implements ProviderApiClient {
     let {sophtron} = config;
     this.apiClient = new SophtronClient(sophtron);
     this.apiClientV1 = new SophtronClientV1(sophtron);
-    this.vcClient = new SophtronVcClient(sophtron);
   }
 
   async clearConnection(vc: any, id: string, userID: string) {
