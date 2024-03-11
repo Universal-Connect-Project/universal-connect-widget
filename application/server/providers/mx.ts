@@ -106,9 +106,9 @@ export class MxApi implements ProviderApiClient {
   db: StorageClient;
 
   constructor(config: any, int: boolean){
-    const {mxInt, mxProd, token} = config;
+    const {mxInt, mxProd, token, storageClient} = config;
     this.token = token;
-    this.db = new StorageClient(token);
+    this.db = storageClient;
     this.provider = int ? 'mx_int': 'mx';
     this.mxConfig = int ? mxInt: mxProd;
     this.apiClient = MxPlatformApiFactory(new Configuration({
@@ -350,16 +350,19 @@ export class MxApi implements ProviderApiClient {
 
   static async HandleOauthResponse(request: any): Promise<Connection> {
     const { member_guid, status, error_reason, token } = request;
+    const db = new StorageClient(token);
     if(status === 'error'){
-      const db = new StorageClient(token);
       await db.set(member_guid, {
         error: true,
         error_reason
       })
     }
-    return {
+    const ret = {
+      storageClient: db,
       id: member_guid,
+      error: error_reason,
       status: status === 'error' ? ConnectionStatus.REJECTED : status === 'success' ? ConnectionStatus.CONNECTED : ConnectionStatus.PENDING 
-    };
+    }
+    return ret;
   }
 }

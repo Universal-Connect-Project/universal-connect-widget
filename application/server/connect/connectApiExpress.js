@@ -150,22 +150,22 @@ module.exports = function(app){
   })
 
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
-    const { member_guid, error_reason, error } = req.query;
     const { provider } = req.params
     const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query)
-    const metadata = JSON.stringify({member_guid, error_reason});
-    const app_url = `mx://oauth_complete?metadata=${encodeURIComponent(metadata)}`
+    const metadata = JSON.stringify({member_guid: ret?.id, error_reason: ret?.error});
+    const app_url = `${ret?.scheme}://oauth_complete?metadata=${encodeURIComponent(metadata)}`
     const queries = {
       status: ret?.status === ConnectionStatus.CONNECTED ? 'success': 'error',
       app_url,
-      redirect: `true`,
-      error_reason: error_reason || error,
+      redirect: ret?.oauth_referral_source?.toLowerCase() === 'browser' ? `false`: 'true',
+      error_reason: ret?.error,
       member_guid: ret?.id,
     };
-
+    
     const oauthParams =  new RegExp(Object.keys(queries).map(r => `\\$${r}`).join('|'), 'g');
     function mapOauthParams(queries, res, html){
       res.send(html.replaceAll(oauthParams, q => queries[q.substring(1)] || ''));
+      // res.send(queries)
     }
 
     if(config.ResourcePrefix !== 'local'){

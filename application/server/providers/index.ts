@@ -67,6 +67,7 @@ export async function instrumentation(context: Context, input: any){
   }
   context.partner = input.current_partner;
   context.job_type = input.job_type || 'agg';
+  context.scheme = input.scheme || 'vcs';
   context.oauth_referral_source = input.oauth_referral_source || 'BROWSER';
   context.single_account_select = input.single_account_select;
   context.updated = true;
@@ -77,6 +78,7 @@ export class ProviderApiBase{
   context: Context
   serviceClient: ProviderApiClient;
   analyticsClient: AnalyticsClient;
+  storageClient: StorageClient
   searchApi: SearchClient;
   providers: string[];
   constructor(req: any){
@@ -87,17 +89,16 @@ export class ProviderApiBase{
     this.searchApi = new SearchClient(this.context.auth?.token);
     if(this.context.auth?.token){
       const {iv, token} = this.context.auth;
-      const storageClient = new StorageClient(token);
+      this.storageClient = new StorageClient(token);
       this.analyticsClient = new AnalyticsClient(token);
       if(iv){
         try{
           const authApi = new AuthClient(token);
           let conf = await authApi.getSecretExchange(iv)
-          conf.sophtron.token = token;
-          conf.token = token;
           this.serviceClient = getApiClient(this.context?.provider, {
             ...conf,
-            storageClient
+            token,
+            storageClient: this.storageClient
           });
           this.providers = Object.values(conf).filter((v: any) => v.available).map((v: any) => v.provider)
           return true;
@@ -190,6 +191,12 @@ export class ProviderApiBase{
     this.context.current_job_id = null;
     let ret = await this.serviceClient.CreateConnection(connection, this.getUserId());
     this.context.current_job_id = ret.cur_job_id;
+    if(ret?.id){
+      await this.storageClient.set(`context_${ret.id}`, {
+        oauth_referral_source: this.context.oauth_referral_source,
+        scheme: this.context.scheme,
+      })
+    }
     return ret;
   }
 
@@ -197,6 +204,12 @@ export class ProviderApiBase{
     let ret = await this.serviceClient.UpdateConnection(connection, this.getUserId());
     this.context.updated = true;
     this.context.current_job_id = ret.cur_job_id;
+    if(ret?.id){
+      this.storageClient.set(`context_${ret.id}`, {
+        oauth_referral_source: this.context.oauth_referral_source,
+        scheme: this.context.scheme,
+      })
+    }
     return ret;
   }
 
@@ -261,25 +274,31 @@ export class ProviderApiBase{
   }
 
   static async handleOauthResponse(provider: string, rawParams: any, rawQueries: any, body: any){
-    let ret = {};
+    let res = {} as any;
     switch(provider){
       case 'akoya':
       case 'akoya_sandbox':
-        ret = await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
+        res = await AkoyaApi.HandleOauthResponse({...rawQueries, ...rawParams})
         break;
       case 'finicity':
       case 'finicity_sandbox':
-        ret = await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
+        res = await FinicityApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
         break;
       case 'mx':
       case 'mx_int':
-        ret = await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
+        res = await MxApi.HandleOauthResponse({...rawQueries, ...rawParams, ...body})
         break;
     }
-    return {
-      ...ret,
+    const ret = {
+      ...res,
       provider
     }
+    if(res?.storageClient && res?.id){
+      const context = await res.storageClient.get(`context_${ret.request_id || ret.id}`);
+      ret.scheme = context.scheme,
+      ret.oauth_referral_source = context.oauth_referral_source;
+    }
+    return ret;
   }
 
   analytics(path: string, content: any){
