@@ -20,6 +20,7 @@ export interface Context {
   auth?: AuthRequest;
   oauth_referral_source?: string;
   scheme?: string;
+  session_id?: string;
   updated?: boolean;
 }
 

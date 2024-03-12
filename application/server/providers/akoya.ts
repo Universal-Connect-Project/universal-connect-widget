@@ -99,7 +99,7 @@ export class AkoyaApi implements ProviderApiClient {
   }
 
   static async HandleOauthResponse(request: any): Promise<Connection> {
-    const { state: request_id, code } = request;
+    const { state: request_id, code, error } = request;
     logger.info(`Received akoya oauth redirect response ${request_id}`)
     const db = new StorageClient(request_id.substring(0, request_id.length - 32))
     let connection = await db.get(request_id)
@@ -110,9 +110,10 @@ export class AkoyaApi implements ProviderApiClient {
       connection.status = ConnectionStatus.CONNECTED
       connection.guid = connection.institution_code
       connection.id = connection.institution_code
-      connection.user_id = code,
-      connection.request_id = request_id
+      connection.user_id = code
     }
+    connection.request_id = request_id
+    connection.error = error
     await db.set(request_id, connection)
     connection.storageClient = db;
     return connection;
