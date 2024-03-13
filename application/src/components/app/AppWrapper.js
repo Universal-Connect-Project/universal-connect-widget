@@ -24,7 +24,6 @@ import { EventCategories, EventLabels, EventActions } from '../../constants/anal
 
 import TimeoutWarningModal from './TimeoutWarningModal'
 import ToastOffer from '../shared/toasts/ToastOffer'
-import TooSmallModal from './TooSmallModal'
 import IEDeprecationModal from './IEDeprecationModal'
 import { LoadSpinner } from './LoadSpinner'
 import TransactionRecategorizeModal from '../shared/transactions/TransactionRecategorizeModal'
@@ -439,9 +438,6 @@ export class AppWrapper extends React.Component {
                     this.timer.resume()
                   }}
                 />
-              ) : null}
-              {this.props.width < 320 && this.state.widgetType.indexOf('mini') === -1 ? (
-                <TooSmallModal width={this.props.width} />
               ) : null}
               {this.props.widgetProfile?.enable_ie_11_deprecation &&
               this.state.showIEDeprecationModal &&
