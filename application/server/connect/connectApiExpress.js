@@ -153,7 +153,14 @@ module.exports = function(app){
   app.get('/oauth/:provider/redirect_from/',  async (req, res) => {
     const { provider } = req.params
     const ret = await ConnectApi.handleOauthResponse(provider, req.params, req.query)
-    const metadata = JSON.stringify({member_guid: ret?.id, error_reason: ret?.error});
+    const metadata = JSON.stringify({
+      provider, 
+      id: ret?.id, 
+      member_guid: ret?.id, 
+      user_guid: ret?.user_id,
+      error_reason: ret?.error, 
+      session_guid: ret?.session_id,
+    });
     const app_url = `${ret?.scheme}://oauth_complete?metadata=${encodeURIComponent(metadata)}`
     const queries = {
       status: ret?.status === ConnectionStatus.CONNECTED ? 'success': 'error',
@@ -168,12 +175,12 @@ module.exports = function(app){
       res.send(html.replaceAll(oauthParams, q => queries[q.substring(1)] || ''));
       // res.send(queries)
     }
-
+    const htmlFile = ret?.error ? 'error' : 'success'
     if(config.ResourcePrefix !== 'local'){
-      const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/success.html`;
+      const resourcePath = `${config.ResourcePrefix}${config.ResourceVersion}/oauth/${htmlFile}.html`;
       http.wget(resourcePath).then(html => mapOauthParams(queries, res, html))
     }else{
-      const filePath = path.join(__dirname, '../../', 'build', 'oauth/success.html');
+      const filePath = path.join(__dirname, '../../', 'build', `oauth/${htmlFile}.html`);
       const html = await readFile(filePath);
       mapOauthParams(queries, res, html);
     }

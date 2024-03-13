@@ -195,6 +195,8 @@ export class ProviderApiBase{
       await this.storageClient.set(`context_${ret.id}`, {
         oauth_referral_source: this.context.oauth_referral_source,
         scheme: this.context.scheme,
+        user_id: this.getUserId(),
+        session_id: this.context.session_id,
       })
     }
     return ret;
@@ -297,11 +299,19 @@ export class ProviderApiBase{
       const context = await res.storageClient.get(`context_${ret.request_id || ret.id}`);
       ret.scheme = context.scheme,
       ret.oauth_referral_source = context.oauth_referral_source;
+      ret.session_id = context.session_id;
+      ret.user_id = context.user_id
     }
     return ret;
   }
 
-  analytics(path: string, content: any){
-    return this.analyticsClient?.analytics(path.replaceAll('/', ''), content);
+  async analytics(path: string, content: any){
+    const p = path.replaceAll('/', '')
+    const ret = await this.analyticsClient?.analytics(path.replaceAll('/', ''), content);
+    if(p === 'analytics_sessions' && ret){
+      this.context.session_id = ret.analytics_session?.guid;
+      this.context.updated = true;
+    }
+    return ret;
   }
 }
