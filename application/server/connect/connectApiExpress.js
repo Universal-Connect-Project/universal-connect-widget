@@ -135,10 +135,11 @@ module.exports = function(app){
   })
 
   app.post('/members/:member_guid/unthrottled_aggregate', async (req, res) => {
-    return ret = await req.connectService.updateConnection(
+    const ret = await req.connectService.updateConnection(
       { id: req.params.member_guid, job_type: 'aggregate' },
       req.context.resolved_user_id
     )
+    return res.send(ret)
   })
 
   app.all('/webhook/:provider/*', async function (req, res) {
