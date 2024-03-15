@@ -190,7 +190,7 @@ const FireflyAPI = {
 
   loadOAuthState(guid) {
     return axiosInstance
-      .get(`${ApiEndpoints.OAUTH_STATES}/${guid}`)
+      .get(`${ApiEndpoints.OAUTH_STATES}/${encodeURIComponent(guid)}`)
       .then(resp => resp.data.oauth_state)
   },
 
