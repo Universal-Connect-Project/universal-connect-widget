@@ -24,6 +24,7 @@ import {
 } from '../serviceClients/mxClient';
 import * as config from '../config'
 import { StorageClient } from'../serviceClients/storageClient';
+import { mapJobType } from '../../server/utils';
 
 function fromMxInstitution(ins: InstitutionResponse, provider: string): Institution {
   return {
@@ -34,45 +35,6 @@ function fromMxInstitution(ins: InstitutionResponse, provider: string): Institut
     url: ins.url!,
     provider,
   };
-}
-
-function mapJobType(input: string){
-  switch (input) {
-    case 'agg':
-    case 'aggregation':
-    case 'aggregate':
-    case 'add':
-    case 'utils':
-    case 'util':
-    case 'demo':
-    case 'vc_transactions':
-    case 'vc_transaction':
-      return 'aggregate';
-    case 'all':
-    case 'everything':
-    case 'aggregate_all':
-    case 'aggregate_everything':
-    case 'agg_all':
-    case 'agg_everything':
-      return 'aggregate_identity_verification';
-    case 'fullhistory':
-    case 'aggregate_extendedhistory':
-      return 'aggregate_extendedhistory';
-    case 'auth':
-    case 'bankauth':
-    case 'verify':
-    case 'verification':
-    case 'vc_account':
-    case 'vc_accounts':
-      return 'verification';
-    case 'identify':
-    case 'vc_identity':
-      return 'aggregate_identity';
-    default:
-      // TODO create without job?
-      logger.error(`Invalid job type ${input}`);
-      break;
-  }
 }
 
 function mapCredentials(mxCreds : CredentialsResponseBody) : Credential[]{
@@ -177,13 +139,15 @@ export class MxApi implements ProviderApiClient {
         institution_code: entityId,
       },
     } as any);
-    //console.log(memberRes)
+
     const member = memberRes.data.member!;
-    // console.log(member)
+
     if (['verification', 'aggregate_identity_verification'].includes(job_type)) {
       await this.apiClient.verifyMember(member.guid, userId);
     } else if (job_type === 'aggregate_identity') {
       await this.apiClient.identifyMember(member.guid, userId);
+    } else if (job_type === 'aggregate_extendedhistory') {
+      await this.apiClient.extendHistory(member.guid, userId);
     }
     return fromMxMember(memberRes.data, this.provider);
   }

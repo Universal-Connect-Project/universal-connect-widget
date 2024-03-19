@@ -60,6 +60,43 @@ function decodeAuthToken(input){
   }
 }
 
+function mapJobType(input){
+  switch (input) {
+    case 'agg':
+    case 'aggregation':
+    case 'aggregate':
+    case 'add':
+    case 'utils':
+    case 'util':
+    case 'demo':
+    case 'vc_transactions':
+    case 'vc_transaction':
+      return 'aggregate';
+    case 'all':
+    case 'everything':
+    case 'aggregate_all':
+    case 'aggregate_everything':
+    case 'agg_all':
+    case 'agg_everything':
+      return 'aggregate_identity_verification';
+    case 'fullhistory':
+    case 'aggregate_extendedhistory':
+      return 'aggregate_extendedhistory';
+    case 'auth':
+    case 'bankauth':
+    case 'verify':
+    case 'verification':
+    case 'vc_account':
+    case 'vc_accounts':
+      return 'verification';
+    case 'identify':
+    case 'vc_identity':
+      return 'aggregate_identity';
+    default:
+      return 'aggregate'
+  }
+}
+
 fileReadCache = {
   content: '',
   time: new Date('1900-01-01')
@@ -71,4 +108,5 @@ module.exports = {
   hmac,
   buildSophtronAuthCode,
   decodeAuthToken,
+  mapJobType,
 }
