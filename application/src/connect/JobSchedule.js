@@ -27,15 +27,21 @@ export const initialize = (member, recentJob, config) => {
    * If the member is aggregating for a job other than what is configured, we
    * need to add it to the list of jobs as the active job
    */
-  if (member.is_being_aggregated && recentJob.job_type !== jobFromMode.type) {
-    jobs = [{ type: recentJob.job_type, status: JOB_STATUSES.ACTIVE }, jobFromMode]
+  // first job
+  if (jobType === "aggregate_extendedhistory") {
+    jobs = [...jobs, { type: JOB_TYPES.HISTORY, status: JOB_STATUSES.ACTIVE }]
+  } else if (jobType === "aggregate_identity") {
+    jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.ACTIVE }]
   } else {
     jobFromMode.status = JOB_STATUSES.ACTIVE
     jobs = [jobFromMode]
   }
 
-  if (config.mode !== 'identify' && (config.include_identity === true || jobType === "aggregate_identity_verification") && ['mx_int', 'mx'].includes(member.provider)) {
-    jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
+  // sequential jobs
+  if (['mx_int', 'mx'].includes(member.provider)) {
+    if (config.include_identity === true || jobType === "aggregate_identity_verification") {
+      jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
+    }
   }
 
   return { isInitialized: true, jobs }

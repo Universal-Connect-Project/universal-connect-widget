@@ -264,6 +264,20 @@ const FireflyAPI = {
       .then(response => response.data)
   },
 
+  history(memberGuid, config = {}, isHuman = false) {
+    const headers = {
+      'x-inter-hu': FireflyAPI.getHumanInteractionGuid(isHuman),
+    }
+
+    return axiosInstance
+      .post(
+        `${ApiEndpoints.MEMBERS}/${memberGuid}/history`,
+        { include_transactions: config?.include_transactions ?? null },
+        { headers },
+      )
+      .then(response => response.data)
+  },
+
   runJob(jobType, memberGuid, connectConfig = {}, isHuman = false) {
     let jobCall = FireflyAPI.aggregate
 
@@ -275,6 +289,8 @@ const FireflyAPI = {
       jobCall = FireflyAPI.tax
     } else if (jobType === JOB_TYPES.IDENTIFICATION) {
       jobCall = FireflyAPI.identify
+    } else if (jobType === JOB_TYPES.HISTORY) {
+      jobCall = FireflyAPI.history
     }
 
     return jobCall(memberGuid, connectConfig, isHuman)

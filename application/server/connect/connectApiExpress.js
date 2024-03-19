@@ -10,6 +10,7 @@ const logger = require('../infra/logger');
 const http = require('../infra/http');
 const path = require('path');
 const {readFile} = require('../utils/fs');
+const { mapJobType } = require('../../server/utils');
 
 module.exports = function(app){
   stubs(app)
@@ -118,7 +119,17 @@ module.exports = function(app){
 
   app.post(`${ApiEndpoints.MEMBERS}/:member_guid/identify`, async (req, res) => {
     const ret = await req.connectService.updateConnection(
-      { id: req.params.member_guid, job_type: 'identify' },
+      { id: req.params.member_guid, job_type: 'aggregate_identity' },
+      req.context.resolved_user_id
+    )
+    res.send({
+      members: ret
+    })
+  })
+
+  app.post(`${ApiEndpoints.MEMBERS}/:member_guid/history`, async (req, res) => {
+    const ret = await req.connectService.updateConnection(
+      { id: req.params.member_guid, job_type: 'aggregate_extendedhistory' },
       req.context.resolved_user_id
     )
     res.send({
