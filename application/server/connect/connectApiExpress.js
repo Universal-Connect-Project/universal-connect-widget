@@ -12,6 +12,8 @@ const path = require('path');
 const {readFile} = require('../utils/fs');
 const { mapJobType } = require('../../server/utils');
 
+const AGGREGATION_JOB_TYPE = 0
+
 module.exports = function(app){
   stubs(app)
   app.use(contextHandler);
@@ -93,16 +95,16 @@ module.exports = function(app){
   app.get('/jobs/:member_guid', async (req, res) => {
     if (['mx_int', 'mx'].includes(req.context.provider)) {
       if (req.params.member_guid == 'null') {
-         res.send({ job: { guid: 'none', job_type: 0 }})
+         res.send({ job: { guid: 'none', job_type: AGGREGATION_JOB_TYPE }})
          return;
         }
-      let ret = await req.connectService.loadMemberByGuid(req.params.member_guid);
+      const ret = await req.connectService.loadMemberByGuid(req.params.member_guid);
       res.send(ret);
     } else {
       res.send({
         job: {
           guid: req.params.guid,
-          job_type: 0, // must
+          job_type: AGGREGATION_JOB_TYPE,
         }
       })
     }
