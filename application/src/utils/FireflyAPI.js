@@ -548,7 +548,7 @@ const FireflyAPI = {
   },
 
   loadJob(jobGuid) {
-    return axiosInstance.get(ApiEndpoints.JOBS + '/' + jobGuid).then(response => response.data.job)
+    return axiosInstance.get(ApiEndpoints.JOBS + '/' + jobGuid).then(response => response.data.member)
   },
 
   loadInstitutions(query) {

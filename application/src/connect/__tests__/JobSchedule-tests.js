@@ -28,12 +28,8 @@ describe('JobSchedule.initialize', () => {
     expect(schedule.isInitialized).toBe(true)
     expect(schedule.jobs).toEqual([
       {
-        type: JOB_TYPES.AGGREGATION,
-        status: JOB_STATUSES.ACTIVE,
-      },
-      {
         type: JOB_TYPES.VERIFICATION,
-        status: JOB_STATUSES.PENDING,
+        status: JOB_STATUSES.ACTIVE,
       },
     ])
   })
