@@ -132,6 +132,7 @@ export interface Connection {
   is_authenticated?: boolean | null;
   vc?: string | null;
   oauth_window_uri?: string | null;
+  error_message?: string | null;
 }
 export interface UpdateConnectionRequest {
   id: string | undefined;

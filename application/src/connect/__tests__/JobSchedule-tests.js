@@ -1,14 +1,16 @@
 import * as JobSchedule from '../JobSchedule'
 import { JOB_TYPES, JOB_STATUSES } from '../consts'
-import { VERIFY_MODE, AGG_MODE } from '../../connect/const/Connect'
+import { VERIFY_MODE, AGG_MODE, HISTORY_MODE } from '../../connect/const/Connect'
 
 describe('JobSchedule.initialize', () => {
   const nonAggregatingMember = { guid: 'MBR-1', is_being_aggregated: false, provider: 'mx' }
   const aggingMember = { guid: 'MBR-1', is_being_aggregated: true }
   const aggJob = { guid: 'JOB-1', job_type: JOB_TYPES.AGGREGATION }
+  const extendedHistoryJob = { guid: 'JOB-2', job_type: JOB_TYPES.HISTORY }
   const aggMode = { mode: AGG_MODE }
   const includeIdentity = { include_identity: true }
   const verfiyMode = { mode: VERIFY_MODE }
+  const historyMode = { mode: HISTORY_MODE }
 
   test('when the member is aggregating with same job as mode', () => {
     const schedule = JobSchedule.initialize(aggingMember, aggJob, aggMode)
@@ -28,12 +30,8 @@ describe('JobSchedule.initialize', () => {
     expect(schedule.isInitialized).toBe(true)
     expect(schedule.jobs).toEqual([
       {
-        type: JOB_TYPES.AGGREGATION,
-        status: JOB_STATUSES.ACTIVE,
-      },
-      {
         type: JOB_TYPES.VERIFICATION,
-        status: JOB_STATUSES.PENDING,
+        status: JOB_STATUSES.ACTIVE,
       },
     ])
   })
@@ -45,6 +43,18 @@ describe('JobSchedule.initialize', () => {
     expect(schedule.jobs).toEqual([
       {
         type: JOB_TYPES.VERIFICATION,
+        status: JOB_STATUSES.ACTIVE,
+      },
+    ])
+  })
+
+  test('when the job type is extended history', () => {
+    const schedule = JobSchedule.initialize(nonAggregatingMember, extendedHistoryJob, historyMode)
+
+    expect(schedule.isInitialized).toBe(true)
+    expect(schedule.jobs).toEqual([
+      {
+        type: JOB_TYPES.HISTORY,
         status: JOB_STATUSES.ACTIVE,
       },
     ])
