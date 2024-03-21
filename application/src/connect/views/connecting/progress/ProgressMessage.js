@@ -45,6 +45,8 @@ export const ProgressMessage = props => {
     mainMessage = __('Getting verification data.')
   } else if (props.job?.type === JOB_TYPES.IDENTIFICATION) {
     mainMessage = __('Getting identification data.')
+  } else if (props.job?.type === JOB_TYPES.HISTORY) {
+    mainMessage = __('Getting extended transactions data.')
   } else if (props.allDone) {
     mainMessage = __('Finishing up.')
   }

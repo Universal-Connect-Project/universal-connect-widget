@@ -24,6 +24,9 @@ import {
 } from '../serviceClients/mxClient';
 import * as config from '../config'
 import { StorageClient } from'../serviceClients/storageClient';
+import { mapJobType } from '../../server/utils';
+
+const EXTENDED_HISTORY_NOT_SUPPORTED_MSG = "Member's institution does not support extended transaction history."
 
 function fromMxInstitution(ins: InstitutionResponse, provider: string): Institution {
   return {
@@ -34,45 +37,6 @@ function fromMxInstitution(ins: InstitutionResponse, provider: string): Institut
     url: ins.url!,
     provider,
   };
-}
-
-function mapJobType(input: string){
-  switch (input) {
-    case 'agg':
-    case 'aggregation':
-    case 'aggregate':
-    case 'add':
-    case 'utils':
-    case 'util':
-    case 'demo':
-    case 'vc_transactions':
-    case 'vc_transaction':
-      return 'aggregate';
-    case 'all':
-    case 'everything':
-    case 'aggregate_all':
-    case 'aggregate_everything':
-    case 'agg_all':
-    case 'agg_everything':
-      return 'aggregate_identity_verification';
-    case 'fullhistory':
-    case 'aggregate_extendedhistory':
-      return 'aggregate_extendedhistory';
-    case 'auth':
-    case 'bankauth':
-    case 'verify':
-    case 'verification':
-    case 'vc_account':
-    case 'vc_accounts':
-      return 'verification';
-    case 'identify':
-    case 'vc_identity':
-      return 'aggregate_identity';
-    default:
-      // TODO create without job?
-      logger.error(`Invalid job type ${input}`);
-      break;
-  }
 }
 
 function mapCredentials(mxCreds : CredentialsResponseBody) : Credential[]{
@@ -177,14 +141,22 @@ export class MxApi implements ProviderApiClient {
         institution_code: entityId,
       },
     } as any);
-    //console.log(memberRes)
+
     const member = memberRes.data.member!;
-    // console.log(member)
-    if (['verification', 'aggregate_identity_verification'].includes(job_type)) {
-      await this.apiClient.verifyMember(member.guid, userId);
-    } else if (job_type === 'aggregate_identity') {
-      await this.apiClient.identifyMember(member.guid, userId);
+
+    if (request?.is_oauth !== true) {
+      if (['verification', 'aggregate_identity_verification'].includes(job_type)) {
+        const updatedMemberRes = await this.apiClient.verifyMember(member.guid, userId);
+        return fromMxMember(updatedMemberRes.data, this.provider);
+      } else if (job_type === 'aggregate_identity') {
+        const updatedMemberRes = await this.apiClient.identifyMember(member.guid, userId);
+        return fromMxMember(updatedMemberRes.data, this.provider);
+      } else if (job_type === 'aggregate_extendedhistory') {
+        const updatedMemberRes = await this.apiClient.extendHistory(member.guid, userId);
+        return fromMxMember(updatedMemberRes.data, this.provider);
+      }
     }
+
     return fromMxMember(memberRes.data, this.provider);
   }
 
@@ -197,13 +169,22 @@ export class MxApi implements ProviderApiClient {
     userId: string
   ): Promise<Connection> {
     let ret
-    if (request.job_type === 'verify') {
+    if (request.job_type === 'verification') {
       ret = await this.apiClient.verifyMember(request.id, userId)
-    } else if (request.job_type === 'identify') {
-      // this only gets called if include_identity=true in url_params
+    } else if (request.job_type === 'aggregate_identity') {
       ret = await this.apiClient.identifyMember(request.id, userId, { data: { member: { include_transactions: true }}})
+    } else if (request.job_type === 'aggregate_extendedhistory') {
+      ret = await this.apiClient.extendHistory(request.id, userId)
     } else {
       ret = await this.apiClient.aggregateMember(request.id, userId)
+    }
+
+    if (ret.data?.error) {
+      if (ret.data.error.message === EXTENDED_HISTORY_NOT_SUPPORTED_MSG) {
+        ret = await this.apiClient.aggregateMember(request.id, userId)
+      } else {
+        return { id: request.id, error_message: ret.data.error.message }
+      }
     }
     return fromMxMember(ret.data, this.provider)
   }
