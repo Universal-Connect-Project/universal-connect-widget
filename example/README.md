@@ -3,6 +3,16 @@
 ## Quick guide on widget usage
 
 This example demonstrates a client website that embeds the universal widget and retrieves data after a connection has been established through the widget.
+The example application includes the following work flow:
+1. getAuthCode
+2. init widget by calling `initWidget` function in `universal-widget-loader.js`, which does the following steps.
+3. generate widget `url`
+4. load widget in an `iframe`
+5. let the end user connect their bank by operating in the widget
+6. handle widget events
+7. extract connection information from the `connected` event.
+
+Detail configuration parameters:
 1. The `initWidget` function in [application/public/loader.html](application/public/loader.html) shows how a universal widget can be embedded into a webpage.
 
     The `action` parameter specifies which type of job to run when user creates a connection through the widget:
