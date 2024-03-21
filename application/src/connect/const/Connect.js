@@ -2,6 +2,7 @@ export const AGG_MODE = 'aggregation'
 export const VERIFY_MODE = 'verification'
 export const REWARD_MODE = 'reward'
 export const TAX_MODE = 'tax'
+export const HISTORY_MODE = 'aggregate_extendedhistory'
 
 export const STEPS = {
   ADD_MANUAL_ACCOUNT: 'addManualAccount',

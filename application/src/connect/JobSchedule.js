@@ -2,40 +2,35 @@ import _find from 'lodash/find'
 import _every from 'lodash/every'
 
 import { JOB_TYPES, JOB_STATUSES } from './consts'
-import { VERIFY_MODE, AGG_MODE, REWARD_MODE, TAX_MODE } from './const/Connect'
-
-const getJobTypeFromMode = mode => {
-  if (mode === VERIFY_MODE) return JOB_TYPES.VERIFICATION
-  if (mode === AGG_MODE) return JOB_TYPES.AGGREGATION
-  if (mode === REWARD_MODE) return JOB_TYPES.REWARD
-  if (mode === TAX_MODE) return JOB_TYPES.TAX
-
-  return JOB_TYPES.AGGREGATION
-}
 
 export const UNINITIALIZED = {
   isInitialized: false,
   jobs: [],
 }
 
-export const initialize = (member, recentJob, config) => {
+export const initialize = (member, updatedMember, config) => {
   let jobs = []
-
-  const jobFromMode = { type: getJobTypeFromMode(config.mode), status: JOB_STATUSES.PENDING }
   const jobType = mapJobType(config.mode)
   /**
    * If the member is aggregating for a job other than what is configured, we
    * need to add it to the list of jobs as the active job
    */
-  if (member.is_being_aggregated && recentJob.job_type !== jobFromMode.type) {
-    jobs = [{ type: recentJob.job_type, status: JOB_STATUSES.ACTIVE }, jobFromMode]
+  // first job
+  if (jobType === "aggregate_extendedhistory") {
+    jobs = [...jobs, { type: JOB_TYPES.HISTORY, status: JOB_STATUSES.ACTIVE }]
+  } else if (jobType === "aggregate_identity") {
+    jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.ACTIVE }]
+  } else if (['verification', 'aggregate_identity_verification'].includes(jobType)) {
+    jobs = [{ type: JOB_TYPES.VERIFICATION, status: JOB_STATUSES.ACTIVE }]
   } else {
-    jobFromMode.status = JOB_STATUSES.ACTIVE
-    jobs = [jobFromMode]
+    jobs = [{ type: JOB_TYPES.AGGREGATION, status: JOB_STATUSES.ACTIVE }]
   }
 
-  if (config.mode !== 'identify' && (config.include_identity === true || jobType === "aggregate_identity_verification") && ['mx_int', 'mx'].includes(member.provider)) {
-    jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
+  // sequential jobs
+  if (['mx_int', 'mx'].includes(member.provider)) {
+    if (config.include_identity === true || jobType === "aggregate_identity_verification") {
+      jobs = [...jobs, { type: JOB_TYPES.IDENTIFICATION, status: JOB_STATUSES.PENDING }]
+    }
   }
 
   return { isInitialized: true, jobs }

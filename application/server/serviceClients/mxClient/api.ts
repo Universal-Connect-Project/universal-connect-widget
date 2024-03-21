@@ -2518,6 +2518,7 @@ export interface MemberResponseBody {
      * @memberof MemberResponseBody
      */
     'member'?: MemberResponse;
+    'error'?: {message?: string}
 }
 /**
  * 
