@@ -121,7 +121,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .put(
-        `${ApiEndpoints.MEMBERS}/${member.guid}`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(member.guid)}`,
         {
           ...member,
           include_transactions: includeTransactions,
@@ -134,13 +134,13 @@ const FireflyAPI = {
 
   deleteMember(member) {
     return axiosInstance
-      .delete(`${ApiEndpoints.MEMBERS}/${member.guid}`)
+      .delete(`${ApiEndpoints.MEMBERS}/${encodeURIComponent(member.guid)}`)
       .then(response => response.data)
   },
 
   getMemberCredentials(memberGuid) {
     return axiosInstance
-      .get(`${ApiEndpoints.MEMBERS}/${memberGuid}/credentials`)
+      .get(`${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/credentials`)
       .then(response => response.data.credentials)
   },
 
@@ -175,7 +175,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .get(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/oauth_window_uri?referral_source=${referralSource}&ui_message_webview_url_scheme=${scheme}&skip_aggregation=true${client_redirect_querystring}`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/oauth_window_uri?referral_source=${referralSource}&ui_message_webview_url_scheme=${scheme}&skip_aggregation=true${client_redirect_querystring}`,
       )
       .then(response => response.data)
   },
@@ -201,7 +201,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/unthrottled_aggregate`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/unthrottled_aggregate`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -215,7 +215,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/identify`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/identify`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -229,7 +229,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/verify`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/verify`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -243,7 +243,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/fetch_rewards`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/fetch_rewards`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -257,7 +257,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/tax`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/tax`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -271,7 +271,7 @@ const FireflyAPI = {
 
     return axiosInstance
       .post(
-        `${ApiEndpoints.MEMBERS}/${memberGuid}/history`,
+        `${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}/history`,
         { include_transactions: config?.include_transactions ?? null },
         { headers },
       )
@@ -613,7 +613,7 @@ const FireflyAPI = {
   },
 
   loadMemberByGuid(memberGuid) {
-    return axiosInstance.get(`${ApiEndpoints.MEMBERS}/${memberGuid}`).then(resp => {
+    return axiosInstance.get(`${ApiEndpoints.MEMBERS}/${encodeURIComponent(memberGuid)}`).then(resp => {
       return resp.data.member
     })
   },
