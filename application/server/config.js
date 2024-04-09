@@ -33,7 +33,7 @@ const config = {
   // fill the corresponding credentials if the auth provider is to be used
 
   LocalAuthEncryptionKey: '', // shared encryption key with caller to encrypt the auth phraze
-  LocalAuthPhraze: 'I am authentic', // a static auth phraze to be encrypted by the key above at caller side. 
+  LocalAuthPhrase: 'I am authentic', // a static auth phraze to be encrypted by the key above at caller side. 
 
   SophtronClientId: '', //sophtron.com -> api settings -> direct auth -> UserId
   SophtronClientSecret: '',  //sophtron.com -> api settings -> direct auth -> AccessKey

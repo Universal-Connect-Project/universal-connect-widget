@@ -18,7 +18,7 @@ export class AuthClient {
     const key = Buffer.from(config.LocalAuthEncryptionKey, 'base64').toString('hex')
     const token = decrypt(this.token, key, iv);
     // if token is valid, or use your own way to validate the token.
-    if(token === config.LocalAuthPhraze){ 
+    if(token === config.LocalAuthPhrase){ 
       return {
         mxInt: {
           username: process.env.MxClientId,
