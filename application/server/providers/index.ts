@@ -19,7 +19,7 @@ import {
 } from '../../shared/contract';
 import { AnalyticsClient } from '../serviceClients/analyticsClient';
 import { SearchClient } from '../serviceClients/searchClient';
-import { AuthClient } from '../serviceClients/authClient';
+import { CreateAuthClient } from '../serviceClients/authClient';
 import { StorageClient } from'../serviceClients/storageClient';
 import { decodeAuthToken } from '../utils';
 
@@ -88,12 +88,12 @@ export class ProviderApiBase{
   async init(){
     this.searchApi = new SearchClient(this.context.auth?.token);
     if(this.context.auth?.token){
-      const {iv, token} = this.context.auth;
+      const {provider: authProvider, iv, token} = this.context.auth;
       this.storageClient = new StorageClient(token);
       this.analyticsClient = new AnalyticsClient(token);
       if(iv){
         try{
-          const authApi = new AuthClient(token);
+          const authApi = CreateAuthClient(token, authProvider);
           let conf = await authApi.getSecretExchange(iv)
           this.serviceClient = getApiClient(this.context?.provider, {
             ...conf,
@@ -117,7 +117,7 @@ export class ProviderApiBase{
   }
 
   institutions() {
-    return this.searchApi.institutions();
+    return this.searchApi.institutions('', this.providers);
   }
 
   async search(query: string) {

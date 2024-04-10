@@ -30,6 +30,7 @@
   - Or set in `.env` Env=dev, this way the redis client will use local in-mem object to handle the cache and remove the error, however, this is just for some testing, the cached values won't expire and also will be cleared on server restart. 
   * Running the docker container:
     if you encounter some strange errors, especially trying on windows, the environment setup could be tricky, you may choose to run the docker image instead. please scroll all the way down for the instruction on docker.
+
 ## Demo Website
 
 *To get a working demo locally, you need to act as a client (who embeds the widget within their own domain). An [example demo website](../example/README.md) is provided to demonstrate this.*
@@ -58,3 +59,16 @@ USE `.env` FILE
 - credentials needs to be configured through envrionment variables. to do it, use `-e` option to pass in
   you can use the `start-docker.sh`, it assumes the config is up to date with the `.env` file and mounts it to the container then start.
 *in your `.env` file, make sure values are encloses by quotes `"` or `'`, this is a limitation by docker
+
+# Using your own auth service
+The widget is designed with flexiblity in mind. by default it's configured to authenticate client with `UCPAuthService`, however, clients who are hosting the widget in their own domain are free to switch to other auth client, 
+So long as the auth provider implements the `SecretExchange` method and returns the aggregation provider credentials
+
+for instance, take a look at the simplest [local](./server/serviceClients/authClient/local.js) auth provider, which returns the configurations from pre-configured environment variables, to enable it, simply set `AuthProvider` with value `local` in the `config.js` or `.env` file
+
+To use your own auth service. follow the patterns in [authClient](./server/serviceClients/authClient) as example to call your own service endpoints
+
+# Using multiple auth providers
+Multiple auth method can be routed by client request too 
+- The `authToken` is in the format of `<authProvider>;<token>;<iv>` , see `getAuthCode`method in the example app
+- By leaving `AuthProvider` in the `config.js` empty, the widget will choose auth provider by using the `authProvider` value provided in the authToken passed in. 
