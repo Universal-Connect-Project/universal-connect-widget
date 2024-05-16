@@ -1,9 +1,9 @@
 const sophtron = (function () {
   const urls = {
-    prod: 'https://universalwidget.sophtron.com',
-    preview: 'https://universalwidget.sophtron-prod.com',
-    pre: 'https://universalwidget.sophtron-prod.com',
-    local: 'http://localhost:8080',
+    prod: "https://widget.universalconnectproject.org",
+    preview: "https://widget.universalconnectproject.org",
+    pre: "https://widget.universalconnectproject.org",
+    local: "http://localhost:8080",
   };
 
   const defaultConf = {

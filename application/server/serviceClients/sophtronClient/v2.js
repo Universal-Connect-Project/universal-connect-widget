@@ -55,4 +55,8 @@ module.exports = class SophtronV2Client extends SophtronBaseClient{
   getJobInfo(jobId){
     return this.get(`/v2/job/${jobId}`);
   }
+
+  answerJobMfa(jobId, mfaType, answer){
+    return this.put(`/v2/job/${jobId}/challenge/${mfaType}`, {AnswerText: answer})
+  }
 };
