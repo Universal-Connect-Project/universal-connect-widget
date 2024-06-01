@@ -1,5 +1,5 @@
 import {AuthClient as UcpAuth} from './ucp'
-import {AuthClient as SophtronAuth} from './ucp'
+import {AuthClient as SophtronAuth} from './sophtron'
 import {AuthClient as LocalAuth} from './local'
 const config = require('../../config');
 

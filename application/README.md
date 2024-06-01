@@ -61,7 +61,7 @@ USE `.env` FILE
   * `member_guid` the connection id: by providers: mx `member_guid`, sophtron `member_id` or `userinstitution_id`, finicity `InstitutionLoginId`, akoya `institution_id` 
 
 # Input parameters
-- To load the widget, an parameter `auth` is required to identify the client that initiates the call, please refer to the `example application` about how to generate one.
+- To load the widget, parameter `auth` is required to identify the client that initiates the call, please refer to the `example application` about how to generate one.
 - Parameter `user_id` is required, this is to identify your `end user`, which is logically corresponding to a physical person, this is important for data security required by the providers, so that the aggregation data is scoped by the `user_id`, typically clients would have a db to track their endusers and use the `UserId` for this purpose, if you don't track your end users, use a unique string such as `session_id` foreach request.
 - For refresh: `provider`, `current_member_guid` are required, use the value retrieved from the intitial connection
 - For refresh: `user_id` is required, it must be consistent with the value provided when creating the intial connection. 

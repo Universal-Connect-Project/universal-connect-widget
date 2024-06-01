@@ -29,12 +29,13 @@ const config = {
   // ResourcePrefix: 'local',
   ResourceVersion: '', // 'development'
   
-  AuthProvider: 'ucp', //supported: local, ucp, sophtron
+  AuthProvider: '', //supported: local, ucp, sophtron
   // fill the corresponding credentials if the auth provider is to be used
 
   LocalAuthEncryptionKey: '', // shared encryption key with caller to encrypt the auth phraze
   LocalAuthPhrase: 'I am authentic', // a static auth phraze to be encrypted by the key above at caller side. 
 
+  SophtronAuthServiceEndpoint: 'https://auth.sophtron-prod.com/api',
   SophtronClientId: '', //sophtron.com -> api settings -> direct auth -> UserId
   SophtronClientSecret: '',  //sophtron.com -> api settings -> direct auth -> AccessKey
 

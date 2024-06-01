@@ -71,7 +71,7 @@
       </div>
       <hr />
       <footer>
-          <p>&copy; 2019 - Sophtron Example</p>
+          <p>&copy; 2019 - UCW Example</p>
       </footer>
     </div>
     <script src="/static/vue3.js"></script>
@@ -129,9 +129,9 @@
             let params = getUrlVars(window.location);
             axios.get('/example/getAuthCode').then(res =>{
               let ps = {institution_id, provider, connection_id, user_id, job_type='', env='prod', ...rest} = params;
-              sophtron.init({
+              ucw.init({
                 env,
-                jobType,
+                jobType: job_type || params.jobType || jobType,
                 user_id,
                 connection_id,
                 institution_id,
@@ -161,7 +161,7 @@
             this.finished = false;
             this.accounts = null;
             this.initWidget(this.action);
-            sophtron.show();
+            ucw.show();
           },
           showData(vcType, id){
             let {user_id} = getUrlVars(window.location);
