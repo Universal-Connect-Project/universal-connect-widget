@@ -62,6 +62,7 @@ export const CreateMemberForm = props => {
         institution: {
           guid: institution.guid,
           code: institution.code,
+          provider: institution.provider
         },
       }),
     )

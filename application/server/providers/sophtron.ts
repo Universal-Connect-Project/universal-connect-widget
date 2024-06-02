@@ -256,6 +256,7 @@ export class SophtronApi implements ProviderApiClient {
       user_id: userId,
       cur_job_id: job.JobID,
       status,
+      raw_status: job.LastStatus,
       challenges: challenge?.id ? [challenge] : undefined,
       provider: 'sophtron'
     };

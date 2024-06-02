@@ -96,6 +96,8 @@ export const Connecting = props => {
       sendPostMessage('connect/memberStatusUpdate', {
         member_guid: pollingState.currentResponse.guid,
         connection_status: pollingState.currentResponse.connection_status,
+        raw_status: pollingState.currentResponse.raw_status,
+        provider: pollingState.currentResponse.provider,
       })
       dispatch(
         sendAnalyticsEvent({

@@ -38,6 +38,7 @@ function mapConnection(connection: Connection): Member{
     institution_guid: connection.institution_code, 
     guid: connection.id, 
     connection_status: connection.status || ConnectionStatus.CREATED, //?
+    raw_status: connection.raw_status,
     most_recent_job_guid: connection.status === ConnectionStatus.CONNECTED ? null : connection.cur_job_id,
     is_oauth: connection.is_oauth,
     oauth_window_uri: connection.oauth_window_uri,

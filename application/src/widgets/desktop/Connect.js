@@ -204,6 +204,7 @@ export class Connect extends React.Component {
       this.props.sendPostMessage('connect/stepChange', {
         previous: prevProps.step,
         current: this.props.step,
+        current_provider: this.props.selectedInstitution?.provider
       })
     }
 

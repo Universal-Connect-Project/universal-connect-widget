@@ -120,6 +120,7 @@ export interface Connection {
   last_updated_utc?: string | null;
   background_aggregation_is_disabled?: boolean;
   status?: ConnectionStatus | null;
+  raw_status?: string | null;
   institution_code?: string | null;
   is_being_aggregated?: boolean | null;
   is_oauth?: boolean | null;
