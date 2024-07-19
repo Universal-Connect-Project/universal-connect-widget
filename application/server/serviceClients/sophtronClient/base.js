@@ -10,14 +10,6 @@ module.exports = class SophtronBaseClient{
   }
 
   getAuthHeaders(method, path){
-    // if(this.apiConfig.integrationKey){
-    //   if(!forcePhrase){
-    //     return {IntegrationKey: this.apiConfig.integrationKey}
-    //   }
-    //   return {
-    //     Authorization: buildSophtronAuthCode(method, path, config.SophtronApiUserId, config.SophtronApiUserSecret)
-    //   };
-    // }
     return {
       Authorization: buildSophtronAuthCode(method, path, this.apiConfig.clientId, this.apiConfig.secret)
     }; 

@@ -98,6 +98,7 @@ export const Connecting = props => {
         connection_status: pollingState.currentResponse.connection_status,
         raw_status: pollingState.currentResponse.raw_status,
         provider: pollingState.currentResponse.provider,
+        institution: pollingState.currentResponse.institution_guid || pollingState.currentResponse.institution_guid,
       })
       dispatch(
         sendAnalyticsEvent({

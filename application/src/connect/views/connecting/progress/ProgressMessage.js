@@ -39,14 +39,14 @@ export const ProgressMessage = props => {
     return () => messageCycle$.unsubscribe()
   }, [props.job?.type])
 
-  let mainMessage = __('Syncing your information.')
+  let mainMessage = __('Syncing your information, It may take up to 30 seconds to get connected.')
 
   if (props.job?.type === JOB_TYPES.VERIFICATION) {
-    mainMessage = __('Getting verification data.')
+    mainMessage = __('Getting verification data, It may take up to 30 seconds to get connected.')
   } else if (props.job?.type === JOB_TYPES.IDENTIFICATION) {
-    mainMessage = __('Getting identification data.')
+    mainMessage = __('Getting identification data, It may take up to 30 seconds to get connected.')
   } else if (props.job?.type === JOB_TYPES.HISTORY) {
-    mainMessage = __('Getting extended transactions data.')
+    mainMessage = __('Getting extended transactions data, It may take up to 30 seconds to get connected.')
   } else if (props.allDone) {
     mainMessage = __('Finishing up.')
   }
