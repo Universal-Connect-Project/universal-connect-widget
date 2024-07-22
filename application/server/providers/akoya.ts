@@ -64,7 +64,8 @@ export class AkoyaApi implements ProviderApiClient {
       institution_code: request.institution_id,
       oauth_window_uri: this.apiClient.getOauthUrl(request.institution_id, this.apiClient.client_redirect_url, request_id),
       provider: this.apiClient.apiConfig.provider,
-      status: ConnectionStatus.PENDING
+      status: ConnectionStatus.PENDING,
+      raw_status: 'PENDING'
     }
     await this.db.set(request_id, obj);
     return obj;
@@ -108,6 +109,7 @@ export class AkoyaApi implements ProviderApiClient {
     }
     if(code){
       connection.status = ConnectionStatus.CONNECTED
+      connection.raw_status = 'CONNECTED'
       connection.guid = connection.institution_code
       connection.id = connection.institution_code
       connection.user_id = code

@@ -1,8 +1,8 @@
-const sophtron = (function () {
+const ucw = (function () {
   const urls = {
-    prod: 'https://universalwidget.sophtron.com',
-    preview: 'https://universalwidget.sophtron-prod.com',
-    pre: 'https://universalwidget.sophtron-prod.com',
+    prod: 'https://widget.universalconnectproject.org',
+    preview: 'https://widget-pre.universalconnectproject.org',
+    pre: 'https://widget-pre.universalconnectproject.org',
     local: 'http://localhost:8080',
   };
 

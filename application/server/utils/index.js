@@ -93,7 +93,7 @@ function mapJobType(input){
     case 'vc_identity':
       return 'aggregate_identity';
     default:
-      return 'aggregate'
+      return input
   }
 }
 

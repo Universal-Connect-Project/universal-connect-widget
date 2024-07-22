@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "server": "npx ts-node server/server.js",
-    "dev": "npx cross-env BROWSER=none react-app-rewired start",
+    "dev": "npx cross-env BROWSER=none PORT=3000 react-app-rewired start",
     "build": "react-app-rewired build",
     "build-android": "npx cross-env mobile=true react-app-rewired build && npx cap sync android",
     "build-ios": "npx cross-env mobile=true react-app-rewired build && npx cap sync ios",

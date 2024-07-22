@@ -126,6 +126,8 @@ const MFAStep = props => {
             onSubmit={credentials => {
               sendPostMessage('connect/submitMFA', {
                 member_guid: currentMember.guid,
+                provider: currentMember.provider,
+                institution: currentMember.institution_guid || currentMember.institution_code,
               })
               setUpdatedMember(previousMember => ({
                 ...previousMember,

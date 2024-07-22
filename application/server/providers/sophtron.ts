@@ -200,7 +200,8 @@ export class SophtronApi implements ProviderApiClient {
           challenge.external_id = 'single_account_select';
           challenge.type = ChallengeType.OPTIONS;
           challenge.question = 'Please select an account to proceed:';
-          challenge.data = accounts.map(
+          const accountTypeOrder = {checking: 10, savings: 20, credit_card: 30, investment: 40, insurance: 50} as any;
+          challenge.data = accounts.sort((a: any, b: any) => (accountTypeOrder[a.AccountType?.toLowerCase()] || 100) - (accountTypeOrder[b.AccountType?.toLowerCase()] || 100)).map(
             (a:any) => ({ key: `${a.AccountName} ${a.AccountNumber}`, value: a.AccountID })
           );
         }else{
@@ -223,7 +224,7 @@ export class SophtronApi implements ProviderApiClient {
             (q: string, i: number) => ({ key: q, value: q })
           );
         } else if (job.TokenSentFlag === true) {
-          challenge.id = 'TokenSentFlag';
+          challenge.id = 'TokenInput';
           challenge.type = ChallengeType.QUESTION;
           challenge.question = 'ota';
           challenge.data = [
@@ -256,6 +257,7 @@ export class SophtronApi implements ProviderApiClient {
       user_id: userId,
       cur_job_id: job.JobID,
       status,
+      raw_status: job.LastStatus,
       challenges: challenge?.id ? [challenge] : undefined,
       provider: 'sophtron'
     };
@@ -271,7 +273,7 @@ export class SophtronApi implements ProviderApiClient {
       case 'SecurityQuestion':
         answer = JSON.stringify([c.response])
         break;
-      case 'TokenSentFlag':
+      case 'TokenInput':
       case 'single_account_select':
       case 'TokenMethod':
       case 'CaptchaImage':

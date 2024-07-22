@@ -250,6 +250,7 @@ export class MxApi implements ProviderApiClient {
         ConnectionStatus[
           status! as keyof typeof ConnectionStatus
         ],
+      raw_status: member.connection_status,
       challenges: (member.challenges || []).map((item, idx) => {
         const c: Challenge = {
           id: item.guid || `${idx}`,

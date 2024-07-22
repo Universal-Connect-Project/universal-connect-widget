@@ -22,9 +22,8 @@ export class AuthClient {
 
   async get(path) {
     const phrase =  buildSophtronAuthCode('get', path, config.SophtronClientId, config.SophtronClientSecret)
-    const ret = await http.get(config.AuthServiceEndpoint + path, {Authorization: phrase, IntegrationKey: this.token});
+    const ret = await http.get(config.SophtronAuthServiceEndpoint + path, {Authorization: phrase, IntegrationKey: this.token});
     return ret;
   }
 
 };
-

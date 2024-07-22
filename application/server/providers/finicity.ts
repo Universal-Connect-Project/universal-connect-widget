@@ -67,7 +67,8 @@ export class FinicityApi implements ProviderApiClient {
       institution_code: request.institution_id,
       oauth_window_uri: await this.apiClient.generateConnectLiteUrl(request.institution_id, user_id, request_id),
       provider: this.apiClient.apiConfig.provider,
-      status: ConnectionStatus.PENDING
+      status: ConnectionStatus.PENDING,
+      raw_status: 'PENDING'
     }
     await this.db.set(request_id, obj);
     return obj;
@@ -138,6 +139,7 @@ export class FinicityApi implements ProviderApiClient {
     }
     if(institutionLoginId){
       connection.status = ConnectionStatus.CONNECTED
+      connection.raw_status = 'CONNECTED'
       connection.guid = connection_id
       connection.id = `${institutionLoginId}`
     }
@@ -164,7 +166,8 @@ export class FinicityApi implements ProviderApiClient {
         credentials: [] as any[],
         oauth_window_uri: await this.apiClient.generateConnectFixUrl(id, user_id, request_id),
         provider: this.apiClient.apiConfig.provider,
-        status: ConnectionStatus.PENDING
+        status: ConnectionStatus.PENDING,
+        raw_status: 'PENDING'
       }
       await this.db.set(request_id, obj);
       return obj;
