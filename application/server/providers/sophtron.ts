@@ -193,7 +193,7 @@ export class SophtronApi implements ProviderApiClient {
         let jobType = job.JobType.toLowerCase();
         if(single_account_select 
             && (!job.AccountID || job.AccountID === '00000000-0000-0000-0000-000000000000')
-            && (jobType === 'authallaccounts' || jobType === 'refreshauthall')
+            && (jobType.indexOf('verification') >= 0 || jobType.indexOf('verify') >= 0)
             ){
           let accounts = await this.apiClientV1.getUserInstitutionAccounts(memberId);
           challenge.id = 'single_account_select';
